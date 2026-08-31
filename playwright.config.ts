@@ -6,8 +6,8 @@ export default defineConfig({
   fullyParallel: true,
   reporter: [["html", { open: "never" }]],
   use: {
-    trace: "on",
-    baseURL: "http://localhost:3000/",
+    trace: "retain-on-failure",
+    baseURL: "http://localhost:3000",
   },
 
   projects: [
