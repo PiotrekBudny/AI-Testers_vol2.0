@@ -1,0 +1,26 @@
+{
+  "name": "ai-testers_vol2.0",
+  "version": "1.0.0",
+  "description": "This repository is dedicated to testing and validation work for AI-related projects and experiments.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PiotrekBudny/AI-Testers_vol2.0.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/PiotrekBudny/AI-Testers_vol2.0/issues"
+  },
+  "homepage": "https://github.com/PiotrekBudny/AI-Testers_vol2.0#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.2.0"
+  }
+}
