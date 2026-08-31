@@ -4,6 +4,7 @@
   "description": "This repository is dedicated to testing and validation work for AI-related projects and experiments.",
   "main": "index.js",
   "scripts": {
+    "pretest": "npx playwright install",
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed"
   },
