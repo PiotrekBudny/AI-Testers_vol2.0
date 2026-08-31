@@ -30,3 +30,35 @@ test(
     await page.close();
   },
 );
+
+test(
+  "login page loads and is visible",
+  { tag: ["@auth", "@smoke"] },
+  async ({ page }) => {
+    await page.goto("/login.html");
+
+    await expect(page).toHaveTitle(/Rolnopol/);
+
+    await expect(
+      page.getByRole("heading", { name: "Login to Your User Account" }),
+    ).toBeVisible();
+
+    await page.close();
+  },
+);
+
+test(
+  "register page loads and is visible",
+  { tag: ["@auth", "@smoke"] },
+  async ({ page }) => {
+    await page.goto("/register.html");
+
+    await expect(page).toHaveTitle(/Rolnopol/);
+
+    await expect(
+      page.getByRole("heading", { name: "Create Your User Account" }),
+    ).toBeVisible();
+
+    await page.close();
+  },
+);
