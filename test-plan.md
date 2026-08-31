@@ -65,8 +65,8 @@ Tags map to Playwright's `--grep`/`--grep-invert` filters (e.g. `npx playwright 
 - Homepage loads with the correct title. `@e2e @smoke`
 - "Get Started Free" navigates from the homepage to the account creation page. `@auth @smoke`
 - Login and register pages load with the correct title and subtitle. `@auth @smoke`
-- Documentation page loads with the correct subtitle. `@docs @smoke`
-- API Explorer (Swagger) page loads with the correct description. `@docs @smoke`
+- Documentation page loads with the correct subtitle. `@docs`
+- API Explorer (Swagger) page loads with the correct description. `@docs`
 
 ## End-to-End Scenarios
 
