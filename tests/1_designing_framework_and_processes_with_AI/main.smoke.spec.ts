@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test(
-  "homepage has title containing 'Rolnopol'",
+  "homepage has title 'Rolnopol'",
   { tag: ["@e2e", "@smoke"] },
   async ({ page }) => {
     const expected = {
