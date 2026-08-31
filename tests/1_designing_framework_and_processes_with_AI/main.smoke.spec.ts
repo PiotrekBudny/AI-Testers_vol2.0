@@ -96,7 +96,7 @@ test(
 
 test(
   "API explorer page loads and is visible",
-  { tag: ["@docs", "@smoke"] },
+  { tag: ["@docs"] },
   async ({ page }) => {
     const expected = {
       description:
