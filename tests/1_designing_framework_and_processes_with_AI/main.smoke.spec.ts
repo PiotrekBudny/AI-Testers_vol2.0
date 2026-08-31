@@ -77,7 +77,7 @@ test(
 
 test(
   "documentation page loads and is visible",
-  { tag: ["@docs", "@smoke"] },
+  { tag: ["@docs"] },
   async ({ page }) => {
     const expected = {
       subtitle: "Rolnopol System Guide & API Reference",
