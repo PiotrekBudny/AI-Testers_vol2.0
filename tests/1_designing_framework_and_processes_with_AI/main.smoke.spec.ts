@@ -2,8 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test(
   "homepage has title containing 'Rolnopol'",
-  { tag: ["@smoke"] },
-  async ({ page }) => {
+  { tag: ["@e2e", "@smoke"] },
     await page.goto("/");
 
     // Expect a title "to contain" a substring.
