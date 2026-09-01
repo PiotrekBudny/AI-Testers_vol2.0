@@ -132,7 +132,7 @@ test(
     // Act
     await registerPage.goto();
     await registerPage.register(user);
-    await expect(registerPage.successToast).toBeVisible();
+    await registerPage.successToast.waitFor({ state: "visible" });
     await registerPage.goto();
     await registerPage.register(user);
 
