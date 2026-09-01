@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
+import { DocsPage } from "../../src/pages/DocsPage";
+import { HomePage } from "../../src/pages/HomePage";
+import { LoginPage } from "../../src/pages/LoginPage";
 import { RegisterPage } from "../../src/pages/RegisterPage";
+import { SwaggerPage } from "../../src/pages/SwaggerPage";
 import { createTestUser } from "../../src/test-data/users";
 
 test(
@@ -7,12 +11,13 @@ test(
   { tag: ["@e2e", "@smoke"] },
   async ({ page }) => {
     // Arrange
+    const homePage = new HomePage(page);
     const expected = {
       title: "Rolnopol",
     };
 
     // Act
-    await page.goto("/");
+    await homePage.goto();
 
     // Assert
     await expect(page).toHaveTitle(expected.title);
@@ -24,18 +29,18 @@ test(
   { tag: ["@auth", "@smoke"] },
   async ({ page }) => {
     // Arrange
+    const homePage = new HomePage(page);
+    const registerPage = new RegisterPage(page);
     const expected = {
-      heading: "Create Your User Account",
+      subtitle: "Create Your User Account",
     };
 
     // Act
-    await page.goto("/");
-    await page.getByRole("link", { name: "Get Started Free" }).click();
+    await homePage.goto();
+    await homePage.clickGetStarted();
 
     // Assert
-    await expect(page.getByRole("heading", { level: 2 })).toHaveText(
-      expected.heading,
-    );
+    await expect(registerPage.subtitle).toHaveText(expected.subtitle);
 
     await page.close();
   },
@@ -46,19 +51,18 @@ test(
   { tag: ["@auth", "@smoke"] },
   async ({ page }) => {
     // Arrange
+    const loginPage = new LoginPage(page);
     const expected = {
       title: "Login - Rolnopol",
       subtitle: "User Login & Account Access",
     };
 
     // Act
-    await page.goto("/login.html");
+    await loginPage.goto();
 
     // Assert
     await expect(page).toHaveTitle(expected.title);
-    await expect(page.getByTestId("login-subtitle")).toHaveText(
-      expected.subtitle,
-    );
+    await expect(loginPage.subtitle).toHaveText(expected.subtitle);
 
     await page.close();
   },
@@ -90,7 +94,7 @@ test(
   "register with valid data succeeds and redirects to login",
   { tag: ["@auth", "@smoke"] },
   async ({ page }) => {
-    test.setTimeout(15_000); // registration redirects to login a few seconds after the success toast
+    test.setTimeout(15_000);
 
     // Arrange
     const registerPage = new RegisterPage(page);
@@ -117,18 +121,16 @@ test(
   { tag: ["@docs"] },
   async ({ page }) => {
     // Arrange
+    const docsPage = new DocsPage(page);
     const expected = {
       subtitle: "Rolnopol System Guide & API Reference",
     };
 
     // Act
-    await page.goto("/docs.html");
+    await docsPage.goto();
 
     // Assert
-    // No test id is available; fall back to the subtitle's class.
-    await expect(page.locator(".docs-header-subtitle")).toHaveText(
-      expected.subtitle,
-    );
+    await expect(docsPage.subtitle).toHaveText(expected.subtitle);
 
     await page.close();
   },
@@ -139,20 +141,17 @@ test(
   { tag: ["@docs"] },
   async ({ page }) => {
     // Arrange
+    const swaggerPage = new SwaggerPage(page);
     const expected = {
       description:
         "API documentation for the Rolnopol service with versioning support",
     };
 
     // Act
-    await page.goto("/swagger.html");
+    await swaggerPage.goto();
 
     // Assert
-    // Swagger UI renders inside an iframe; no test id is available.
-    const swaggerFrame = page.frameLocator("iframe");
-    await expect(swaggerFrame.locator(".description")).toHaveText(
-      expected.description,
-    );
+    await expect(swaggerPage.description).toHaveText(expected.description);
 
     await page.close();
   },

@@ -3,9 +3,11 @@
 ## Page Objects (`src/pages/`)
 
 - One class per page, named `<Page>Page` (e.g. `RegisterPage`).
+- Extend `BasePage`, which holds the shared `page` field and the `goto()` navigation method.
+- Declare the page's URL as a `protected readonly url` field; `BasePage.goto()` navigates to it.
 - Store locators as `readonly` fields, initialized in the constructor.
 - Prefer `page.getByTestId(...)`; fall back to role/text/class locators only when no test id exists.
-- Provide action methods (e.g. `goto()`, `register()`) that perform steps, not checks.
+- Provide action methods (e.g. `register()`) that perform steps, not checks.
 - **No assertions (`expect`) in page objects.** Page objects only locate elements and perform actions — all verification belongs in test files.
 - Expose locators used for assertions (e.g. `successToast`) as public readonly fields so tests can assert on them directly.
 - Keep methods small and focused on a single user action or flow step.

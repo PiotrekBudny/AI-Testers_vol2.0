@@ -21,3 +21,7 @@ feat(tests): add smoke test for login flow
 ## Coding Standards
 
 See [coding-standards.md](../coding-standards.md) for page object conventions, test structure (Arrange/Act/Assert), and test tagging rules.
+
+## Comments
+
+Do not add comments to code, except for the `// Arrange`, `// Act`, and `// Assert` markers required in test bodies.
