@@ -34,7 +34,8 @@ Tags map to Playwright's `--grep`/`--grep-invert` filters (e.g. `npx playwright 
 
 ### Registration & Login
 
-- Register with valid data succeeds and auto-logs in; duplicate email or invalid fields fail. `@auth @smoke`
+- Register with valid data succeeds and redirects to the login page. `@auth @smoke`
+- Registering with a duplicate email or invalid fields fails. `@auth @smoke`
 - Login with valid/invalid credentials; logout clears the session. `@auth @smoke`
 - Requests without a valid token are rejected. `@auth`
 
