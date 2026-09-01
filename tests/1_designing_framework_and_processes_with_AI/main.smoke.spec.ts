@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { RegisterPage } from "../pages/RegisterPage";
+import { RegisterPage } from "../../src/pages/RegisterPage";
+import { createTestUser } from "../../src/test-data/users";
 
 test(
   "homepage has title 'Rolnopol'",
@@ -93,11 +94,7 @@ test(
 
     // Arrange
     const registerPage = new RegisterPage(page);
-    const user = {
-      email: `jane.tester+${Date.now()}@example.com`,
-      displayName: "Jane Tester",
-      password: "SecurePass123",
-    };
+    const user = createTestUser();
     const expected = {
       redirectTitle: "Login - Rolnopol",
     };
