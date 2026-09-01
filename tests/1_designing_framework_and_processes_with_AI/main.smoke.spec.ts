@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { RegisterPage } from "../pages/RegisterPage";
 
 test(
   "homepage has title 'Rolnopol'",
@@ -67,19 +68,18 @@ test(
   { tag: ["@auth", "@smoke"] },
   async ({ page }) => {
     // Arrange
+    const registerPage = new RegisterPage(page);
     const expected = {
       title: "Register - Rolnopol",
       subtitle: "Create Your User Account",
     };
 
     // Act
-    await page.goto("/register.html");
+    await registerPage.goto();
 
     // Assert
     await expect(page).toHaveTitle(expected.title);
-    await expect(page.getByTestId("register-subtitle")).toHaveText(
-      expected.subtitle,
-    );
+    await expect(registerPage.subtitle).toHaveText(expected.subtitle);
 
     await page.close();
   },
@@ -92,22 +92,22 @@ test(
     test.setTimeout(15_000); // registration redirects to login a few seconds after the success toast
 
     // Arrange
-    const email = `jane.tester+${Date.now()}@example.com`;
-    const expected = {
+    const registerPage = new RegisterPage(page);
+    const user = {
+      email: `jane.tester+${Date.now()}@example.com`,
       displayName: "Jane Tester",
       password: "SecurePass123",
+    };
+    const expected = {
       redirectTitle: "Login - Rolnopol",
     };
 
     // Act
-    await page.goto("/register.html");
-    await page.getByTestId("email-input").fill(email);
-    await page.getByTestId("display-name-input").fill(expected.displayName);
-    await page.getByTestId("password-input").fill(expected.password);
-    await page.getByTestId("register-submit-btn").click();
+    await registerPage.goto();
+    await registerPage.register(user);
 
     // Assert
-    await expect(page.getByText("Registration successful!")).toBeVisible();
+    await expect(registerPage.successToast).toBeVisible();
     await expect(page).toHaveURL(/\/login\.html$/, { timeout: 8000 });
     await expect(page).toHaveTitle(expected.redirectTitle);
 
