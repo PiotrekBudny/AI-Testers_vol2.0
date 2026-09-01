@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/PiotrekBudny/AI-Testers_vol2.0#readme",
   "devDependencies": {
+    "@playwright/mcp": "^0.0.80",
     "@playwright/test": "^1.62.1",
-    "@types/node": "^26.2.0"
+    "@types/node": "^26.4.0"
   }
 }
