@@ -10,6 +10,7 @@ export class RegisterPage extends BasePage {
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
   readonly successToast: Locator;
+  readonly errorToast: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -18,7 +19,12 @@ export class RegisterPage extends BasePage {
     this.displayNameInput = page.getByTestId("display-name-input");
     this.passwordInput = page.getByTestId("password-input");
     this.submitButton = page.getByTestId("register-submit-btn");
-    this.successToast = page.getByText("Registration successful!", { exact: true });
+    this.successToast = page.getByText("Registration successful!", {
+      exact: true,
+    });
+    this.errorToast = page.getByText("User with this email already exists", {
+      exact: true,
+    });
   }
 
   async register(user: {
