@@ -31,3 +31,4 @@ Tag Playwright tests with the tags defined in `test-plan.md` so they can be filt
 ## Writing Tests
 
 - Review `playwright.config.ts` before creating tests to follow its configured `baseURL`, `timeout`, `projects`, and other settings.
+- Structure each test body into three distinct sections, in order: Arrange, Act, Assert. Mark each with a `// Arrange`, `// Act`, `// Assert` comment.
