@@ -18,7 +18,7 @@ export class RegisterPage extends BasePage {
     this.displayNameInput = page.getByTestId("display-name-input");
     this.passwordInput = page.getByTestId("password-input");
     this.submitButton = page.getByTestId("register-submit-btn");
-    this.successToast = page.getByText("Registration successful!");
+    this.successToast = page.getByText("Registration successful!", { exact: true });
   }
 
   async register(user: {
