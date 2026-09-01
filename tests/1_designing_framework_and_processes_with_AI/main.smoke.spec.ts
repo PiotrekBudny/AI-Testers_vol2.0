@@ -117,6 +117,129 @@ test(
 );
 
 test(
+  "registering with a duplicate email fails",
+  { tag: ["@auth", "@smoke"] },
+  async ({ page }) => {
+    test.setTimeout(15_000);
+
+    // Arrange
+    const registerPage = new RegisterPage(page);
+    const user = createTestUser();
+    const expected = {
+      errorMessage: "User with this email already exists",
+    };
+
+    // Act
+    await registerPage.goto();
+    await registerPage.register(user);
+    await expect(registerPage.successToast).toBeVisible();
+    await registerPage.goto();
+    await registerPage.register(user);
+
+    // Assert
+    await expect(registerPage.errorToast).toBeVisible();
+    await expect(registerPage.errorToast).toHaveText(expected.errorMessage);
+    await expect(page).toHaveURL(/\/register\.html$/);
+
+    await page.close();
+  },
+);
+
+test(
+  "registering with an invalid email format fails",
+  { tag: ["@auth", "@smoke"] },
+  async ({ page }) => {
+    // Arrange
+    const registerPage = new RegisterPage(page);
+    const user = createTestUser({ email: "not-an-email" });
+    const expected = {
+      validationMessage:
+        "Please include an '@' in the email address. 'not-an-email' is missing an '@'.",
+    };
+
+    // Act
+    await registerPage.goto();
+    await registerPage.register(user);
+
+    // Assert
+    await expect(page).toHaveURL(/\/register\.html$/);
+    await expect(registerPage.successToast).toBeHidden();
+    await expect(registerPage.emailInput).toHaveJSProperty(
+      "validity.valid",
+      false,
+    );
+    await expect(registerPage.emailInput).toHaveJSProperty(
+      "validationMessage",
+      expected.validationMessage,
+    );
+
+    await page.close();
+  },
+);
+
+test(
+  "registering with a too-short password fails",
+  { tag: ["@auth", "@smoke"] },
+  async ({ page }) => {
+    // Arrange
+    const registerPage = new RegisterPage(page);
+    const user = createTestUser({ password: "ab" });
+    const expected = {
+      validationMessage:
+        "Please lengthen this text to 3 characters or more (you are currently using 2 characters).",
+    };
+
+    // Act
+    await registerPage.goto();
+    await registerPage.register(user);
+
+    // Assert
+    await expect(page).toHaveURL(/\/register\.html$/);
+    await expect(registerPage.successToast).toBeHidden();
+    await expect(registerPage.passwordInput).toHaveJSProperty(
+      "validity.valid",
+      false,
+    );
+    await expect(registerPage.passwordInput).toHaveJSProperty(
+      "validationMessage",
+      expected.validationMessage,
+    );
+
+    await page.close();
+  },
+);
+
+test(
+  "registering with missing required fields fails",
+  { tag: ["@auth", "@smoke"] },
+  async ({ page }) => {
+    // Arrange
+    const registerPage = new RegisterPage(page);
+    const expected = {
+      validationMessage: "Please fill out this field.",
+    };
+
+    // Act
+    await registerPage.goto();
+    await registerPage.submitButton.click();
+
+    // Assert
+    await expect(page).toHaveURL(/\/register\.html$/);
+    await expect(registerPage.successToast).toBeHidden();
+    await expect(registerPage.emailInput).toHaveJSProperty(
+      "validity.valid",
+      false,
+    );
+    await expect(registerPage.emailInput).toHaveJSProperty(
+      "validationMessage",
+      expected.validationMessage,
+    );
+
+    await page.close();
+  },
+);
+
+test(
   "documentation page loads and is visible",
   { tag: ["@docs"] },
   async ({ page }) => {

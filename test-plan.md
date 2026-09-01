@@ -32,48 +32,54 @@ Tags map to Playwright's `--grep`/`--grep-invert` filters (e.g. `npx playwright 
 
 ## Test Areas
 
+Checkboxes indicate implementation status: `[x]` implemented, `[ ]` not yet implemented.
+
 ### Registration & Login
 
-- Register with valid data succeeds and redirects to the login page. `@auth @smoke`
-- Registering with a duplicate email or invalid fields fails. `@auth @smoke`
-- Login with valid/invalid credentials; logout clears the session. `@auth @smoke`
-- Requests without a valid token are rejected. `@auth`
+- [x] Register with valid data succeeds and redirects to the login page. `@auth @smoke`
+- [x] Registering with a duplicate email fails. `@auth @smoke`
+- [x] Registering with invalid fields (invalid email format, password too short, missing required fields) fails. `@auth @smoke`
+- [ ] Login with valid credentials succeeds. `@auth @smoke`
+- [ ] Login with invalid credentials fails. `@auth @smoke`
+- [ ] Logout clears the session. `@auth @smoke`
+- [ ] Requests without a valid token are rejected. `@auth`
 
 ### Role-Based Access
 
-- Farmers cannot access admin/superadmin pages or endpoints. `@rbac`
-- Admins/superadmins can view and manage all users' resources. `@rbac`
+- [ ] Farmers cannot access admin/superadmin pages or endpoints. `@rbac`
+- [ ] Admins/superadmins can view and manage all users' resources. `@rbac`
 
 ### Farm & Resource Management
 
-- Add, edit, and remove fields, animals, and staff. `@farm @smoke`
-- Assign staff/animals to a field. `@farm`
+- [ ] Add, edit, and remove fields, animals, and staff. `@farm @smoke`
+- [ ] Assign staff/animals to a field. `@farm`
 
 ### Marketplace Trading
 
-- Create an offer for an unassigned resource → active; for an assigned one → unavailable. `@marketplace`
-- Buy an active offer → ownership transferred, balances updated, offer marked sold. `@marketplace @smoke`
-- Buying with insufficient funds, buying own offer, or buying a non-active offer is blocked. `@marketplace`
-- Cancel an active offer → cancelled. `@marketplace`
+- [ ] Create an offer for an unassigned resource → active; for an assigned one → unavailable. `@marketplace`
+- [ ] Buy an active offer → ownership transferred, balances updated, offer marked sold. `@marketplace @smoke`
+- [ ] Buying with insufficient funds, buying own offer, or buying a non-active offer is blocked. `@marketplace`
+- [ ] Cancel an active offer → cancelled. `@marketplace`
 
 ### Financial Operations
 
-- View balance and transaction history. `@finance`
-- Balance updates correctly after purchases and transfers; no overdraft allowed. `@finance @smoke`
+- [ ] View balance and transaction history. `@finance`
+- [ ] Balance updates correctly after purchases and transfers; no overdraft allowed. `@finance @smoke`
 
 ### Navigation & Static Pages
 
-- Homepage loads with the correct title. `@e2e @smoke`
-- "Get Started Free" navigates from the homepage to the account creation page. `@auth @smoke`
-- Login and register pages load with the correct title and subtitle. `@auth @smoke`
-- Documentation page loads with the correct subtitle. `@docs`
-- API Explorer (Swagger) page loads with the correct description. `@docs`
+- [x] Homepage loads with the correct title. `@e2e @smoke`
+- [x] "Get Started Free" navigates from the homepage to the account creation page. `@auth @smoke`
+- [x] Login page loads with the correct title and subtitle. `@auth @smoke`
+- [x] Register page loads with the correct title and subtitle. `@auth @smoke`
+- [x] Documentation page loads with the correct subtitle. `@docs`
+- [x] API Explorer (Swagger) page loads with the correct description. `@docs`
 
 ## End-to-End Scenarios
 
-1. **Register and Set Up Farm** – register → log in → add field, animal, staff → verify farm overview. `@e2e @auth @farm @smoke`
-2. **Sell a Field on the Marketplace** – User A offers a field → User B buys it → ownership and balances updated. `@e2e @marketplace @finance`
-3. **Insufficient Funds** – user tries to buy an offer above their balance → purchase blocked, balance unchanged. `@e2e @marketplace @finance`
+1. [ ] **Register and Set Up Farm** – register → log in → add field, animal, staff → verify farm overview. `@e2e @auth @farm @smoke`
+2. [ ] **Sell a Field on the Marketplace** – User A offers a field → User B buys it → ownership and balances updated. `@e2e @marketplace @finance`
+3. [ ] **Insufficient Funds** – user tries to buy an offer above their balance → purchase blocked, balance unchanged. `@e2e @marketplace @finance`
 
 ## Out of Scope / Lower Priority
 
