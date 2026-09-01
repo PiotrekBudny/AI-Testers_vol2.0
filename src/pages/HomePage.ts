@@ -1,8 +1,9 @@
 import type { Locator, Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
+import { PageUrls } from "./urls";
 
 export class HomePage extends BasePage {
-  protected readonly url = "/";
+  protected readonly url = PageUrls.home;
   readonly getStartedLink: Locator;
 
   constructor(page: Page) {
