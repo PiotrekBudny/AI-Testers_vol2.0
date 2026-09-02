@@ -1,26 +1,78 @@
 # AI-Testers Vol2.0
 
-This repository is dedicated to testing and validation work for AI-related projects and experiments.
+Playwright end-to-end tests for the Rolnopol application. The suite covers
+authentication, navigation, documentation pages, and other planned farm
+management and marketplace flows.
 
-## Purpose
+## Requirements
 
-This project serves as a test repository for:
+- Node.js 20 or newer
+- npm (included with Node.js)
+- A running Rolnopol application available at
+  `http://localhost:3000`
 
-- validating AI workflows
-- experimenting with automation and tooling
-- testing code quality and reliability
-- exploring implementation ideas in a controlled environment
+The test plan assumes the application provides the following pages:
 
-## Repository Scope
+- `http://localhost:3000`
+- `http://localhost:3000/docs.html`
+- `http://localhost:3000/swagger.html`
 
-The contents of this repository are intended for testing scenarios, prototype development, and verification activities. It may be used to assess functionality, iterate on ideas, and confirm behavior before integrating changes into larger production projects.
+## Installation
 
-## Notes
+Clone the repository, then install its dependencies:
 
-- This repository is focused on test and validation use cases.
-- Changes may be experimental and iterative.
-- Use it as a safe place to test scripts, automation, and project ideas.
+```bash
+git clone https://github.com/PiotrekBudny/AI-Testers_vol2.0.git
+cd AI-Testers_vol2.0
+npm install
+```
 
-## Getting Started
+Playwright browsers are installed automatically before `npm test`. To install
+them separately, run:
 
-Open the repository in your preferred editor and begin exploring or adding test-related files and scripts as needed.
+```bash
+npx playwright install
+```
+
+## Getting started
+
+1. Start the Rolnopol application on `http://localhost:3000`.
+2. From the repository root, install dependencies with `npm install`.
+3. Run the test suite with `npm test`.
+4. Open the generated report with `npx playwright show-report`.
+
+The demo account used by the test plan is
+`demo@example.com` / `demo123` (farmer).
+
+## Test commands
+
+| Command | Description |
+| --- | --- |
+| `npm test` | Run all Playwright tests in Chromium |
+| `npm run test:headed` | Run tests with a visible browser |
+| `npx playwright test --grep @smoke` | Run critical-path smoke tests |
+| `npx playwright show-report` | Open the latest HTML report |
+
+Tags are defined in [`test-plan.md`](test-plan.md), and can be combined with
+Playwright's `--grep` and `--grep-invert` options.
+
+## Test reports
+
+Playwright generates an HTML report in `playwright-report/`. It is configured
+not to open automatically; use `npx playwright show-report` to view it.
+Test artifacts are written to `test-results/`, and traces are retained for
+failed tests to help diagnose problems.
+
+## Project structure
+
+```text
+src/
+  pages/       Page objects and application URLs
+  test-data/   Reusable test data
+tests/         Playwright test specifications
+playwright.config.ts
+test-plan.md
+```
+
+Page objects contain reusable navigation and interaction logic. Test
+specifications contain assertions and are organized under `tests/`.
