@@ -18,17 +18,18 @@ Map) are lower priority.
 
 Tags map to Playwright's `--grep`/`--grep-invert` filters (e.g. `npx playwright test --grep @smoke`).
 
-| Tag            | Meaning                           |
-| -------------- | --------------------------------- |
-| `@auth`        | Registration & login              |
-| `@rbac`        | Role-based access                 |
-| `@farm`        | Farm & resource management        |
-| `@marketplace` | Marketplace trading               |
-| `@finance`     | Financial operations              |
-| `@e2e`         | End-to-end scenario               |
-| `@flagged`     | Behind a feature flag             |
-| `@docs`        | Documentation & API reference     |
-| `@smoke`       | Critical path, run on every build |
+| Tag               | Meaning                                                            |
+| ----------------- | ------------------------------------------------------------------ |
+| `@auth`           | Registration & login                                               |
+| `@rbac`           | Role-based access                                                  |
+| `@farm`           | Farm & resource management                                         |
+| `@marketplace`    | Marketplace trading                                                |
+| `@finance`        | Financial operations                                               |
+| `@e2e`            | End-to-end scenario                                                |
+| `@flagged`        | Behind a feature flag                                              |
+| `@docs`           | Documentation & API reference                                      |
+| `@smoke`          | Critical path, run on every build                                  |
+| `@pipeline-check` | Intentionally failing test verifying CI artifact upload on failure |
 
 ## Test Areas
 
