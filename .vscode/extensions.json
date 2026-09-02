@@ -5,6 +5,7 @@
     "dbaeumer.vscode-eslint",
     "pkief.material-icon-theme",
     "streetsidesoftware.code-spell-checker",
-    "GitHub.vscode-pull-request-github"
+    "GitHub.vscode-pull-request-github",
+    "github.vscode-github-actions"
   ]
 }
