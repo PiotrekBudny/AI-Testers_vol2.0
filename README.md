@@ -1,26 +1,22 @@
 # AI-Testers Vol2.0
 
-This repository is dedicated to testing and validation work for AI-related projects and experiments.
+Playwright tests for the Rolnopol application.
 
-## Purpose
+## Setup
 
-This project serves as a test repository for:
+```bash
+npm install
+```
 
-- validating AI workflows
-- experimenting with automation and tooling
-- testing code quality and reliability
-- exploring implementation ideas in a controlled environment
+The application under test must be available at `http://localhost:3000`.
 
-## Repository Scope
+## Run tests
 
-The contents of this repository are intended for testing scenarios, prototype development, and verification activities. It may be used to assess functionality, iterate on ideas, and confirm behavior before integrating changes into larger production projects.
+```bash
+npm test
+npm run test:headed
+```
 
-## Notes
+Use `npx playwright test --grep @smoke` to run the smoke tests.
 
-- This repository is focused on test and validation use cases.
-- Changes may be experimental and iterative.
-- Use it as a safe place to test scripts, automation, and project ideas.
-
-## Getting Started
-
-Open the repository in your preferred editor and begin exploring or adding test-related files and scripts as needed.
+See [test-plan.md](test-plan.md) for test coverage and tags.
