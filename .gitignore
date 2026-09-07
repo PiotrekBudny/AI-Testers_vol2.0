@@ -9,3 +9,6 @@ node_modules/
 /.playwright-mcp/
 
 .ai-outputs/
+.env
+.env.*
+!.env.example

@@ -8,7 +8,9 @@ Playwright tests for the Rolnopol application.
 npm install
 ```
 
-The application under test must be available at `http://localhost:3000`.
+Copy `.env.example` to `.env` and adjust values as needed. `BASE_URL` controls the app URL used by `playwright.config.ts` (defaults to `http://localhost:3000` if unset). Keep sensitive values (credentials, tokens, etc.) in `.env` only — it is git-ignored and must never be committed.
+
+The application under test must be available at the configured `BASE_URL`.
 
 ## Run tests
 

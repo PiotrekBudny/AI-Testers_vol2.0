@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import "dotenv/config";
 
 export default defineConfig({
   testDir: "./tests",
@@ -10,7 +11,7 @@ export default defineConfig({
     : [["html", { open: "never" }]],
   use: {
     trace: "retain-on-failure",
-    baseURL: "http://localhost:3000",
+    baseURL: process.env.BASE_URL,
   },
 
   projects: [
