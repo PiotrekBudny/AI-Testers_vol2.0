@@ -105,6 +105,20 @@ After every change - no matter how small - run the **full existing test suite** 
 - If only **newly added** tests fail, debug and fix them before moving on.
 - Never skip this step. A passing full suite is a hard gate for completion.
 
+### 6.5. Update CI/CD workflows if needed
+
+If any changes involve environment variables, configuration, or test infrastructure:
+
+- Check `.github/workflows/*.yml` files
+- Verify all new environment variables are included in workflow steps
+- Add missing variables with appropriate GitHub Actions syntax:
+  - Public config: `${{ vars.VARIABLE_NAME }}`
+  - Sensitive data: `${{ secrets.VARIABLE_NAME }}`
+- Ensure workflows reference the correct GitHub environment (e.g., `environment: dev`)
+- Document which workflow variables correspond to which environment variables
+- Update workflow documentation if needed
+- Never add secrets to workflows directly; use GitHub Secrets Management
+
 ### 7. Validate your work
 
 Before finishing, verify:
@@ -119,8 +133,9 @@ Before finishing, verify:
 ### 8. Final check & report
 
 - Summarize what was added or changed.
-- List touched files.
+- List touched files (including any workflow files).
 - Mention which tests were run (if any).
+- **Confirm CI/CD workflows are updated** if environment variables changed.
 - Highlight assumptions, risks, or open questions.
 - Mark the plan as completed or ready for review.
 
