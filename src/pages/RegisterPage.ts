@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+import type { User } from "../models/User";
 import { BasePage } from "./BasePage";
 import { PageUrls } from "./urls";
 
@@ -27,11 +28,7 @@ export class RegisterPage extends BasePage {
     });
   }
 
-  async register(user: {
-    email: string;
-    displayName: string;
-    password: string;
-  }) {
+  async register(user: User) {
     await this.emailInput.fill(user.email);
     await this.displayNameInput.fill(user.displayName);
     await this.passwordInput.fill(user.password);

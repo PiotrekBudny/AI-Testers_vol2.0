@@ -18,6 +18,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment: dev
 
     services:
       rolnopol:
@@ -25,7 +26,7 @@ jobs:
         ports:
           - 3000:3000
         options: >-
-          --health-cmd="wget -qO- http://localhost:3000 || exit 1"
+          --health-cmd="wget -qO- ${{ vars.BASE_URL }} || exit 1"
           --health-interval=5s --health-timeout=3s --health-retries=10
 
     steps:
@@ -55,6 +56,13 @@ jobs:
 
       - name: Run tests
         run: npx playwright test
+        env:
+          BASE_URL: ${{ vars.BASE_URL }}
+          EXISTING_USER_EMAIL: ${{ secrets.EXISTING_USER_EMAIL }}
+          EXISTING_USER_PASSWORD: ${{ secrets.EXISTING_USER_PASSWORD }}
+          EXISTING_USER_DISPLAY_NAME: ${{ vars.EXISTING_USER_DISPLAY_NAME }}
+          DEFAULT_TEST_USER_DISPLAY_NAME: ${{ vars.DEFAULT_TEST_USER_DISPLAY_NAME }}
+          DEFAULT_TEST_USER_PASSWORD: ${{ secrets.DEFAULT_TEST_USER_PASSWORD }}
 
       - name: Upload Playwright report
         if: success() || failure()
