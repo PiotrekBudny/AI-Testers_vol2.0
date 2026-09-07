@@ -38,6 +38,15 @@ export const config = Object.freeze({
   /** Display name of the empty user account for login tests. */
   EMPTY_USER_DISPLAY_NAME: requireEnv("EMPTY_USER_DISPLAY_NAME"),
 
+  /** Email of the demo user account for login tests. */
+  DEMO_USER_EMAIL: requireEnv("DEMO_USER_EMAIL"),
+
+  /** Password of the demo user account for login tests. */
+  DEMO_USER_PASSWORD: requireEnv("DEMO_USER_PASSWORD"),
+
+  /** Display name of the demo user account for login tests. */
+  DEMO_USER_DISPLAY_NAME: requireEnv("DEMO_USER_DISPLAY_NAME"),
+
   /** Display name for newly created test users. */
   DEFAULT_TEST_USER_DISPLAY_NAME: requireEnv("DEFAULT_TEST_USER_DISPLAY_NAME"),
 

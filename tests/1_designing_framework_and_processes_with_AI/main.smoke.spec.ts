@@ -6,7 +6,7 @@ import { LoginPage } from "../../src/pages/LoginPage";
 import { ProfilePage } from "../../src/pages/ProfilePage";
 import { RegisterPage } from "../../src/pages/RegisterPage";
 import { SwaggerPage } from "../../src/pages/SwaggerPage";
-import { createUser, existingUsers } from "../../src/test-data/users";
+import { createTestUser, existingUsers } from "../../src/test-data/users";
 
 test(
   "homepage has title 'Rolnopol'",
@@ -100,7 +100,7 @@ test(
 
     // Arrange
     const registerPage = new RegisterPage(page);
-    const user = createUser();
+    const user = createTestUser();
     const expected = {
       redirectTitle: "Login - Rolnopol",
     };
@@ -126,7 +126,7 @@ test(
 
     // Arrange
     const registerPage = new RegisterPage(page);
-    const user = createUser();
+    const user = createTestUser();
     const expected = {
       errorMessage: "User with this email already exists",
     };
@@ -153,7 +153,7 @@ test(
   async ({ page }) => {
     // Arrange
     const registerPage = new RegisterPage(page);
-    const user = createUser({ email: "not-an-email" });
+    const user = createTestUser({ email: "not-an-email" });
     const expected = {
       validationMessage:
         "Please include an '@' in the email address. 'not-an-email' is missing an '@'.",
@@ -185,7 +185,7 @@ test(
   async ({ page }) => {
     // Arrange
     const registerPage = new RegisterPage(page);
-    const user = createUser({ password: "ab" });
+    const user = createTestUser({ password: "ab" });
     const expected = {
       validationMessage:
         "Please lengthen this text to 3 characters or more (you are currently using 2 characters).",
