@@ -10,7 +10,7 @@
 - Provide action methods (e.g. `register()`) that perform steps, not checks.
 - **No assertions (`expect`) in page objects.** Page objects only locate elements and perform actions — all verification belongs in test files.
 - Expose locators used for assertions (e.g. `successToast`) as public readonly fields so tests can assert on them directly.
-- Keep methods small and focused on a single user action or flow step.
+- Prefer one method per form/flow that accepts a params object (e.g. `fillForm(field: FieldFormData)`, `register(user: User)`) over many single-field methods (e.g. avoid separate `fillFieldName()`, `selectDistrict()`, `fillArea()`). Short, single-field methods in page objects are discouraged — they fragment a single user action across the test and the page object.
 
 ## Tests (`tests/`)
 

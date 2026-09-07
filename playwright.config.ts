@@ -29,15 +29,27 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
     },
 
-    // Authenticated tests - require successful setup
+    // Authenticated tests that mutate data - must finish before the demo user logs out
     {
-      name: "authenticated",
-      testMatch: /.*authenticated\/.*\.spec\.ts/,
+      name: "authenticated-fields",
+      testMatch: /.*authenticated\/fields\.spec\.ts/,
       use: {
         ...devices["Desktop Chrome"],
         storageState: "playwright/.auth/user.json",
       },
       dependencies: ["setup"],
+    },
+
+    // Authenticated tests that end with logout - must run after authenticated-fields
+    // so it doesn't invalidate the shared demo user session mid-flow
+    {
+      name: "authenticated-profile",
+      testMatch: /.*authenticated\/demo-user\.spec\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "playwright/.auth/user.json",
+      },
+      dependencies: ["setup", "authenticated-fields"],
     },
   ],
 });
