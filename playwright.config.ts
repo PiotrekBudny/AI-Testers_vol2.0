@@ -15,9 +15,29 @@ export default defineConfig({
   },
 
   projects: [
+    // Setup project for authentication
     {
-      name: "chromium",
+      name: "setup",
+      testMatch: /.*auth\/setup\.spec\.ts/,
       use: { ...devices["Desktop Chrome"] },
+    },
+
+    // Smoke tests - fast checks without authentication
+    {
+      name: "smoke-tests",
+      testMatch: /.*smoke\/.*\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"] },
+    },
+
+    // Authenticated tests - require successful setup
+    {
+      name: "authenticated",
+      testMatch: /.*authenticated\/.*\.spec\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "playwright/.auth/user.json",
+      },
+      dependencies: ["setup"],
     },
   ],
 });
