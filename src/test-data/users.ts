@@ -1,23 +1,26 @@
 import { randomUUID } from "node:crypto";
+import type { LoginCredentials, User } from "../models/User";
 
-export interface TestUser {
-  email: string;
-  displayName: string;
-  password: string;
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
 }
 
-export function createTestUser(overrides: Partial<TestUser> = {}): TestUser {
+export function createUser(overrides: Partial<User> = {}): User {
   return {
     email: `jane.tester+${randomUUID()}@example.com`,
-    displayName: "Jane Tester",
-    password: "SecurePass123",
+    displayName: requireEnv("DEFAULT_TEST_USER_DISPLAY_NAME"),
+    password: requireEnv("DEFAULT_TEST_USER_PASSWORD"),
     ...overrides,
   };
 }
 
-export const existingUsers = {
+export const existingUsers: { emptyUser: LoginCredentials } = {
   emptyUser: {
-    email: "emptyuser@rolnopol.demo.pl",
-    password: "demoPass123",
+    email: requireEnv("EXISTING_USER_EMAIL"),
+    password: requireEnv("EXISTING_USER_PASSWORD"),
   },
-} as const;
+};
