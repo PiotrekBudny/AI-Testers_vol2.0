@@ -29,14 +29,14 @@ export const config = Object.freeze({
   /** Base URL for the application under test. */
   BASE_URL: requireEnv("BASE_URL"),
 
-  /** Email of an existing user account for login tests. */
-  EXISTING_USER_EMAIL: requireEnv("EXISTING_USER_EMAIL"),
+  /** Email of the empty user account for login tests. */
+  EMPTY_USER_EMAIL: requireEnv("EMPTY_USER_EMAIL"),
 
-  /** Password of an existing user account for login tests. */
-  EXISTING_USER_PASSWORD: requireEnv("EXISTING_USER_PASSWORD"),
+  /** Password of the empty user account for login tests. */
+  EMPTY_USER_PASSWORD: requireEnv("EMPTY_USER_PASSWORD"),
 
-  /** Display name of an existing user account for login tests. */
-  EXISTING_USER_DISPLAY_NAME: requireEnv("EXISTING_USER_DISPLAY_NAME"),
+  /** Display name of the empty user account for login tests. */
+  EMPTY_USER_DISPLAY_NAME: requireEnv("EMPTY_USER_DISPLAY_NAME"),
 
   /** Display name for newly created test users. */
   DEFAULT_TEST_USER_DISPLAY_NAME: requireEnv("DEFAULT_TEST_USER_DISPLAY_NAME"),

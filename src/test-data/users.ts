@@ -13,7 +13,7 @@ export function createUser(overrides: Partial<User> = {}): User {
 
 export const existingUsers: { emptyUser: LoginCredentials } = {
   emptyUser: {
-    email: config.EXISTING_USER_EMAIL,
-    password: config.EXISTING_USER_PASSWORD,
+    email: config.EMPTY_USER_EMAIL,
+    password: config.EMPTY_USER_PASSWORD,
   },
 };

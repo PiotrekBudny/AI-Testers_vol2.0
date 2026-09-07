@@ -302,8 +302,8 @@ test(
     const profilePage = new ProfilePage(page);
     const user = existingUsers.emptyUser;
     const expected = {
-      displayName: config.EXISTING_USER_DISPLAY_NAME,
-      email: config.EXISTING_USER_EMAIL,
+      displayName: config.EMPTY_USER_DISPLAY_NAME,
+      email: config.EMPTY_USER_EMAIL,
     };
 
     // Act
