@@ -8,4 +8,4 @@ node_modules/
 /playwright/.auth/
 /.playwright-mcp/
 
-.ai-docs/
+.ai-outputs/

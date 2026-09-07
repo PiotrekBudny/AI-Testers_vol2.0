@@ -2,9 +2,10 @@ import { expect, test } from "@playwright/test";
 import { DocsPage } from "../../src/pages/DocsPage";
 import { HomePage } from "../../src/pages/HomePage";
 import { LoginPage } from "../../src/pages/LoginPage";
+import { ProfilePage } from "../../src/pages/ProfilePage";
 import { RegisterPage } from "../../src/pages/RegisterPage";
 import { SwaggerPage } from "../../src/pages/SwaggerPage";
-import { createTestUser } from "../../src/test-data/users";
+import { createTestUser, existingUsers } from "../../src/test-data/users";
 
 test(
   "homepage has title 'Rolnopol'",
@@ -234,6 +235,58 @@ test(
       "validationMessage",
       expected.validationMessage,
     );
+
+    await page.close();
+  },
+);
+
+test(
+  "login with valid credentials succeeds and shows profile sections",
+  { tag: ["@auth", "@smoke"] },
+  async ({ page }) => {
+    // Arrange
+    const loginPage = new LoginPage(page);
+    const profilePage = new ProfilePage(page);
+    const user = existingUsers.emptyUser;
+    const expected = {
+      profileTitle: "Profile - Rolnopol",
+    };
+
+    // Act
+    await loginPage.goto();
+    await loginPage.login(user);
+
+    // Assert
+    await expect(page).toHaveURL(/\/profile\.html$/);
+    await expect(page).toHaveTitle(expected.profileTitle);
+    await expect(profilePage.profileInformationHeading).toBeVisible();
+    await expect(profilePage.updateProfileHeading).toBeVisible();
+    await expect(profilePage.dangerZoneHeading).toBeVisible();
+
+    await page.close();
+  },
+);
+
+test(
+  "logout redirects to home page",
+  { tag: ["@auth", "@smoke"] },
+  async ({ page }) => {
+    // Arrange
+    const loginPage = new LoginPage(page);
+    const profilePage = new ProfilePage(page);
+    const user = existingUsers.emptyUser;
+    const expected = {
+      homeTitle: "Rolnopol",
+    };
+
+    // Act
+    await loginPage.goto();
+    await loginPage.login(user);
+    await profilePage.logout();
+
+    // Assert
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveTitle(expected.homeTitle);
 
     await page.close();
   },

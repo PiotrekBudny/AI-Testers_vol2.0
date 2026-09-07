@@ -39,9 +39,9 @@ Checkboxes indicate implementation status: `[x]` implemented, `[ ]` not yet impl
 - [x] Register with valid data succeeds and redirects to the login page. `@auth @smoke`
 - [x] Registering with a duplicate email fails. `@auth @smoke`
 - [x] Registering with invalid fields (invalid email format, password too short, missing required fields) fails. `@auth @smoke`
-- [ ] Login with valid credentials succeeds. `@auth @smoke`
+- [x] Login with valid credentials succeeds. `@auth @smoke`
 - [ ] Login with invalid credentials fails. `@auth @smoke`
-- [ ] Logout clears the session. `@auth @smoke`
+- [x] Logout clears the session. `@auth @smoke`
 - [ ] Requests without a valid token are rejected. `@auth`
 
 ### Role-Based Access

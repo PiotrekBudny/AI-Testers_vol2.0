@@ -14,3 +14,10 @@ export function createTestUser(overrides: Partial<TestUser> = {}): TestUser {
     ...overrides,
   };
 }
+
+export const existingUsers = {
+  emptyUser: {
+    email: "emptyuser@rolnopol.demo.pl",
+    password: "demoPass123",
+  },
+} as const;
