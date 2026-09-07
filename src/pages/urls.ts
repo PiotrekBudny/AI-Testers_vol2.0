@@ -5,4 +5,5 @@ export const PageUrls = {
   profile: "/profile.html",
   docs: "/docs.html",
   swagger: "/swagger.html",
+  staffFieldsMain: "/staff-fields-main.html",
 } as const;
