@@ -1,7 +1,18 @@
 ---
-title: 'UI Test Automation'
+title: "UI Test Automation"
 description: This custom agent creates and maintains Playwright tests for UI automation.
-tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'playwright/*', 'todo']
+tools:
+  [
+    "vscode",
+    "execute",
+    "read",
+    "agent",
+    "edit",
+    "search",
+    "web",
+    "playwright/*",
+    "todo",
+  ]
 name: ui-test-automation
 ---
 
@@ -70,6 +81,9 @@ For UI tests:
 - Choose test cases that clearly map to the Test Plan.
 - Select tags strictly according to `TEST_PLAN.md`.
 - Keep the scope minimal (one intent per test).
+- Use hard assertions for flow-critical conditions and prerequisites that make later steps unreliable when they fail.
+- Use `expect.soft(...)` for independent UI checks in the same state when reporting all mismatches provides useful diagnostic value.
+- Do not use soft assertions to mask a failed prerequisite, replace an assertion that controls test flow, or verify mutually dependent outcomes.
 - Update the plan if the test design changes.
 
 ### 5. Implement

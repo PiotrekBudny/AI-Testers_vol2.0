@@ -8,6 +8,9 @@ export class ProfilePage extends BasePage {
   readonly updateProfileHeading: Locator;
   readonly dangerZoneHeading: Locator;
   readonly logoutButton: Locator;
+  readonly userDisplayName: Locator;
+  readonly userEmailAddress: Locator;
+  readonly userDisplayNameInInfo: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -26,6 +29,9 @@ export class ProfilePage extends BasePage {
     this.logoutButton = page
       .getByTestId("header-component")
       .getByTestId("logout-btn");
+    this.userDisplayName = page.locator("#profileName");
+    this.userEmailAddress = page.locator("#profileEmail");
+    this.userDisplayNameInInfo = page.locator("#displayedName");
   }
 
   async logout() {

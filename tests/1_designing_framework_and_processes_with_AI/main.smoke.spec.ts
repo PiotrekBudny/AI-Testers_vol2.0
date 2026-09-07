@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { config } from "../../src/config/environment";
 import { DocsPage } from "../../src/pages/DocsPage";
 import { HomePage } from "../../src/pages/HomePage";
 import { LoginPage } from "../../src/pages/LoginPage";
@@ -287,6 +288,35 @@ test(
     // Assert
     await expect(page).toHaveURL(/\/$/);
     await expect(page).toHaveTitle(expected.homeTitle);
+
+    await page.close();
+  },
+);
+
+test(
+  "profile page displays correct user email and display name",
+  { tag: ["@auth", "@smoke"] },
+  async ({ page }) => {
+    // Arrange
+    const loginPage = new LoginPage(page);
+    const profilePage = new ProfilePage(page);
+    const user = existingUsers.emptyUser;
+    const expected = {
+      displayName: config.EXISTING_USER_DISPLAY_NAME,
+      email: config.EXISTING_USER_EMAIL,
+    };
+
+    // Act
+    await loginPage.goto();
+    await loginPage.login(user);
+
+    // Assert
+    await expect(page).toHaveURL(/\/profile\.html$/);
+    await expect(profilePage.userDisplayName).toHaveText(expected.displayName);
+    await expect(profilePage.userEmailAddress).toHaveText(expected.email);
+    await expect(profilePage.userDisplayNameInInfo).toHaveText(
+      expected.displayName,
+    );
 
     await page.close();
   },

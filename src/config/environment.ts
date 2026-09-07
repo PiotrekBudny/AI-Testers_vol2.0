@@ -35,6 +35,9 @@ export const config = Object.freeze({
   /** Password of an existing user account for login tests. */
   EXISTING_USER_PASSWORD: requireEnv("EXISTING_USER_PASSWORD"),
 
+  /** Display name of an existing user account for login tests. */
+  EXISTING_USER_DISPLAY_NAME: requireEnv("EXISTING_USER_DISPLAY_NAME"),
+
   /** Display name for newly created test users. */
   DEFAULT_TEST_USER_DISPLAY_NAME: requireEnv("DEFAULT_TEST_USER_DISPLAY_NAME"),
 
