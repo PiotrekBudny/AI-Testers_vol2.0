@@ -78,6 +78,31 @@ test(
     await staffFieldsPage.clickAddAnimalButton();
     await staffFieldsPage.fillAnimalForm(testAnimal);
     await staffFieldsPage.submitAnimalForm();
+
+    // Assert
+    await expect(staffFieldsPage.animalModalHeading).toBeHidden({
+      timeout: 10_000,
+    });
+
+    await page.close();
+  },
+);
+
+test(
+  "User can find a newly added animal herd in the search bar by its type",
+  { tag: ["@farm"] },
+  async ({ page }) => {
+    test.setTimeout(15_000);
+
+    // Arrange
+    const staffFieldsPage = new StaffFieldsPage(page);
+    const testAnimal = { type: "sheep", amount: (Date.now() % 9_000_000) + 1 };
+
+    // Act
+    await staffFieldsPage.goto();
+    await staffFieldsPage.clickAddAnimalButton();
+    await staffFieldsPage.fillAnimalForm(testAnimal);
+    await staffFieldsPage.submitAnimalForm();
     await expect(staffFieldsPage.animalModalHeading).toBeHidden({
       timeout: 10_000,
     });
