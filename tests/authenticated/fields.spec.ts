@@ -71,7 +71,7 @@ test(
 
     // Arrange
     const staffFieldsPage = new StaffFieldsPage(page);
-    const testAnimal = { type: "goat", amount: (Date.now() % 90_000) + 1 };
+    const testAnimal = { type: "goat", amount: (Date.now() % 9_000_000) + 1 };
 
     // Act
     await staffFieldsPage.goto();
