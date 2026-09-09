@@ -41,13 +41,13 @@ export class StaffFieldsPage extends BasePage {
     });
 
     this.addAnimalTriggerButton = page
-      .getByRole("button", { name: "Add Animal", exact: true })
+      .getByRole("button", { name: /add animal/i })
       .first();
     this.animalModalHeading = page.getByRole("heading", {
       name: /add animal/i,
       level: 3,
     });
-    this.animalTypeSelect = page.getByRole("combobox", { name: /^type$/i });
+    this.animalTypeSelect = page.getByRole("combobox", { name: /type/i });
     this.animalAmountInput = page.getByRole("spinbutton", {
       name: /amount/i,
     });
@@ -93,10 +93,6 @@ export class StaffFieldsPage extends BasePage {
   async clickAddAnimalButton() {
     await this.addAnimalTriggerButton.click();
     await this.animalModalHeading.waitFor({ state: "visible" });
-    await this.page.waitForFunction(() => {
-      const firstOption = document.querySelector("#animalType option");
-      return firstOption !== null && firstOption.textContent !== "Loading...";
-    });
   }
 
   async fillAnimalForm(animal: AnimalFormData) {
@@ -112,7 +108,7 @@ export class StaffFieldsPage extends BasePage {
   async submitAnimalForm() {
     // Submit button shares its accessible name with the trigger button, so target the last match
     const buttons = await this.page
-      .getByRole("button", { name: "Add Animal", exact: true })
+      .getByRole("button", { name: /add animal/i })
       .all();
     await buttons[buttons.length - 1].click();
   }
