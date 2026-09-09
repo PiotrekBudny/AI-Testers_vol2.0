@@ -12,6 +12,7 @@ export class StaffFieldsPage extends BasePage {
   readonly areaInput: Locator;
   readonly modalHeading: Locator;
   readonly successMessage: Locator;
+  readonly fieldSearchInput: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -27,6 +28,9 @@ export class StaffFieldsPage extends BasePage {
       level: 3,
     });
     this.successMessage = page.getByText("Field added!");
+    this.fieldSearchInput = page.getByRole("textbox", {
+      name: /search fields/i,
+    });
   }
 
   async clickAddFieldButton() {
@@ -50,5 +54,13 @@ export class StaffFieldsPage extends BasePage {
       .getByRole("button", { name: /\+ add field/i })
       .all();
     await buttons[buttons.length - 1].click();
+  }
+
+  async searchFields(query: string) {
+    await this.fieldSearchInput.fill(query);
+  }
+
+  fieldResult(name: string): Locator {
+    return this.page.getByText(name, { exact: true });
   }
 }

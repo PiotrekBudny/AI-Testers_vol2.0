@@ -33,3 +33,32 @@ test(
     await page.close();
   },
 );
+
+test(
+  "User can find a newly added field in the search bar by its name",
+  { tag: ["@farm"] },
+  async ({ page }) => {
+    test.setTimeout(15_000);
+
+    // Arrange
+    const staffFieldsPage = new StaffFieldsPage(page);
+    const testField = { name: `SearchField-${Date.now()}`, area: 20 };
+
+    // Act
+    await staffFieldsPage.goto();
+    await staffFieldsPage.clickAddFieldButton();
+    await staffFieldsPage.fillForm(testField);
+    await staffFieldsPage.submitForm();
+    await expect(staffFieldsPage.successMessage).toBeVisible({
+      timeout: 10_000,
+    });
+    await staffFieldsPage.searchFields(testField.name);
+
+    // Assert
+    await expect(staffFieldsPage.fieldResult(testField.name)).toBeVisible({
+      timeout: 10_000,
+    });
+
+    await page.close();
+  },
+);
