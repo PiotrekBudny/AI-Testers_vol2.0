@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { StaffFieldsPage } from "../../src/pages/StaffFieldsPage";
 
 /**
- * Tests for Staff & Fields Management - Field operations.
+ * Tests for Staff & Fields Management - Field and Animal operations.
  * These tests depend on the setup project that handles authentication.
  * Authentication state is automatically loaded from playwright/.auth/user.json.
  
@@ -56,6 +56,35 @@ test(
 
     // Assert
     await expect(staffFieldsPage.fieldResult(testField.name)).toBeVisible({
+      timeout: 10_000,
+    });
+
+    await page.close();
+  },
+);
+
+test(
+  "User can add a new animal herd with valid data",
+  { tag: ["@farm"] },
+  async ({ page }) => {
+    test.setTimeout(15_000);
+
+    // Arrange
+    const staffFieldsPage = new StaffFieldsPage(page);
+    const testAnimal = { type: "goat", amount: (Date.now() % 9_000_000) + 1 };
+
+    // Act
+    await staffFieldsPage.goto();
+    await staffFieldsPage.clickAddAnimalButton();
+    await staffFieldsPage.fillAnimalForm(testAnimal);
+    await staffFieldsPage.submitAnimalForm();
+    await expect(staffFieldsPage.animalModalHeading).toBeHidden({
+      timeout: 10_000,
+    });
+    await staffFieldsPage.searchAnimals(testAnimal.type);
+
+    // Assert
+    await expect(staffFieldsPage.animalResult(testAnimal)).toBeVisible({
       timeout: 10_000,
     });
 
