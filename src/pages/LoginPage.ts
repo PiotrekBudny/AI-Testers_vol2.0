@@ -18,7 +18,7 @@ export class LoginPage extends BasePage {
     this.submitButton = page.getByTestId("login-submit-btn");
   }
 
-  async login(credentials: LoginCredentials) {
+  async login(credentials: LoginCredentials): Promise<void> {
     await this.emailInput.fill(credentials.email);
     await this.passwordInput.fill(credentials.password);
     await this.submitButton.click();

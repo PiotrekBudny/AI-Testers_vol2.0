@@ -28,7 +28,7 @@ export class RegisterPage extends BasePage {
     });
   }
 
-  async register(user: User) {
+  async register(user: User): Promise<void> {
     await this.emailInput.fill(user.email);
     await this.displayNameInput.fill(user.displayName);
     await this.passwordInput.fill(user.password);

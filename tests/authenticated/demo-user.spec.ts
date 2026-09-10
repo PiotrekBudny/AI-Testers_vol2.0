@@ -1,7 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { config } from "../../src/config/environment";
 import { ProfilePage } from "../../src/pages/ProfilePage";
-import { existingUsers } from "../../src/test-data/users";
 
 /**
  * Authenticated tests that require DEMO_USER to be logged in.
@@ -41,7 +40,6 @@ test(
   async ({ page }) => {
     // Arrange
     const profilePage = new ProfilePage(page);
-    const demoUser = existingUsers.demoUser;
     const expected = {
       displayName: config.DEMO_USER_DISPLAY_NAME,
       email: config.DEMO_USER_EMAIL,

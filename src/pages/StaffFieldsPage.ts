@@ -59,12 +59,12 @@ export class StaffFieldsPage extends BasePage {
     });
   }
 
-  async clickAddFieldButton() {
+  async clickAddFieldButton(): Promise<void> {
     await this.addFieldTriggerButton.click();
     await this.modalHeading.waitFor({ state: "visible" });
   }
 
-  async fillForm(field: FieldFormData) {
+  async fillForm(field: FieldFormData): Promise<void> {
     await this.fieldNameInput.fill(field.name);
     if (field.district) {
       await this.districtSelect.selectOption(field.district, {
@@ -74,7 +74,7 @@ export class StaffFieldsPage extends BasePage {
     await this.areaInput.fill(field.area.toString());
   }
 
-  async submitForm() {
+  async submitForm(): Promise<void> {
     // Submit button shares its accessible name with the trigger button, so target the last match
     const buttons = await this.page
       .getByRole("button", { name: /add field/i })
@@ -82,7 +82,7 @@ export class StaffFieldsPage extends BasePage {
     await buttons[buttons.length - 1].click();
   }
 
-  async searchFields(query: string) {
+  async searchFields(query: string): Promise<void> {
     await this.fieldSearchInput.fill(query);
   }
 
@@ -90,12 +90,12 @@ export class StaffFieldsPage extends BasePage {
     return this.page.getByText(name, { exact: true });
   }
 
-  async clickAddAnimalButton() {
+  async clickAddAnimalButton(): Promise<void> {
     await this.addAnimalTriggerButton.click();
     await this.animalModalHeading.waitFor({ state: "visible" });
   }
 
-  async fillAnimalForm(animal: AnimalFormData) {
+  async fillAnimalForm(animal: AnimalFormData): Promise<void> {
     await this.animalTypeSelect.selectOption(animal.type, { timeout: 10_000 });
     await this.animalAmountInput.fill(animal.amount.toString());
     if (animal.field) {
@@ -105,7 +105,7 @@ export class StaffFieldsPage extends BasePage {
     }
   }
 
-  async submitAnimalForm() {
+  async submitAnimalForm(): Promise<void> {
     // Submit button shares its accessible name with the trigger button, so target the last match
     const buttons = await this.page
       .getByRole("button", { name: /add animal/i })
@@ -119,7 +119,7 @@ export class StaffFieldsPage extends BasePage {
     );
   }
 
-  async searchAnimals(query: string) {
+  async searchAnimals(query: string): Promise<void> {
     await this.animalSearchInput.fill(query);
   }
 }

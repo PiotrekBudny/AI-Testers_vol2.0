@@ -34,7 +34,7 @@ export class ProfilePage extends BasePage {
     this.userDisplayNameInInfo = page.locator("#displayedName");
   }
 
-  async logout() {
+  async logout(): Promise<void> {
     await this.logoutButton.click();
   }
 }
