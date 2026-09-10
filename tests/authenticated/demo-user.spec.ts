@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+
 import { config } from "../../src/config/environment";
 import { ProfilePage } from "../../src/pages/ProfilePage";
 

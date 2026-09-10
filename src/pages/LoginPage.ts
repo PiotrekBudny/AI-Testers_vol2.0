@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+
 import type { LoginCredentials } from "../models/User";
 import { BasePage } from "./BasePage";
 import { PageUrls } from "./urls";

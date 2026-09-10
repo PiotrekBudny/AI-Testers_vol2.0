@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+
 import type { AnimalFormData } from "../models/Animal";
 import type { FieldFormData } from "../models/Field";
 import { BasePage } from "./BasePage";

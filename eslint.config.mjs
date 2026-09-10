@@ -1,6 +1,7 @@
 import pluginJs from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginPlaywright from "eslint-plugin-playwright";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -18,8 +19,13 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
     rules: {
       "no-console": "error",
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
       "@typescript-eslint/explicit-function-return-type": "error",
     },
   },
