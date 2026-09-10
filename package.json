@@ -7,6 +7,8 @@
     "pretest": "npx playwright install",
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
+    "check": "npm run format && npm run lint && npm run tsc:check",
+    "check:ci": "npm run format:check && npm run lint && npm run tsc:check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
@@ -20,6 +22,9 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
   "bugs": {
     "url": "https://github.com/PiotrekBudny/AI-Testers_vol2.0/issues"
   },
