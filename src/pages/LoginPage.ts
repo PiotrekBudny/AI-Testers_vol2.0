@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+
 import type { LoginCredentials } from "../models/User";
 import { BasePage } from "./BasePage";
 import { PageUrls } from "./urls";
@@ -18,7 +19,7 @@ export class LoginPage extends BasePage {
     this.submitButton = page.getByTestId("login-submit-btn");
   }
 
-  async login(credentials: LoginCredentials) {
+  async login(credentials: LoginCredentials): Promise<void> {
     await this.emailInput.fill(credentials.email);
     await this.passwordInput.fill(credentials.password);
     await this.submitButton.click();

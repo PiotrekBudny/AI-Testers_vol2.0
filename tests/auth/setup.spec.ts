@@ -1,4 +1,5 @@
 import { test as setup } from "@playwright/test";
+
 import { LoginPage } from "../../src/pages/LoginPage";
 import { existingUsers } from "../../src/test-data/users";
 

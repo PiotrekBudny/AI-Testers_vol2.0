@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+
 import { BasePage } from "./BasePage";
 import { PageUrls } from "./urls";
 
@@ -11,7 +12,7 @@ export class HomePage extends BasePage {
     this.getStartedLink = page.getByRole("link", { name: "Get Started Free" });
   }
 
-  async clickGetStarted() {
+  async clickGetStarted(): Promise<void> {
     await this.getStartedLink.click();
   }
 }

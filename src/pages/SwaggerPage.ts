@@ -1,4 +1,5 @@
 import type { FrameLocator, Locator, Page } from "@playwright/test";
+
 import { BasePage } from "./BasePage";
 import { PageUrls } from "./urls";
 

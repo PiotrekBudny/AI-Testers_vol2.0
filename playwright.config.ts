@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+
 import { config } from "./src/config/environment";
 
 export default defineConfig({

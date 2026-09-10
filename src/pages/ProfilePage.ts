@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+
 import { BasePage } from "./BasePage";
 import { PageUrls } from "./urls";
 
@@ -34,7 +35,7 @@ export class ProfilePage extends BasePage {
     this.userDisplayNameInInfo = page.locator("#displayedName");
   }
 
-  async logout() {
+  async logout(): Promise<void> {
     await this.logoutButton.click();
   }
 }
