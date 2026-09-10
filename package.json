@@ -12,7 +12,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
-    "tsc:check": "tsc --noEmit --pretty"
+    "lint-staged": "lint-staged",
+    "tsc:check": "tsc --noEmit --pretty",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,13 @@
     "url": "https://github.com/PiotrekBudny/AI-Testers_vol2.0/issues"
   },
   "homepage": "https://github.com/PiotrekBudny/AI-Testers_vol2.0#readme",
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "eslint --fix --max-warnings=0"
+    ],
+    "*.{json,md,mjs,yml,yaml}": "prettier --write"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/mcp": "^0.0.80",
@@ -40,6 +49,8 @@
     "eslint-plugin-playwright": "^2.11.0",
     "eslint-plugin-simple-import-sort": "^14.0.0",
     "globals": "^17.12.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
     "prettier": "^3.9.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.70.0"
