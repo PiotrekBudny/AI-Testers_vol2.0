@@ -7,6 +7,8 @@
     "pretest": "npx playwright install",
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
     "tsc:check": "tsc --noEmit --pretty"
   },
@@ -29,8 +31,10 @@
     "@types/node": "^26.4.0",
     "dotenv": "^17.4.2",
     "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-playwright": "^2.11.0",
     "globals": "^17.12.0",
+    "prettier": "^3.9.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.70.0"
   }

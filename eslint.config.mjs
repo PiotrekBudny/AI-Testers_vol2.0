@@ -1,4 +1,5 @@
 import pluginJs from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginPlaywright from "eslint-plugin-playwright";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -41,4 +42,5 @@ export default [
       "playwright/expect-expect": "off",
     },
   },
+  eslintConfigPrettier,
 ];
