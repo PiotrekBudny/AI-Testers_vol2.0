@@ -153,7 +153,7 @@ Run only specific steps:
 
 ```bash
 # Comments only (no lint/format)
-node ./scripts/remove-comments.js "src/file.ts"
+node ./scripts/remove-comments.ts "src/file.ts"
 
 # Lint only (no comments/format)
 npx eslint --fix "src/file.ts"
@@ -194,7 +194,7 @@ chmod +x .github/skills/code-cleanup/scripts/cleanup.sh
 
 ### glob Module Not Found
 
-The remove-comments.js script uses Node's built-in `glob` for Node 16.13+. For older versions:
+The remove-comments.ts script uses Node's built-in `glob` for Node 16.13+. For older versions:
 
 ```bash
 npm install --save-dev glob

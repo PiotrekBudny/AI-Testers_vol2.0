@@ -244,7 +244,7 @@ npx eslint --fix "src/test.ts"
 
 ### Issue: Want to keep certain comments
 
-Edit the `PRESERVE_MARKERS` array in `scripts/remove-comments.js`:
+Edit the `PRESERVE_MARKERS` array in `scripts/remove-comments.ts`:
 
 ```javascript
 const PRESERVE_MARKERS = [

@@ -24,7 +24,7 @@ echo ""
 
 # Step 1: Remove comments
 echo "Step 1/3: Removing comments..."
-node "$SCRIPT_DIR/remove-comments.js" "$PATTERN" || {
+node "$SCRIPT_DIR/remove-comments.ts" "$PATTERN" || {
   echo "⚠️  Comment removal completed (some files may have been skipped)"
 }
 echo "✅ Comment removal done"

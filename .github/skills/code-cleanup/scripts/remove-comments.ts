@@ -187,7 +187,9 @@ function processFile(filePath: string): boolean {
     return true;
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(`  ✗ Error processing ${filePath}: ${(error as Error).message}`);
+    console.error(
+      `  ✗ Error processing ${filePath}: ${(error as Error).message}`,
+    );
     return false;
   }
 }

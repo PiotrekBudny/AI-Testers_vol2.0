@@ -25,7 +25,7 @@ npx eslint --fix "src/**/*.ts"
 npx prettier --write "src/**/*.ts"
 
 # Remove comments only
-node ./scripts/remove-comments.js "src/**/*.ts"
+node ./scripts/remove-comments.ts "src/**/*.ts"
 
 # Full cleanup
 .github/skills/code-cleanup/scripts/cleanup.sh "src/**/*.ts"

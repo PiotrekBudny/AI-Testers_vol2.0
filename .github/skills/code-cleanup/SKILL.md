@@ -96,7 +96,7 @@ npx eslint --fix "src/file.ts"
 npx prettier --write "src/file.ts"
 
 # Comment removal only:
-node ./scripts/remove-comments.js "src/file.ts"
+node ./scripts/remove-comments.ts "src/file.ts"
 ```
 
 ## Troubleshooting
