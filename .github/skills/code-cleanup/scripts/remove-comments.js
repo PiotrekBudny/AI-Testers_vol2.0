@@ -8,9 +8,9 @@
  * Usage: node remove-comments.js <file-or-pattern>
  */
 
-const fs = require("fs");
-const path = require("path");
-const glob = require("glob");
+import fs from "fs";
+import glob from "glob";
+import path from "path";
 
 // Important comment markers to preserve
 const PRESERVE_MARKERS = [
@@ -29,23 +29,22 @@ const PRESERVE_MARKERS = [
 /**
  * Check if a comment should be preserved
  */
-function shouldPreserveComment(comment) {
+function shouldPreserveComment(comment: string): boolean {
   return PRESERVE_MARKERS.some(
-    (marker) => comment.includes(marker) || comment.match(/^\s*[@\\]/), // JSDoc/TSDoc markers
+    (marker) => comment.includes(marker) || comment.match(/^\s*[@]/), // JSDoc/TSDoc markers
   );
 }
 
 /**
  * Remove comments from TypeScript/JavaScript code
  */
-function removeCommentsFromCode(content) {
+function removeCommentsFromCode(content: string): string {
   let result = "";
   let i = 0;
 
   while (i < content.length) {
     // Single-line comment
     if (content[i] === "/" && content[i + 1] === "/") {
-      const lineStart = i;
       let comment = "";
       i += 2;
 
@@ -117,7 +116,7 @@ function removeCommentsFromCode(content) {
     if (content[i] === "/" && i > 0) {
       const prevChar = content[i - 1];
       const isRegex =
-        /[=(\[,;:!&|?+\-*/%^~]/.test(prevChar) ||
+        /[=([,;:!&|?+\-*/%^~]/.test(prevChar) ||
         content.substring(Math.max(0, i - 6), i).match(/return|new|throw/);
 
       if (isRegex) {
@@ -152,14 +151,14 @@ function removeCommentsFromCode(content) {
 /**
  * Remove extra blank lines (max 2 consecutive)
  */
-function removeExtraBlankLines(content) {
+function removeExtraBlankLines(content: string): string {
   return content.replace(/\n\n\n+/g, "\n\n");
 }
 
 /**
  * Process a single file
  */
-function processFile(filePath) {
+function processFile(filePath: string): boolean {
   try {
     // Check if file should be processed
     const ext = path.extname(filePath).toLowerCase();
@@ -167,6 +166,7 @@ function processFile(filePath) {
       return false; // Skip non-code files
     }
 
+    // eslint-disable-next-line no-console
     console.log(`  Processing: ${filePath}`);
 
     let content = fs.readFileSync(filePath, "utf-8");
@@ -181,11 +181,13 @@ function processFile(filePath) {
       ((originalSize - content.length) / originalSize) *
       100
     ).toFixed(2);
+    // eslint-disable-next-line no-console
     console.log(`    ✓ Cleaned (${reduction}% size reduction)`);
 
     return true;
   } catch (error) {
-    console.error(`  ✗ Error processing ${filePath}: ${error.message}`);
+    // eslint-disable-next-line no-console
+    console.error(`  ✗ Error processing ${filePath}: ${(error as Error).message}`);
     return false;
   }
 }
@@ -193,19 +195,21 @@ function processFile(filePath) {
 /**
  * Main entry point
  */
-function main() {
+function main(): void {
   const pattern = process.argv[2];
 
   if (!pattern) {
+    // eslint-disable-next-line no-console
     console.error("Usage: node remove-comments.js <file-or-pattern>");
     process.exit(1);
   }
 
+  // eslint-disable-next-line no-console
   console.log("🧹 Removing comments...\n");
 
   try {
     // Handle glob patterns and direct file paths
-    let files = [];
+    let files: string[] = [];
 
     if (pattern.includes("*")) {
       // Glob pattern
@@ -221,10 +225,12 @@ function main() {
     }
 
     if (files.length === 0) {
+      // eslint-disable-next-line no-console
       console.log("No files found matching pattern:", pattern);
       process.exit(0);
     }
 
+    // eslint-disable-next-line no-console
     console.log(`Found ${files.length} file(s) to process:\n`);
 
     let processed = 0;
@@ -238,11 +244,13 @@ function main() {
       }
     });
 
+    // eslint-disable-next-line no-console
     console.log(
       `\n✅ Complete: ${processed} file(s) processed, ${skipped} file(s) skipped`,
     );
   } catch (error) {
-    console.error("Error:", error.message);
+    // eslint-disable-next-line no-console
+    console.error("Error:", (error as Error).message);
     process.exit(1);
   }
 }
