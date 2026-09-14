@@ -1,13 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-import { StaffFieldsPage } from "../../src/pages/StaffFieldsPage";
-
-/**
- * Tests for Staff & Fields Management - Field and Animal operations.
- * These tests depend on the setup project that handles authentication.
- * Authentication state is automatically loaded from playwright/.auth/user.json.
- 
- */
+import { StaffFieldsPage } from "../../../src/pages/StaffFieldsPage";
+import { createTestAnimal } from "../../../src/test-data/animals";
 
 test(
   "User can add a new field with valid data",
@@ -72,7 +66,7 @@ test(
 
     // Arrange
     const staffFieldsPage = new StaffFieldsPage(page);
-    const testAnimal = { type: "goat", amount: (Date.now() % 9_000_000) + 1 };
+    const testAnimal = createTestAnimal();
 
     // Act
     await staffFieldsPage.goto();
@@ -97,7 +91,7 @@ test(
 
     // Arrange
     const staffFieldsPage = new StaffFieldsPage(page);
-    const testAnimal = { type: "sheep", amount: (Date.now() % 9_000_000) + 1 };
+    const testAnimal = createTestAnimal();
 
     // Act
     await staffFieldsPage.goto();

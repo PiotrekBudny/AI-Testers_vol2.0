@@ -1,0 +1,1444 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\repos\\AI-Testers_vol2.0\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\repos\\AI-Testers_vol2.0\\playwright.config.ts",
+    "rootDir": "C:/repos/AI-Testers_vol2.0/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 6
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/repos/AI-Testers_vol2.0/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "setup",
+        "name": "setup",
+        "testDir": "C:/repos/AI-Testers_vol2.0/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*1_designing_framework_and_processes_with_AI\\/auth\\/setup\\.spec\\.ts/"
+        ],
+        "timeout": 10000
+      },
+      {
+        "outputDir": "C:/repos/AI-Testers_vol2.0/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "smoke-tests",
+        "name": "smoke-tests",
+        "testDir": "C:/repos/AI-Testers_vol2.0/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*1_designing_framework_and_processes_with_AI\\/main\\.smoke\\.spec\\.ts/"
+        ],
+        "timeout": 10000
+      },
+      {
+        "outputDir": "C:/repos/AI-Testers_vol2.0/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "playwright-cli",
+        "name": "playwright-cli",
+        "testDir": "C:/repos/AI-Testers_vol2.0/tests",
+        "testIgnore": [],
+        "testMatch": ["/.*2_playwright_cli\\/.*\\.spec\\.ts/"],
+        "timeout": 10000
+      },
+      {
+        "outputDir": "C:/repos/AI-Testers_vol2.0/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "authenticated-fields",
+        "name": "authenticated-fields",
+        "testDir": "C:/repos/AI-Testers_vol2.0/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*1_designing_framework_and_processes_with_AI\\/authenticated\\/fields\\.spec\\.ts/"
+        ],
+        "timeout": 10000
+      },
+      {
+        "outputDir": "C:/repos/AI-Testers_vol2.0/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "authenticated-profile",
+        "name": "authenticated-profile",
+        "testDir": "C:/repos/AI-Testers_vol2.0/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*1_designing_framework_and_processes_with_AI\\/authenticated\\/demo-user\\.spec\\.ts/"
+        ],
+        "timeout": 10000
+      }
+    ],
+    "quiet": false,
+    "reporter": [["json"]],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 6,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "1_designing_framework_and_processes_with_AI\\auth\\setup.spec.ts",
+      "file": "1_designing_framework_and_processes_with_AI/auth/setup.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "authenticate DEMO_USER and save session state",
+          "ok": true,
+          "tags": ["setup"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup",
+              "projectName": "setup",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3247,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:08.324Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fd69caef42e3dc79d3db-207f5b27cffe4e009135",
+          "file": "1_designing_framework_and_processes_with_AI/auth/setup.spec.ts",
+          "line": 6,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "title": "1_designing_framework_and_processes_with_AI\\main.smoke.spec.ts",
+      "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "homepage has title 'Rolnopol'",
+          "ok": true,
+          "tags": ["e2e", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1259,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:08.302Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-ef30cd7377e8eda11233",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 12,
+          "column": 5
+        },
+        {
+          "title": "clicking 'Get Started Free' navigates to account creation page",
+          "ok": true,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2017,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:08.316Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-c89b9c2ea51e245fd2ad",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 30,
+          "column": 5
+        },
+        {
+          "title": "login page loads and is visible",
+          "ok": false,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "failed",
+                  "duration": 5966,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: /login to your user account/i })\nTimeout: 5000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- User Login & Account Access\u001b[39m\n\u001b[31m+\u001b[39m\n\u001b[31m+ \u001b[43m            \u001b[49m\u001b[39m\n\u001b[31m+             Login to Your User Account\u001b[39m\n\u001b[31m+ \u001b[43m          \u001b[49m\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: /login to your user account/i })\u001b[22m\n\u001b[2m    14 × locator resolved to <h2>…</h2>\u001b[22m\n\u001b[2m       - unexpected value \"\u001b[22m\n\u001b[2m            \u001b[22m\n\u001b[2m            Login to Your User Account\u001b[22m\n\u001b[2m          \"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: /login to your user account/i })\nTimeout: 5000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- User Login & Account Access\u001b[39m\n\u001b[31m+\u001b[39m\n\u001b[31m+ \u001b[43m            \u001b[49m\u001b[39m\n\u001b[31m+             Login to Your User Account\u001b[39m\n\u001b[31m+ \u001b[43m          \u001b[49m\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: /login to your user account/i })\u001b[22m\n\u001b[2m    14 × locator resolved to <h2>…</h2>\u001b[22m\n\u001b[2m       - unexpected value \"\u001b[22m\n\u001b[2m            \u001b[22m\n\u001b[2m            Login to Your User Account\u001b[22m\n\u001b[2m          \"\u001b[22m\n\n    at C:\\repos\\AI-Testers_vol2.0\\tests\\1_designing_framework_and_processes_with_AI\\main.smoke.spec.ts:68:38",
+                    "location": {
+                      "file": "C:\\repos\\AI-Testers_vol2.0\\tests\\1_designing_framework_and_processes_with_AI\\main.smoke.spec.ts",
+                      "column": 38,
+                      "line": 68
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 66 |\u001b[39m     \u001b[90m// Assert\u001b[39m\n \u001b[90m 67 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveTitle(expected\u001b[33m.\u001b[39mtitle)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 68 |\u001b[39m     \u001b[36mawait\u001b[39m expect(loginPage\u001b[33m.\u001b[39msubtitle)\u001b[33m.\u001b[39mtoHaveText(expected\u001b[33m.\u001b[39msubtitle)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 69 |\u001b[39m\n \u001b[90m 70 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m 71 |\u001b[39m   }\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\repos\\AI-Testers_vol2.0\\tests\\1_designing_framework_and_processes_with_AI\\main.smoke.spec.ts",
+                        "column": 38,
+                        "line": 68
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: /login to your user account/i })\nTimeout: 5000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[32m- User Login & Account Access\u001b[39m\n\u001b[31m+\u001b[39m\n\u001b[31m+ \u001b[43m            \u001b[49m\u001b[39m\n\u001b[31m+             Login to Your User Account\u001b[39m\n\u001b[31m+ \u001b[43m          \u001b[49m\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: /login to your user account/i })\u001b[22m\n\u001b[2m    14 × locator resolved to <h2>…</h2>\u001b[22m\n\u001b[2m       - unexpected value \"\u001b[22m\n\u001b[2m            \u001b[22m\n\u001b[2m            Login to Your User Account\u001b[22m\n\u001b[2m          \"\u001b[22m\n\n\n  66 |     // Assert\n  67 |     await expect(page).toHaveTitle(expected.title);\n> 68 |     await expect(loginPage.subtitle).toHaveText(expected.subtitle);\n     |                                      ^\n  69 |\n  70 |     await page.close();\n  71 |   },\n    at C:\\repos\\AI-Testers_vol2.0\\tests\\1_designing_framework_and_processes_with_AI\\main.smoke.spec.ts:68:38"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:08.309Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\repos\\AI-Testers_vol2.0\\test-results\\1_designing_framework_and_-64132-n-page-loads-and-is-visible-smoke-tests\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\repos\\AI-Testers_vol2.0\\test-results\\1_designing_framework_and_-64132-n-page-loads-and-is-visible-smoke-tests\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\repos\\AI-Testers_vol2.0\\tests\\1_designing_framework_and_processes_with_AI\\main.smoke.spec.ts",
+                    "column": 38,
+                    "line": 68
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-954c6b95ccfeec8b42a2",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 52,
+          "column": 5
+        },
+        {
+          "title": "register page loads and is visible",
+          "ok": true,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 1172,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:08.330Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-039ce053f871ee8b9bfa",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 74,
+          "column": 5
+        },
+        {
+          "title": "register with valid data succeeds and redirects to login",
+          "ok": true,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 15000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 5,
+                  "status": "passed",
+                  "duration": 7117,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:08.383Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-ffcaf587bec7eb3a9ab1",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 96,
+          "column": 5
+        },
+        {
+          "title": "registering with a duplicate email fails",
+          "ok": true,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 15000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 5557,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:09.703Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-3ac15b5797d732beb33d",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 122,
+          "column": 5
+        },
+        {
+          "title": "registering with an invalid email format fails",
+          "ok": true,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 930,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:09.715Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-2b63ebed61e3400ea148",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 151,
+          "column": 5
+        },
+        {
+          "title": "registering with a too-short password fails",
+          "ok": true,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 884,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:10.459Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-053682a9c182851fec58",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 183,
+          "column": 5
+        },
+        {
+          "title": "registering with missing required fields fails",
+          "ok": true,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 929,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:10.658Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-54c8548e82b0dbe505e5",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 215,
+          "column": 5
+        },
+        {
+          "title": "login with valid credentials succeeds and shows profile sections",
+          "ok": true,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 3331,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:11.358Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-784b9664c11cfc4033e9",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 245,
+          "column": 5
+        },
+        {
+          "title": "logout redirects to home page",
+          "ok": false,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 3395,
+                  "error": {
+                    "message": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: /log out|logout/i }) resolved to 2 elements:\n    1) <button title=\"Logout\" id=\"logout-btn\" aria-label=\"Logout\" data-testid=\"logout-btn\" class=\"btn btn-secondary btn-sm\">…</button> aka getByTestId('header-component').getByTestId('logout-btn')\n    2) <button id=\"logout-btn\" data-testid=\"logout-btn\" class=\"btn btn-compact btn-futuristic\">…</button> aka getByTestId('profile-header').getByTestId('logout-btn')\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /log out|logout/i })\u001b[22m\n",
+                    "stack": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: /log out|logout/i }) resolved to 2 elements:\n    1) <button title=\"Logout\" id=\"logout-btn\" aria-label=\"Logout\" data-testid=\"logout-btn\" class=\"btn btn-secondary btn-sm\">…</button> aka getByTestId('header-component').getByTestId('logout-btn')\n    2) <button id=\"logout-btn\" data-testid=\"logout-btn\" class=\"btn btn-compact btn-futuristic\">…</button> aka getByTestId('profile-header').getByTestId('logout-btn')\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /log out|logout/i })\u001b[22m\n\n    at ProfilePage.logout (C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts:39:29)\n    at C:\\repos\\AI-Testers_vol2.0\\tests\\1_designing_framework_and_processes_with_AI\\main.smoke.spec.ts:287:23",
+                    "location": {
+                      "file": "C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts",
+                      "column": 29,
+                      "line": 39
+                    },
+                    "snippet": "\u001b[90m   at \u001b[39m..\\src\\pages\\ProfilePage.ts:39\n\n\u001b[0m \u001b[90m 37 |\u001b[39m\n \u001b[90m 38 |\u001b[39m   \u001b[36masync\u001b[39m logout()\u001b[33m:\u001b[39m \u001b[33mPromise\u001b[39m\u001b[33m<\u001b[39m\u001b[36mvoid\u001b[39m\u001b[33m>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mlogoutButton\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 40 |\u001b[39m   }\n \u001b[90m 41 |\u001b[39m }\n \u001b[90m 42 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts",
+                        "column": 29,
+                        "line": 39
+                      },
+                      "message": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: /log out|logout/i }) resolved to 2 elements:\n    1) <button title=\"Logout\" id=\"logout-btn\" aria-label=\"Logout\" data-testid=\"logout-btn\" class=\"btn btn-secondary btn-sm\">…</button> aka getByTestId('header-component').getByTestId('logout-btn')\n    2) <button id=\"logout-btn\" data-testid=\"logout-btn\" class=\"btn btn-compact btn-futuristic\">…</button> aka getByTestId('profile-header').getByTestId('logout-btn')\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /log out|logout/i })\u001b[22m\n\n\n   at ..\\src\\pages\\ProfilePage.ts:39\n\n  37 |\n  38 |   async logout(): Promise<void> {\n> 39 |     await this.logoutButton.click();\n     |                             ^\n  40 |   }\n  41 | }\n  42 |\n    at ProfilePage.logout (C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts:39:29)\n    at C:\\repos\\AI-Testers_vol2.0\\tests\\1_designing_framework_and_processes_with_AI\\main.smoke.spec.ts:287:23"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:11.597Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\repos\\AI-Testers_vol2.0\\test-results\\1_designing_framework_and_-044e8-gout-redirects-to-home-page-smoke-tests\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\repos\\AI-Testers_vol2.0\\test-results\\1_designing_framework_and_-044e8-gout-redirects-to-home-page-smoke-tests\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts",
+                    "column": 29,
+                    "line": 39
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-6716c37674339c81c14f",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 272,
+          "column": 5
+        },
+        {
+          "title": "profile page displays correct user email and display name",
+          "ok": true,
+          "tags": ["auth", "smoke"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2319,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:12.403Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-a4e42af6b3103510db18",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 297,
+          "column": 5
+        },
+        {
+          "title": "documentation page loads and is visible",
+          "ok": true,
+          "tags": ["docs"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 484,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:14.706Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-2647b46161675461aa97",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 326,
+          "column": 5
+        },
+        {
+          "title": "API explorer page loads and is visible",
+          "ok": true,
+          "tags": ["docs"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "smoke-tests",
+              "projectName": "smoke-tests",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 1422,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:15.392Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e28b28a0be5fca4283d1-7c6f34c70240b3a84228",
+          "file": "1_designing_framework_and_processes_with_AI/main.smoke.spec.ts",
+          "line": 346,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "2_playwright_cli\\inspect-locators.spec.ts",
+      "file": "2_playwright_cli/inspect-locators.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "inspect login page locators",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "playwright-cli",
+              "projectName": "playwright-cli",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 911,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "\n=== LOGIN PAGE BUTTONS ===\n"
+                    },
+                    {
+                      "text": "Text: \"Login\", aria-label: null, id: null, data-testid: login-submit-btn\n"
+                    },
+                    {
+                      "text": "\n=== LOGIN PAGE HEADINGS ===\n"
+                    },
+                    {
+                      "text": "Text: \"\n          \n        \", tag: H1, id: null, data-testid: null\n"
+                    },
+                    {
+                      "text": "Text: \"\n            \n            Login to Your User Account\n          \", tag: H2, id: null, data-testid: null\n"
+                    },
+                    {
+                      "text": "\n=== LOGIN PAGE TEXTBOXES ===\n"
+                    },
+                    {
+                      "text": "aria-label: null, placeholder: Enter your email, id: email, data-testid: email-input\n"
+                    },
+                    {
+                      "text": "aria-label: null, placeholder: Enter your password, id: password, data-testid: password-input\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:15.505Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1e777640d47beb3c388e-f9d6362eb4f7c04cea16",
+          "file": "2_playwright_cli/inspect-locators.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "inspect register page locators",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "playwright-cli",
+              "projectName": "playwright-cli",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1129,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "\n=== REGISTER PAGE BUTTONS ===\n"
+                    },
+                    {
+                      "text": "Text: \"\n              Create Account\n            \", aria-label: null, id: null, data-testid: register-submit-btn\n"
+                    },
+                    {
+                      "text": "\n=== REGISTER PAGE HEADINGS ===\n"
+                    },
+                    {
+                      "text": "Text: \"\n          \n        \", tag: H1, id: null, data-testid: null\n"
+                    },
+                    {
+                      "text": "Text: \"\n            \n            Create Your User Account\n          \", tag: H2, id: null, data-testid: null\n"
+                    },
+                    {
+                      "text": "Text: \"\n            \n            Registration Guidelines\n          \", tag: H3, id: null, data-testid: null\n"
+                    },
+                    {
+                      "text": "\n=== REGISTER PAGE TEXTBOXES ===\n"
+                    },
+                    {
+                      "text": "aria-label: null, placeholder: Enter your email (e.g., john@example.com), id: email, data-testid: email-input\n"
+                    },
+                    {
+                      "text": "aria-label: null, placeholder: Enter your display name (e.g., John Doe), id: displayedName, data-testid: display-name-input\n"
+                    },
+                    {
+                      "text": "aria-label: null, placeholder: Enter your password, id: password, data-testid: password-input\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:15.957Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1e777640d47beb3c388e-cd2f3e873df8bbff6cef",
+          "file": "2_playwright_cli/inspect-locators.spec.ts",
+          "line": 40,
+          "column": 5
+        },
+        {
+          "title": "inspect profile page logout button",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "playwright-cli",
+              "projectName": "playwright-cli",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 954,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "\n=== PROFILE PAGE BUTTONS ===\n"
+                    },
+                    {
+                      "text": "Text: \"Login\", aria-label: null, id: null, data-testid: login-submit-btn\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:15.989Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1e777640d47beb3c388e-484c5e45a9e1c0893711",
+          "file": "2_playwright_cli/inspect-locators.spec.ts",
+          "line": 77,
+          "column": 5
+        },
+        {
+          "title": "inspect docs page subtitle",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "playwright-cli",
+              "projectName": "playwright-cli",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 2483,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "\n=== DOCS PAGE HEADINGS ===\n"
+                    },
+                    {
+                      "text": "Text: \"\n          \n        \", tag: H1, classes: docs-header-title\n"
+                    },
+                    {
+                      "text": "Text: \"\n             Contents\n          \", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"System Overview\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Main Data Entities\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \" User\", tag: H4, classes: entity-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" Field\", tag: H4, classes: entity-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" Animal\", tag: H4, classes: entity-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" Staff\", tag: H4, classes: entity-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" Assignment\", tag: H4, classes: entity-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" FinancialAccount\", tag: H4, classes: entity-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" MarketplaceOffer\", tag: H4, classes: entity-card-title\n"
+                    },
+                    {
+                      "text": "Text: \"User Types & Permissions\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \" User\", tag: H4, classes: types-card-title\n"
+                    },
+                    {
+                      "text": "Text: \"Main Features\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Key User Flows\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \" Registration & Login\", tag: H4, classes: feature-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" Marketplace Trading\", tag: H4, classes: feature-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" Resource & Farm Management\", tag: H4, classes: feature-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" Financial Operations\", tag: H4, classes: feature-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" System Health Check\", tag: H4, classes: feature-card-title\n"
+                    },
+                    {
+                      "text": "Text: \"API Basics\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Testing Tips\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Demo Accounts\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \" Demo Farmer\", tag: H4, classes: demo-account-title\n"
+                    },
+                    {
+                      "text": "Text: \" Demo Farmer\", tag: H4, classes: demo-account-title\n"
+                    },
+                    {
+                      "text": "Text: \" Demo Farmer\", tag: H4, classes: demo-account-title\n"
+                    },
+                    {
+                      "text": "Text: \" Demo Farmer\", tag: H4, classes: demo-account-title\n"
+                    },
+                    {
+                      "text": "Text: \"Asset–Finance–Marketplace Flow\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Overview\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Entities\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Asset Assignment and Ownership\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Financial Transactions\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Marketplace Flow\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Example Cases\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Data Consistency Rules\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Summary Table\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"End-to-End Scenarios\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \" Register and Set Up Farm\", tag: H4, classes: feature-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" Sell a Field on the Marketplace\", tag: H4, classes: feature-card-title\n"
+                    },
+                    {
+                      "text": "Text: \" Attempt to Buy with Insufficient Funds\", tag: H4, classes: feature-card-title\n"
+                    },
+                    {
+                      "text": "Text: \"Alerts Feature flag\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Overview\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"How an alert reaches the user\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Endpoints\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Alerts — Severity Filter Feature flag\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Overview\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Contact Form Feature flag\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Overview\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Submission flow\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Interactive Farm Map Feature flag\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Overview\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Endpoints\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"AgriAcademy (External Service) Feature flag\", tag: H2, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Overview\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Pay-before-exam & payment flow\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Scenario: not enough ROL for a paid exam\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "Text: \"Endpoints\", tag: H3, classes: null\n"
+                    },
+                    {
+                      "text": "\n=== DOCS PAGE .docs-header-subtitle ===\n"
+                    },
+                    {
+                      "text": "Text: \"Rolnopol System Guide & API Reference\", tag: SPAN\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:16.067Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1e777640d47beb3c388e-7561142bee62017a8b5d",
+          "file": "2_playwright_cli/inspect-locators.spec.ts",
+          "line": 92,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "2_playwright_cli\\registration.spec.ts",
+      "file": "2_playwright_cli/registration.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "user can successfully register with valid credentials",
+          "ok": true,
+          "tags": ["registration", "happy-path"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "playwright-cli",
+              "projectName": "playwright-cli",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 5,
+                  "status": "passed",
+                  "duration": 4316,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:17.310Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a61de105fe3e3bda161f-59a1b74e3bd3e8615cef",
+          "file": "2_playwright_cli/registration.spec.ts",
+          "line": 6,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "1_designing_framework_and_processes_with_AI\\authenticated\\fields.spec.ts",
+      "file": "1_designing_framework_and_processes_with_AI/authenticated/fields.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "User can add a new field with valid data",
+          "ok": true,
+          "tags": ["farm", "smoke"],
+          "tests": [
+            {
+              "timeout": 15000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "authenticated-fields",
+              "projectName": "authenticated-fields",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2110,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:22.259Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2dabaa84c19dc0b1967a-bd8f337fd354f00773cc",
+          "file": "1_designing_framework_and_processes_with_AI/authenticated/fields.spec.ts",
+          "line": 6,
+          "column": 5
+        },
+        {
+          "title": "User can find a newly added field in the search bar by its name",
+          "ok": true,
+          "tags": ["farm"],
+          "tests": [
+            {
+              "timeout": 15000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "authenticated-fields",
+              "projectName": "authenticated-fields",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2468,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:22.293Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2dabaa84c19dc0b1967a-fd0267a8cdfd3f5c469d",
+          "file": "1_designing_framework_and_processes_with_AI/authenticated/fields.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "User can add a new animal herd with valid data",
+          "ok": true,
+          "tags": ["farm"],
+          "tests": [
+            {
+              "timeout": 15000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "authenticated-fields",
+              "projectName": "authenticated-fields",
+              "results": [
+                {
+                  "workerIndex": 15,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2168,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:22.291Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2dabaa84c19dc0b1967a-1cbfe189f8c87b98b837",
+          "file": "1_designing_framework_and_processes_with_AI/authenticated/fields.spec.ts",
+          "line": 61,
+          "column": 5
+        },
+        {
+          "title": "User can find a newly added animal herd in the search bar by its type",
+          "ok": true,
+          "tags": ["farm"],
+          "tests": [
+            {
+              "timeout": 15000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "authenticated-fields",
+              "projectName": "authenticated-fields",
+              "results": [
+                {
+                  "workerIndex": 16,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2351,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:22.320Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2dabaa84c19dc0b1967a-c52e2451e1d25757bbec",
+          "file": "1_designing_framework_and_processes_with_AI/authenticated/fields.spec.ts",
+          "line": 86,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "1_designing_framework_and_processes_with_AI\\authenticated\\demo-user.spec.ts",
+      "file": "1_designing_framework_and_processes_with_AI/authenticated/demo-user.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "authenticated user can access profile page",
+          "ok": true,
+          "tags": ["authenticated", "profile"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "authenticated-profile",
+              "projectName": "authenticated-profile",
+              "results": [
+                {
+                  "workerIndex": 17,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 1652,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:22.300Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eb48c5dceab061827c27-1b6e4c9489bcc2d23ad4",
+          "file": "1_designing_framework_and_processes_with_AI/authenticated/demo-user.spec.ts",
+          "line": 6,
+          "column": 5
+        },
+        {
+          "title": "authenticated user profile displays correct user email and display name",
+          "ok": true,
+          "tags": ["authenticated", "profile"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "authenticated-profile",
+              "projectName": "authenticated-profile",
+              "results": [
+                {
+                  "workerIndex": 18,
+                  "parallelIndex": 5,
+                  "status": "passed",
+                  "duration": 1157,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:22.319Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eb48c5dceab061827c27-60305a120fc13b1c90d3",
+          "file": "1_designing_framework_and_processes_with_AI/authenticated/demo-user.spec.ts",
+          "line": 30,
+          "column": 5
+        },
+        {
+          "title": "authenticated user can logout and redirect to home page",
+          "ok": false,
+          "tags": ["authenticated", "profile"],
+          "tests": [
+            {
+              "timeout": 10000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "authenticated-profile",
+              "projectName": "authenticated-profile",
+              "results": [
+                {
+                  "workerIndex": 18,
+                  "parallelIndex": 5,
+                  "status": "failed",
+                  "duration": 1302,
+                  "error": {
+                    "message": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: /log out|logout/i }) resolved to 2 elements:\n    1) <button title=\"Logout\" id=\"logout-btn\" aria-label=\"Logout\" data-testid=\"logout-btn\" class=\"btn btn-secondary btn-sm\">…</button> aka getByTestId('header-component').getByTestId('logout-btn')\n    2) <button id=\"logout-btn\" data-testid=\"logout-btn\" class=\"btn btn-compact btn-futuristic\">…</button> aka getByTestId('profile-header').getByTestId('logout-btn')\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /log out|logout/i })\u001b[22m\n",
+                    "stack": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: /log out|logout/i }) resolved to 2 elements:\n    1) <button title=\"Logout\" id=\"logout-btn\" aria-label=\"Logout\" data-testid=\"logout-btn\" class=\"btn btn-secondary btn-sm\">…</button> aka getByTestId('header-component').getByTestId('logout-btn')\n    2) <button id=\"logout-btn\" data-testid=\"logout-btn\" class=\"btn btn-compact btn-futuristic\">…</button> aka getByTestId('profile-header').getByTestId('logout-btn')\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /log out|logout/i })\u001b[22m\n\n    at ProfilePage.logout (C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts:39:29)\n    at C:\\repos\\AI-Testers_vol2.0\\tests\\1_designing_framework_and_processes_with_AI\\authenticated\\demo-user.spec.ts:68:23",
+                    "location": {
+                      "file": "C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts",
+                      "column": 29,
+                      "line": 39
+                    },
+                    "snippet": "\u001b[90m   at \u001b[39m..\\src\\pages\\ProfilePage.ts:39\n\n\u001b[0m \u001b[90m 37 |\u001b[39m\n \u001b[90m 38 |\u001b[39m   \u001b[36masync\u001b[39m logout()\u001b[33m:\u001b[39m \u001b[33mPromise\u001b[39m\u001b[33m<\u001b[39m\u001b[36mvoid\u001b[39m\u001b[33m>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mlogoutButton\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 40 |\u001b[39m   }\n \u001b[90m 41 |\u001b[39m }\n \u001b[90m 42 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts",
+                        "column": 29,
+                        "line": 39
+                      },
+                      "message": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: /log out|logout/i }) resolved to 2 elements:\n    1) <button title=\"Logout\" id=\"logout-btn\" aria-label=\"Logout\" data-testid=\"logout-btn\" class=\"btn btn-secondary btn-sm\">…</button> aka getByTestId('header-component').getByTestId('logout-btn')\n    2) <button id=\"logout-btn\" data-testid=\"logout-btn\" class=\"btn btn-compact btn-futuristic\">…</button> aka getByTestId('profile-header').getByTestId('logout-btn')\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /log out|logout/i })\u001b[22m\n\n\n   at ..\\src\\pages\\ProfilePage.ts:39\n\n  37 |\n  38 |   async logout(): Promise<void> {\n> 39 |     await this.logoutButton.click();\n     |                             ^\n  40 |   }\n  41 | }\n  42 |\n    at ProfilePage.logout (C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts:39:29)\n    at C:\\repos\\AI-Testers_vol2.0\\tests\\1_designing_framework_and_processes_with_AI\\authenticated\\demo-user.spec.ts:68:23"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T16:52:23.646Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\repos\\AI-Testers_vol2.0\\test-results\\1_designing_framework_and_-1d16a-t-and-redirect-to-home-page-authenticated-profile\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\repos\\AI-Testers_vol2.0\\test-results\\1_designing_framework_and_-1d16a-t-and-redirect-to-home-page-authenticated-profile\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\repos\\AI-Testers_vol2.0\\src\\pages\\ProfilePage.ts",
+                    "column": 29,
+                    "line": 39
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "eb48c5dceab061827c27-e29064f76cc538f70c33",
+          "file": "1_designing_framework_and_processes_with_AI/authenticated/demo-user.spec.ts",
+          "line": 56,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-14T16:52:07.740Z",
+    "duration": 17337.218,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

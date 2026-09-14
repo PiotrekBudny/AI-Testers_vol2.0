@@ -19,21 +19,31 @@ export default defineConfig({
     // Setup project for authentication
     {
       name: "setup",
-      testMatch: /.*auth\/setup\.spec\.ts/,
+      testMatch:
+        /.*1_designing_framework_and_processes_with_AI\/auth\/setup\.spec\.ts/,
       use: { ...devices["Desktop Chrome"] },
     },
 
     // Smoke tests - fast checks without authentication
     {
       name: "smoke-tests",
-      testMatch: /.*smoke\/.*\.spec\.ts/,
+      testMatch:
+        /.*1_designing_framework_and_processes_with_AI\/main\.smoke\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"] },
+    },
+
+    // Playwright CLI tests - new test suite using Playwright CLI
+    {
+      name: "playwright-cli",
+      testMatch: /.*2_playwright_cli\/.*\.spec\.ts/,
       use: { ...devices["Desktop Chrome"] },
     },
 
     // Authenticated tests that mutate data - must finish before the demo user logs out
     {
       name: "authenticated-fields",
-      testMatch: /.*authenticated\/fields\.spec\.ts/,
+      testMatch:
+        /.*1_designing_framework_and_processes_with_AI\/authenticated\/fields\.spec\.ts/,
       use: {
         ...devices["Desktop Chrome"],
         storageState: "playwright/.auth/user.json",
@@ -41,16 +51,17 @@ export default defineConfig({
       dependencies: ["setup"],
     },
 
-    // Authenticated tests that end with logout - must run after authenticated-fields
-    // so it doesn't invalidate the shared demo user session mid-flow
+    // Authenticated tests that end with logout - runs after setup
+    // Demo-user tests can run independently without being blocked by authenticated-fields failures
     {
       name: "authenticated-profile",
-      testMatch: /.*authenticated\/demo-user\.spec\.ts/,
+      testMatch:
+        /.*1_designing_framework_and_processes_with_AI\/authenticated\/demo-user\.spec\.ts/,
       use: {
         ...devices["Desktop Chrome"],
         storageState: "playwright/.auth/user.json",
       },
-      dependencies: ["setup", "authenticated-fields"],
+      dependencies: ["setup"],
     },
   ],
 });

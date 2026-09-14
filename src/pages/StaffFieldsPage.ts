@@ -115,9 +115,12 @@ export class StaffFieldsPage extends BasePage {
   }
 
   animalResult(animal: AnimalFormData): Locator {
-    return this.page.locator(
-      `[title="Amount of ${animal.type}: ${animal.amount}"]`,
-    );
+    // Look for a list item containing the animal type
+    // This is more specific than just searching for text to avoid matching labels/headers
+    return this.page
+      .getByRole("listitem")
+      .filter({ hasText: animal.type })
+      .first();
   }
 
   async searchAnimals(query: string): Promise<void> {
