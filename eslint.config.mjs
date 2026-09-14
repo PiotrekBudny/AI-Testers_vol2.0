@@ -43,7 +43,9 @@ export default [
     },
   },
   {
-    files: ["tests/auth/setup.spec.ts"],
+    files: [
+      "tests/1_designing_framework_and_processes_with_AI/auth/setup.spec.ts",
+    ],
     rules: {
       "playwright/expect-expect": "off",
     },

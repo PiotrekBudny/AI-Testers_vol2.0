@@ -1,15 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-import { config } from "../../src/config/environment";
-import { ProfilePage } from "../../src/pages/ProfilePage";
-
-/**
- * Authenticated tests that require DEMO_USER to be logged in.
- * These tests depend on the setup project that handles authentication.
- *
- * Authentication state is automatically loaded from playwright/.auth/user.json
- * via the project configuration.
- */
+import { config } from "../../../src/config/environment";
+import { ProfilePage } from "../../../src/pages/ProfilePage";
 
 test(
   "authenticated user can access profile page",
