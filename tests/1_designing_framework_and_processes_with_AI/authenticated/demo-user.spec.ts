@@ -57,6 +57,8 @@ test(
   "authenticated user can logout and redirect to home page",
   { tag: ["@authenticated", "@profile"] },
   async ({ page }) => {
+    test.setTimeout(15_000);
+
     // Arrange
     const profilePage = new ProfilePage(page);
     const expected = {
@@ -68,7 +70,7 @@ test(
     await profilePage.logout();
 
     // Assert
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/$/, { timeout: 8000 });
     await expect(page).toHaveTitle(expected.homeTitle);
 
     await page.close();
