@@ -18,17 +18,18 @@ Map) are lower priority.
 
 Tags map to Playwright's `--grep`/`--grep-invert` filters (e.g. `npx playwright test --grep @smoke`).
 
-| Tag            | Meaning                           |
-| -------------- | --------------------------------- |
-| `@auth`        | Registration & login              |
-| `@rbac`        | Role-based access                 |
-| `@farm`        | Farm & resource management        |
-| `@marketplace` | Marketplace trading               |
-| `@finance`     | Financial operations              |
-| `@e2e`         | End-to-end scenario               |
-| `@flagged`     | Behind a feature flag             |
-| `@docs`        | Documentation & API reference     |
-| `@smoke`       | Critical path, run on every build |
+| Tag            | Meaning                                      |
+| -------------- | -------------------------------------------- |
+| `@auth`        | Registration & login                         |
+| `@rbac`        | Role-based access                            |
+| `@farm`        | Farm & resource management                   |
+| `@marketplace` | Marketplace trading                          |
+| `@finance`     | Financial operations                         |
+| `@e2e`         | End-to-end scenario                          |
+| `@flagged`     | Behind a feature flag                        |
+| `@docs`        | Documentation & API reference                |
+| `@system`      | System/health/debug/logs & version endpoints |
+| `@smoke`       | Critical path, run on every build            |
 
 ## Test Areas
 
@@ -42,37 +43,40 @@ Checkboxes indicate implementation status: `[x]` implemented, `[ ]` not yet impl
 - [x] Login with valid credentials succeeds. `@auth @smoke`
 - [x] Login with invalid credentials fails. `@auth @smoke`
 - [x] Logout clears the session. `@auth @smoke`
-- [ ] Requests without a valid token are rejected. `@auth`
+- [x] Requests without a valid token are rejected. `@auth` (API, tests/3_api_tests/users-system.api.spec.ts + fields-staff-animals.api.spec.ts + financial-marketplace.api.spec.ts)
 
 ### Role-Based Access
 
-- [ ] Farmers cannot access admin/superadmin pages or endpoints. `@rbac`
-- [ ] Admins/superadmins can view and manage all users' resources. `@rbac`
+- [x] Farmers cannot access admin/superadmin endpoints. `@rbac` (API 403 checks on `/users/statistics/all`, `/financial/accounts/all`, `PUT /financial/accounts/balance` with a non-admin token)
+- [ ] Admins/superadmins can view and manage all users' resources. `@rbac` (no admin test account is configured in this repo — cannot exercise the 200 admin-success path yet)
 
 ### Farm & Resource Management
 
 - [x] Add a field with valid data. `@farm @smoke`
 - [x] Find a newly added field via search. `@farm`
-- [ ] Edit an existing field. `@farm`
-- [ ] Remove a field. `@farm`
+- [x] Edit an existing field. `@farm` (API, `PUT /fields/{id}`)
+- [x] Remove a field. `@farm` (API, `DELETE /fields/{id}`)
 - [x] Add an animal herd with valid data. `@farm`
 - [x] Find a newly added animal herd via search. `@farm`
-- [ ] Edit an animal herd. `@farm`
-- [ ] Remove an animal herd. `@farm`
-- [ ] Add, edit, and remove staff. `@farm`
-- [ ] Assign staff/animals to a field. `@farm`
+- [x] Edit an animal herd. `@farm` (API, `PUT /animals/{id}`)
+- [x] Remove an animal herd. `@farm` (API, `DELETE /animals/{id}`)
+- [x] Add, edit, and remove staff. `@farm` (API, `POST`/`PUT`/`DELETE /staff`(`/{id}`))
+- [x] Assign staff to a field. `@farm` (API, `POST /fields/assign`, `GET /fields/assign`, `GET /assignments`, `DELETE /assignments/{id}`, `DELETE /fields/assign/{id}`)
 
 ### Marketplace Trading
 
-- [ ] Create an offer for an unassigned resource → active; for an assigned one → unavailable. `@marketplace`
-- [ ] Buy an active offer → ownership transferred, balances updated, offer marked sold. `@marketplace @smoke`
-- [ ] Buying with insufficient funds, buying own offer, or buying a non-active offer is blocked. `@marketplace`
-- [ ] Cancel an active offer → cancelled. `@marketplace`
+- [ ] Create an offer for an unassigned resource → active; for an assigned one → unavailable. `@marketplace` (offer-creation happy path is covered; the "assigned resource → unavailable" case is not yet tested)
+- [x] Buy an active offer → ownership transferred and offer marked sold. `@marketplace @smoke` (API, `POST /marketplace/buy`)
+- [ ] Buy an active offer → buyer/seller balances updated accordingly. `@marketplace` — **known app defect**: verified live that `POST /marketplace/buy` does not debit/credit either party's `/financial/account` balance, even though ownership and offer status change correctly. Test intentionally does not assert a balance change until this is confirmed as expected/fixed.
+- [x] Buying own offer is blocked. `@marketplace` (API, 400 "cannot buy own offer")
+- [ ] Buying with insufficient funds, or buying a non-active/non-existent offer is blocked. `@marketplace` (non-existent offer → 404 is covered; insufficient-funds is not yet tested, since marketplace purchases don't currently move balance at all — see defect above)
+- [x] Cancel an active offer → cancelled. `@marketplace` (API, `DELETE /marketplace/offers/{offerId}`)
 
 ### Financial Operations
 
-- [ ] View balance and transaction history. `@finance`
-- [ ] Balance updates correctly after purchases and transfers; no overdraft allowed. `@finance @smoke`
+- [x] View balance and transaction history. `@finance` (API, `GET /financial/account`, `GET /financial/transactions`)
+- [x] No overdraft allowed for fund transfers (amount exceeding balance is rejected). `@finance @smoke` (API, `POST /financial/transfer` → 400)
+- [ ] Balance updates correctly after marketplace purchases. `@finance @marketplace` — see known app defect noted under Marketplace Trading above.
 
 ### Navigation & Static Pages
 
