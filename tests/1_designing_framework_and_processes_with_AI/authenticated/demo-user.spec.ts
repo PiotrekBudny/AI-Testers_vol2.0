@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
 
 import { config } from "../../../src/config/environment";
+import { LoginPage } from "../../../src/pages/LoginPage";
 import { ProfilePage } from "../../../src/pages/ProfilePage";
+import { existingUsers } from "../../../src/test-data/users";
 
 test(
   "authenticated user can access profile page",
@@ -53,26 +55,33 @@ test(
   },
 );
 
-test(
-  "authenticated user can logout and redirect to home page",
-  { tag: ["@authenticated", "@profile"] },
-  async ({ page }) => {
-    test.setTimeout(15_000);
+test.describe("logout", () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
 
-    // Arrange
-    const profilePage = new ProfilePage(page);
-    const expected = {
-      homeTitle: "Rolnopol",
-    };
+  test(
+    "authenticated user can logout and redirect to home page",
+    { tag: ["@authenticated", "@profile"] },
+    async ({ page }) => {
+      test.setTimeout(15_000);
 
-    // Act
-    await page.goto("/profile.html");
-    await profilePage.logout();
+      // Arrange
+      const loginPage = new LoginPage(page);
+      const profilePage = new ProfilePage(page);
+      const expected = {
+        homeTitle: "Rolnopol",
+      };
 
-    // Assert
-    await expect(page).toHaveURL(/\/$/, { timeout: 8000 });
-    await expect(page).toHaveTitle(expected.homeTitle);
+      // Act
+      await loginPage.goto();
+      await loginPage.login(existingUsers.demoUser);
+      await page.waitForURL(/\/profile\.html$/, { timeout: 8000 });
+      await profilePage.logout();
 
-    await page.close();
-  },
-);
+      // Assert
+      await expect(page).toHaveURL(/\/$/, { timeout: 8000 });
+      await expect(page).toHaveTitle(expected.homeTitle);
+
+      await page.close();
+    },
+  );
+});
