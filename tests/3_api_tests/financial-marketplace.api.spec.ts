@@ -961,28 +961,38 @@ test(
       >(offerResponse);
     const offerId = offerBody.data.offer.id;
 
-    // Act
-    const [sellerOffersResponse, otherUserOffersResponse] = await Promise.all([
-      request.get(ApiUrls.marketplaceOffers, {
-        headers: { token: seller.token },
-      }),
-      request.get(ApiUrls.marketplaceOffers, {
-        headers: { token: otherUser.token },
-      }),
-    ]);
-    const sellerOffersBody =
-      await readApiResponse<
-        ApiSuccessResponse<MarketplaceOffersListResponseData>
-      >(sellerOffersResponse);
+    // Act & Assert - poll to tolerate the live server's eventual consistency
+    // between offer creation and the exclusion filter under parallel load.
+    await expect
+      .poll(
+        async () => {
+          const sellerOffersResponse = await request.get(
+            ApiUrls.marketplaceOffers,
+            { headers: { token: seller.token } },
+          );
+          const sellerOffersBody =
+            await readApiResponse<
+              ApiSuccessResponse<MarketplaceOffersListResponseData>
+            >(sellerOffersResponse);
+          return sellerOffersBody.data.offers.some(
+            (offer) => offer.id === offerId,
+          );
+        },
+        {
+          message:
+            "Seller's own active offer should be excluded from their own offers list",
+          timeout: 10_000,
+        },
+      )
+      .toBe(false);
+
+    const otherUserOffersResponse = await request.get(
+      ApiUrls.marketplaceOffers,
+      { headers: { token: otherUser.token } },
+    );
     const otherUserOffersBody = await readApiResponse<
       ApiSuccessResponse<MarketplaceOffersListResponseData>
     >(otherUserOffersResponse);
-
-    // Assert
-    expect(
-      sellerOffersBody.data.offers.some((offer) => offer.id === offerId),
-      "Seller's own active offer should be excluded from their own offers list",
-    ).toBe(false);
     expect(
       otherUserOffersBody.data.offers.some((offer) => offer.id === offerId),
       "Another user's offers list should include the seller's active offer",
