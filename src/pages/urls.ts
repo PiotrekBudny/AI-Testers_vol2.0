@@ -7,3 +7,8 @@ export const PageUrls = {
   swagger: "/swagger.html",
   staffFieldsMain: "/staff-fields-main.html",
 } as const;
+
+export const ApiUrls = {
+  login: "/api/v1/login",
+  register: "/api/v1/register",
+} as const;

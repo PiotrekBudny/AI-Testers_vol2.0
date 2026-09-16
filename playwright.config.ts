@@ -39,6 +39,13 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
     },
 
+    // API tests - direct HTTP requests, no browser needed
+    {
+      name: "api-tests",
+      testMatch: /.*3_api_tests\/.*\.spec\.ts/,
+      use: { baseURL: config.BASE_URL },
+    },
+
     // Authenticated tests that mutate data - must finish before the demo user logs out
     {
       name: "authenticated-fields",
