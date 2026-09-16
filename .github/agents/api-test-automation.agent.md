@@ -34,7 +34,7 @@ Find and align with existing rules, conventions, and standards before writing co
 - `playwright.config.ts` (note the `api-tests` project, its `testMatch`, and `baseURL`)
 - `tests/3_api_tests/api-test-helpers.ts` and any existing `*.api.spec.ts` files for established
   patterns (response typing, `readApiResponse`, etc.)
-- `src/pages/urls.ts` (`ApiUrls`) and `src/test-data/` for existing URL constants and data factories
+- `src/api/urls.ts` (`ApiUrls`) and `src/test-data/` for existing URL constants and data factories
 
 Follow repository patterns by default. Do not override or reinterpret those documents except when
 directly asked to change them.
@@ -68,10 +68,11 @@ directly asked to change them.
   `createTestUser()`) and must not depend on side effects from another test or on execution order.
   Never reuse a mutable record (a created user, a created resource) across tests.
 - **Modular and easy to extend.**
-  - Add new endpoint paths to `ApiUrls` in `src/pages/urls.ts` — never hardcode raw URL strings in
+  - Add new endpoint paths to `ApiUrls` in `src/api/urls.ts` — never hardcode raw URL strings in
     spec files.
-  - Put shared response types and parsing helpers in `tests/3_api_tests/api-test-helpers.ts` (or a
-    new helper file per module if it grows large); do not duplicate response-typing code per spec.
+  - Put response types in `src/api/types/` (grouped by domain, e.g. `farm.ts`, `financial.ts`) and
+    parsing helpers in `tests/3_api_tests/api-test-helpers.ts` (or a new helper file per module if
+    it grows large); do not duplicate response-typing code per spec.
   - Put reusable test data builders in `src/test-data/`.
   - Group tests by endpoint/module in one spec file per module (e.g. `registration.api.spec.ts`),
     consistent with existing naming (`<module>.api.spec.ts`).

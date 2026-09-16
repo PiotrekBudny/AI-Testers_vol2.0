@@ -1,13 +1,13 @@
 import { expect, test } from "@playwright/test";
 
-import { ApiUrls } from "../../src/pages/urls";
+import type { RegisterResponseData } from "../../src/api/types/auth";
+import type {
+  ApiErrorResponse,
+  ApiSuccessResponse,
+} from "../../src/api/types/common";
+import { ApiUrls } from "../../src/api/urls";
 import { createTestUser, existingUsers } from "../../src/test-data/users";
-import {
-  type ApiErrorResponse,
-  type ApiSuccessResponse,
-  readApiResponse,
-  type RegisterResponseData,
-} from "./api-test-helpers";
+import { readApiResponse } from "./api-test-helpers";
 
 test(
   "registration succeeds with valid data",

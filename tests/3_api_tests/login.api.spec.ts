@@ -1,13 +1,13 @@
 import { expect, test } from "@playwright/test";
 
-import { ApiUrls } from "../../src/pages/urls";
+import type { LoginResponseData } from "../../src/api/types/auth";
+import type {
+  ApiErrorResponse,
+  ApiSuccessResponse,
+} from "../../src/api/types/common";
+import { ApiUrls } from "../../src/api/urls";
 import { existingUsers } from "../../src/test-data/users";
-import {
-  type ApiErrorResponse,
-  type ApiSuccessResponse,
-  type LoginResponseData,
-  readApiResponse,
-} from "./api-test-helpers";
+import { readApiResponse } from "./api-test-helpers";
 
 test(
   "login succeeds with valid credentials",
