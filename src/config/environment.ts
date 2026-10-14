@@ -20,6 +20,12 @@ function requireEnv(name: string): string {
   return value.trim();
 }
 
+/** Retrieve an optional environment variable without affecting other app suites. */
+function optionalEnv(name: string): string | undefined {
+  const value = process.env[name]?.trim();
+  return value || undefined;
+}
+
 /**
  * Centralized environment configuration module.
  * All environment variables used by the project are defined, validated, and exported here.
@@ -52,6 +58,16 @@ export const config = Object.freeze({
 
   /** Password for newly created test users. */
   DEFAULT_TEST_USER_PASSWORD: requireEnv("DEFAULT_TEST_USER_PASSWORD"),
+
+  /** Username used by the Bystre API login tests. */
+  BYSTRE_API_USERNAME: optionalEnv("BYSTRE_API_USERNAME"),
+
+  /** Password used by the Bystre API login tests. */
+  BYSTRE_API_PASSWORD: optionalEnv("BYSTRE_API_PASSWORD"),
+
+  /** Base URL for the Bystre API tests. */
+  BYSTRE_API_BASE_URL:
+    optionalEnv("BYSTRE_API_BASE_URL") ?? "https://awesome.byst.re",
 
   /** Indicates whether tests are running in a CI environment (GitHub Actions). */
   isCI: Boolean(process.env.CI),

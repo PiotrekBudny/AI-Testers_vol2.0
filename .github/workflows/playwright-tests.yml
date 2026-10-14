@@ -83,7 +83,13 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run tests
-        run: npx playwright test
+        run: |
+          if [[ -n "$BYSTRE_API_USERNAME" && -n "$BYSTRE_API_PASSWORD" ]]; then
+            npx playwright test
+          else
+            echo "Skipping the Bystre credential-dependent login case because its secrets are not configured."
+            npx playwright test --grep-invert @bystre-credentials
+          fi
         env:
           BASE_URL: ${{ vars.BASE_URL }}
           EMPTY_USER_EMAIL: ${{ secrets.EMPTY_USER_EMAIL }}
@@ -94,6 +100,9 @@ jobs:
           DEMO_USER_DISPLAY_NAME: ${{ vars.DEMO_USER_DISPLAY_NAME }}
           DEFAULT_TEST_USER_DISPLAY_NAME: ${{ vars.DEFAULT_TEST_USER_DISPLAY_NAME }}
           DEFAULT_TEST_USER_PASSWORD: ${{ secrets.DEFAULT_TEST_USER_PASSWORD }}
+          BYSTRE_API_BASE_URL: ${{ vars.BYSTRE_API_BASE_URL || 'https://awesome.byst.re' }}
+          BYSTRE_API_USERNAME: ${{ secrets.BYSTRE_API_USERNAME }}
+          BYSTRE_API_PASSWORD: ${{ secrets.BYSTRE_API_PASSWORD }}
 
       - name: Upload Playwright report
         if: success() || failure()
