@@ -22,6 +22,7 @@ Tags map to Playwright's `--grep`/`--grep-invert` filters (e.g. `npx playwright 
 | -------------- | -------------------------------------------- |
 | `@auth`        | Registration & login                         |
 | `@bystre`      | Bystre API                                   |
+| `@ollama`      | Ollama API and streaming responses           |
 | `@users`       | User account API operations                  |
 | `@cart`        | Shopping cart API operations                 |
 | `@rbac`        | Role-based access                            |

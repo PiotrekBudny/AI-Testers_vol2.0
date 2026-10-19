@@ -2,5 +2,5 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "terminal.integrated.defaultProfile.windows": "Git Bash",
-  "cSpell.userWords": ["Rolnopol", "Bystre"]
+  "cSpell.userWords": ["Rolnopol", "Bystre", "Ollama"]
 }

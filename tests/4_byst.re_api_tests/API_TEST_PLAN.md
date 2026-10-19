@@ -71,7 +71,7 @@ Planning notes below are based on the sibling [`test-secure-backend` README](../
 | OPS-03  | `GET /api/v1/traffic/info`                  | Public   | ✅ Covered | `traffic/get-traffic-info.api.spec.ts`                   |
 | OPS-04  | `GET /api/v1/traffic/logs`                  | Public   | ✅ Covered | `traffic/get-traffic-logs.api.spec.ts`                   |
 | OPS-05  | `GET /api/v1/traffic/logs/{correlationId}`  | Public   | ⬜ Planned | `traffic/get-traffic-logs-by-correlation-id.api.spec.ts` |
-| INT-04  | `GET /api/v1/ollama/chat/tools/definitions` | Bearer   | ⬜ Planned | `ollama/get-ollama-chat-tools-definitions.api.spec.ts`   |
+| INT-04  | `GET /api/v1/ollama/chat/tools/definitions` | Bearer   | ✅ Covered | `ollama/get-ollama-chat-tools-definitions.api.spec.ts`   |
 | SHOP-01 | `GET /api/v1/products`                      | Bearer   | ✅ Covered | `products/get-products.api.spec.ts`                      |
 | SHOP-03 | `GET /api/v1/products/{id}`                 | Bearer   | ✅ Covered | `products/get-products-by-id.api.spec.ts`                |
 | AUTH-03 | `GET /api/v1/users/me`                      | Bearer   | ✅ Covered | `users/bystre-me.api.spec.ts`                            |
@@ -154,9 +154,9 @@ Planning notes below are based on the sibling [`test-secure-backend` README](../
 | ------- | --------------------------------- | -------- | ----------------------------------------------------- | ------------------------------------------- |
 | AUTH-09 | `POST /api/v1/users/sso/exchange` | Public   | ⏸️ Blocked — controlled OIDC identity needed          | `users/post-users-sso-exchange.api.spec.ts` |
 | OPS-02  | `POST /api/v1/email`              | Bearer   | ⬜ Planned                                            | `email/post-email.api.spec.ts`              |
-| INT-01  | `POST /api/v1/ollama/generate`    | Bearer   | ⏸️ Blocked — Ollama service or test substitute needed | `ollama/post-ollama-generate.api.spec.ts`   |
-| INT-02  | `POST /api/v1/ollama/chat`        | Bearer   | ⏸️ Blocked — Ollama service or test substitute needed | `ollama/post-ollama-chat.api.spec.ts`       |
-| INT-03  | `POST /api/v1/ollama/chat/tools`  | Bearer   | ⏸️ Blocked — Ollama service or test substitute needed | `ollama/post-ollama-chat-tools.api.spec.ts` |
+| INT-01  | `POST /api/v1/ollama/generate`    | Bearer   | 🟡 Partial — upstream 404/500 cases need a controlled fault target | `ollama/post-ollama-generate.api.spec.ts`   |
+| INT-02  | `POST /api/v1/ollama/chat`        | Bearer   | 🟡 Partial — upstream 404/500 cases need a controlled fault target | `ollama/post-ollama-chat.api.spec.ts`       |
+| INT-03  | `POST /api/v1/ollama/chat/tools`  | Bearer   | 🟡 Partial — upstream 404/500 cases need a controlled fault target | `ollama/post-ollama-chat-tools.api.spec.ts` |
 
 ## Coverage approach for each operation
 
@@ -197,6 +197,7 @@ Record the date, phase/operation IDs, implemented change, and latest run result.
 
 | 2026-10-19 | USER-01, USER-02, SHOP-06, SHOP-07 | Added dedicated specs for user listing, username lookup, cart retrieval, and cart clearing, including authentication and not-found checks. | 13/13 Playwright checks passed against the configured API (`--project=bystre-api-tests --workers=1 --retries=0`). Client access to user listing returned 200. |
 | 2026-10-19 | OPS-01 | Added QR client, fixture, and endpoint spec for PNG output, auth rejection, and missing/blank text validation. | 5/5 Playwright tests passed against Bystre using an isolated config. Live probes confirmed the same behavior; the temporary probe user was deleted (204). |
+| 2026-10-19 | INT-01–INT-04 | Added four Ollama operation specs, typed client/fixture, and a multiline SSE JSON parser. Coverage includes definitions, token assembly, thinking, tool iterations, validation, and bearer rejection. | Only the new Ollama specs ran: 19/19 passed against the hosted API (`--project=bystre-api-tests --workers=1 --retries=0`). Upstream 404/500 behavior remains untested with the current mock. |
 
 ## Completion criteria
 
