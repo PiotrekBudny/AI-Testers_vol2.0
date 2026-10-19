@@ -13,12 +13,28 @@ const signupPath = "/api/v1/users/signup";
 const mePath = "/api/v1/users/me";
 const logoutPath = "/api/v1/users/logout";
 const refreshPath = "/api/v1/users/refresh";
+const usersPath = "/api/v1/users";
 
 export class BystreUsersApiClient {
   constructor(private readonly request: APIRequestContext) {}
 
   getMe(authorization?: string): Promise<APIResponse> {
     return this.request.get(mePath, {
+      headers: authorization ? { Authorization: authorization } : undefined,
+    });
+  }
+
+  getAll(authorization?: string): Promise<APIResponse> {
+    return this.request.get(usersPath, {
+      headers: authorization ? { Authorization: authorization } : undefined,
+    });
+  }
+
+  getByUsername(
+    username: string,
+    authorization?: string,
+  ): Promise<APIResponse> {
+    return this.request.get(`${usersPath}/${encodeURIComponent(username)}`, {
       headers: authorization ? { Authorization: authorization } : undefined,
     });
   }
