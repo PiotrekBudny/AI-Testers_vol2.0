@@ -14,12 +14,113 @@ This skill documents the API testing patterns, helpers, and best practices from 
 
 ## When to Use
 
+- Exploring API documentation and designing test strategies
 - Writing new API test cases for specific endpoints or modules
 - Creating API client abstractions and helper utilities
 - Adding assertions on HTTP status codes, response bodies, or error contracts
 - Organizing API tests into spec files and support structures
 - Implementing test data factories or fixtures for API tests
 - Debugging failing API tests
+- Validating implementation against requirements before coding
+
+## API Testing Workflow
+
+Before implementing tests, follow this structured workflow:
+
+### 1. Explore & Understand the API
+
+**Step 1a: Locate & Review Documentation**
+
+- Find API documentation: OpenAPI/Swagger spec, README, inline comments
+- If live docs available: navigate to `/swagger.html`, `/api/docs`, or similar
+- Extract: endpoints, methods, parameters, request/response shapes, status codes
+- Identify: authentication requirements, rate limits, data models
+
+**Step 1b: Exploratory Testing with curl or Tools**
+
+```bash
+# Test endpoint with curl
+curl -X GET http://localhost:3000/api/products
+curl -X GET http://localhost:3000/api/products/123
+curl -X POST http://localhost:3000/api/products \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test Product","price":99.99}'
+
+# With authentication
+curl -X GET http://localhost:3000/api/users/me \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Test error scenarios
+curl -X POST http://localhost:3000/api/products \
+  -H "Content-Type: application/json" \
+  -d '{}' # Missing required fields
+```
+
+**Step 1c: Document Findings**
+
+- Request format (URL, method, headers, body)
+- Response format (status codes, body structure, headers)
+- Authentication method and token format
+- Required vs. optional fields
+- Validation rules and error messages
+- Edge cases and rate limits
+
+### 2. Create Implementation Plan
+
+**Step 2a: Design Test Matrix**
+
+| Scenario         | Method | Path              | Params        | Expected Status | Notes      |
+| ---------------- | ------ | ----------------- | ------------- | --------------- | ---------- |
+| List products    | GET    | /api/products     | -             | 200             | happy path |
+| List with filter | GET    | /api/products     | ?category=foo | 200             | filtering  |
+| Get single       | GET    | /api/products/123 | -             | 200             | happy path |
+| Get non-existent | GET    | /api/products/999 | -             | 404             | error case |
+| Create product   | POST   | /api/products     | {...}         | 201             | happy path |
+
+**Step 2b: Categorize Tests**
+
+- ✅ Happy path: Valid requests, expected success
+- ❌ Sad paths: Invalid input, missing fields, invalid IDs
+- ⚠️ Edge cases: Empty results, boundary values, large payloads
+
+**Step 2c: Plan Test Structure**
+
+```typescript
+// Suggested file organization
+tests/3_api_tests/
+├── products-list.api.spec.ts      // GET /products, filtering
+├── products-get.api.spec.ts       // GET /products/:id
+├── products-create.api.spec.ts    // POST /products
+└── products-update.api.spec.ts    // PUT /products/:id
+```
+
+### 3. Validate Plan with User
+
+**Before coding, confirm:**
+
+- [ ] All important endpoints are included
+- [ ] Happy path, sad path, and edge cases are covered
+- [ ] Test count is reasonable (not over-testing)
+- [ ] Dependencies between tests are minimal
+- [ ] Authentication approach is correct
+- [ ] Status codes and error messages match documentation
+
+**Ask user:**
+
+```
+"I plan to create 3 test files with ~12 total tests covering:
+1. List products (happy path, filtering, error handling)
+2. Get single product (found, not found)
+3. Create product (valid, validation errors, unauthorized)
+
+Does this match your needs? Any scenarios I missed?"
+```
+
+### 4. Implement Tests
+
+Once plan is approved, implement following the patterns in this skill.
+
+---
 
 ## Core Concepts
 
