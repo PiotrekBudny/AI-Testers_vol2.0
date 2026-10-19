@@ -1,23 +1,23 @@
 import { expect, test } from "@playwright/test";
 
-import { config } from "../../src/config/environment";
-import { BystreApiClient } from "./support/bystre-api.client";
+import { config } from "../../../src/config/environment";
+import { BystreUsersApiClient } from "../support/users/bystre-users-api.client";
 import {
   expectBystreLoginAuthState,
   requiredBystreCredential,
-} from "./support/bystre-api.helpers";
+} from "../support/users/bystre-users-api.helpers";
 import type {
   BystreErrorResponse,
   BystreLoginResponse,
   BystreValidationErrors,
-} from "./support/bystre-api.models";
+} from "../support/users/bystre-users-api.models";
 
 test.describe("Bystre API login", () => {
   test(
     "returns a session or MFA challenge for valid credentials",
     { tag: ["@bystre", "@auth", "@smoke", "@bystre-credentials"] },
     async ({ request }) => {
-      const api = new BystreApiClient(request);
+      const api = new BystreUsersApiClient(request);
       const username = requiredBystreCredential(
         config.BYSTRE_API_USERNAME,
         "BYSTRE_API_USERNAME",
@@ -54,7 +54,7 @@ test.describe("Bystre API login", () => {
   test("rejects a username shorter than the documented minimum", async ({
     request,
   }) => {
-    const api = new BystreApiClient(request);
+    const api = new BystreUsersApiClient(request);
     const response = await api.login({
       username: "abc",
       password: "valid-test-password",
@@ -70,7 +70,7 @@ test.describe("Bystre API login", () => {
 
   // 401 Unauthorized: the public login endpoint rejects a supplied invalid Bearer token.
   test("rejects an invalid Bearer token", async ({ request }) => {
-    const api = new BystreApiClient(request);
+    const api = new BystreUsersApiClient(request);
     const response = await api.login(
       { username: "valid-test-user", password: "valid-test-password" },
       "Bearer invalid-token",
@@ -84,7 +84,7 @@ test.describe("Bystre API login", () => {
 
   // 422 Unprocessable Entity: syntactically valid but invalid credentials.
   test("rejects unknown credentials", async ({ request }) => {
-    const api = new BystreApiClient(request);
+    const api = new BystreUsersApiClient(request);
     const response = await api.login({
       username: "unknown-bystre-api-test-user",
       password: "not-a-valid-test-password",

@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 
-import type { BystreLoginResponse } from "./bystre-api.models";
+import type { BystreLoginResponse } from "./bystre-users-api.models";
 
 export function requiredBystreCredential(
   value: string | undefined,

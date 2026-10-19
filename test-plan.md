@@ -21,6 +21,7 @@ Tags map to Playwright's `--grep`/`--grep-invert` filters (e.g. `npx playwright 
 | Tag            | Meaning                                      |
 | -------------- | -------------------------------------------- |
 | `@auth`        | Registration & login                         |
+| `@bystre`      | Bystre API                                   |
 | `@rbac`        | Role-based access                            |
 | `@farm`        | Farm & resource management                   |
 | `@marketplace` | Marketplace trading                          |

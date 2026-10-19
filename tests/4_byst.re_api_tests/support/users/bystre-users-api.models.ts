@@ -3,12 +3,35 @@ export interface BystreLoginRequest {
   password: string;
 }
 
+export interface BystreRefreshTokenRequest {
+  refreshToken: string;
+}
+
+export interface BystreTokenRefreshResponse {
+  token: string;
+  refreshToken: string;
+}
+
 export interface BystreSignupRequest {
   username: string;
   email: string;
   password: string;
   firstName: string;
   lastName: string;
+}
+
+export interface BystreAuthenticatedUser {
+  user: Readonly<BystreSignupRequest>;
+  token: string;
+}
+
+export interface BystreUserResponse {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  roles: string[];
 }
 
 export interface BystreLoginResponse {
@@ -29,3 +52,7 @@ export interface BystreErrorResponse {
 }
 
 export type BystreValidationErrors = Record<string, unknown>;
+
+export type SystemPromptKind = "chat" | "tool";
+export type SystemPromptField = "chatSystemPrompt" | "toolSystemPrompt";
+export type SystemPromptDto = Partial<Record<SystemPromptField, string | null>>;
