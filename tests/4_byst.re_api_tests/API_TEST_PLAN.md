@@ -8,11 +8,11 @@
 | Plan status             | 🟡 In progress                                                     |
 | Inventory size          | 53 HTTP operations                                                 |
 
-This is an endpoint-by-endpoint plan for the Playwright API suite in this folder. Work from **Phase 1 to Phase 5**, which are ordered from easiest to hardest. Each row represents one HTTP method and path from the checked-in OpenAPI snapshot. Refresh the inventory when the live API contract changes.
+This is an endpoint-by-endpoint plan for the Playwright API suite in this folder. The workstreams below group operations by behavior and dependency so contributors can select useful work independently. Each row represents one HTTP method and path from the checked-in OpenAPI snapshot. Refresh the inventory when the live API contract changes.
 
-## Start here
+## How to prioritize work
 
-Start with **Phase 1 — Quick wins**. It focuses on small, read-only requests and gives the suite early endpoint coverage. Move to the next phase when the current phase's exit criteria are met. Keep each operation's plan status current as its own spec file is implemented and run.
+There is no required workstream order. Choose the next operation or small related slice using current risk, user impact, environment readiness, and available fixtures. Prefer independent work that can produce useful coverage now; record a concrete blocker when a dependency prevents a complete scenario, and continue with applicable contract, validation, authentication, or client-denial checks. Revisit blocked work when its required identity, service, or test environment becomes available. Update an operation's status when its dedicated spec changes, and record run outcomes separately in the progress log.
 
 ## Status key
 
@@ -43,28 +43,110 @@ Use one file per method/path, following the suggested file names in the register
 | `docs/bystre-docs.api.spec.ts`               | OpenAPI and Swagger availability, selected documented paths, and bearer security declarations. These are contract checks and do not count as behavioral coverage for every route.      |
 | Fixture lifecycle                            | Setup calls `POST /api/v1/users/signin`; teardown calls `DELETE /api/v1/users/{username}/right-to-be-forgotten`. The latter is 🧰 Fixture only until it has a dedicated endpoint spec. |
 
-## Backend and environment context
+## Local integration environment (source repositories)
 
-Planning notes below are based on the sibling [`test-secure-backend` README](../../../test-secure-backend/README.md). Treat the local README as setup guidance; confirm the deployed API's behavior and configuration before relying on it in hosted tests.
+Use the sibling repositories as setup and behavior sources: [test-secure-backend README](../../../test-secure-backend/README.md), [backend Compose file](../../../test-secure-backend/docker-compose.yml), [backend local profile](../../../test-secure-backend/src/main/resources/application-local.yml), and [ollama-mock README](../../../ollama-mock/README.md). These describe available local paths; confirm the deployed target's actual behavior before treating it as equivalent.
 
-- The backend supports a local H2 profile with demo seed data and a Docker PostgreSQL profile with demo seed data. These are useful for repeatable development. Do not assume seeded users or products exist on the hosted API.
-- Authentication uses an application-issued JWT in `Authorization: Bearer <token>`. Sign-in returns access and refresh tokens; refresh exchanges the refresh token, and logout revokes it.
-- The application has `CLIENT` and `ADMIN` roles. The backend README identifies user listing/deletion, product mutations, order administration, and inventory management as admin operations. The current API fixture only creates a client, so admin-success tests are blocked until the chosen test environment has a controlled admin identity. A local demo profile or explicitly configured bootstrap admin can provide one; do not use guessed public credentials.
-- Password recovery and email behavior depend on the app's email pipeline. The README describes a local fake mail sink and user-owned email-event history that can help verify delivery without depending on a real inbox.
-- SSO depends on the Keycloak identity provider in the local stack. Ollama routes depend on a reachable Ollama service or a deterministic test substitute. Keep these checks out of the quick-win phase.
-- Use unique test users and isolated mutable data. Clean up test-created records wherever the API permits it; protect shared seeded fixtures from destructive tests.
+- **Backend local profile:** runs the API on port 4001 with an H2 database and demo seed data. It enables the local password-reset outbox and exposes reset tokens in the response. Use the backend's local-only outbox endpoints to inspect or clear captured email payloads; password-reset coverage can run without SMTP or Mailhog in this profile. Seeded users, products, orders, and the demo admin are local-only test data.
+- **Backend Docker profile:** the backend Compose stack activates docker,demo and starts PostgreSQL, ActiveMQ, and an Ollama container. This Ollama container is the real Qwen service image declared in the Compose file, not the separate mock. The backend README describes Docker/LocalStack email handoff through Artemis to a mail sink; verify that the required consumer and sink are part of the environment being started. This path has more service prerequisites than the local profile.
+- **Ollama mock:** the separate ollama-mock repository runs on port 11434 and returns deterministic, scenario-driven NDJSON/JSON responses for generate, chat, and tool routes. Its default model is qwen3.5:2b, with configurable streaming delays. The backend local profile points to localhost:11434, so the mock can replace a real Ollama service for local API integration. In a container network, configure the backend to use the mock service hostname; localhost inside the backend container refers to that container. Do not start the real Ollama container and mock on the same host port at once.
+- **Authentication and roles:** the API issues its own access and refresh JWTs. The local/demo profiles provide seeded role identities for local testing; the hosted API fixture currently creates a CLIENT user only. Admin-success coverage is therefore available in a controlled local/demo environment or with a configured test admin, but remains blocked against a target without admin credentials. Never use demo identities against the hosted service.
+- **SSO:** AUTH-09 still needs Keycloak from the sibling awesome-localstack setup or a deterministic OIDC test identity. Neither backend nor ollama-mock replaces that identity provider.
+- Keep mutable users, carts, orders, products, inventory, tokens, and MFA state isolated per scenario. Protect demo seed data from destructive tests and clean up resources created by a test wherever the API allows it.
+
+## Dependencies and parallel work
+
+Dependencies below describe data, identity, or environment prerequisites for a scenario. They do not mean one spec file must run before another. Every operation spec must arrange its own prerequisites with a fixture, isolated test data, or controlled environment; never rely on another spec's side effects. A dependent scenario can be implemented before its prerequisite spec is complete if a fixture or deterministic setup can provide the required state.
+
+### Shared prerequisites
+
+| Scenario                  | Prerequisite                                                                                                                                                                                                                                                          | Independent coverage that can proceed                                                                                 |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Any Bearer operation      | A valid client token. The authenticated-user fixture creates a unique user and signs in; the relevant endpoint spec does not need the signup or signin spec to run first.                                                                                             | Public operations and invalid/missing-token cases do not need this fixture.                                           |
+| Admin-success scenario    | A controlled admin identity and any required owned resource. The current client fixture cannot provide admin access.                                                                                                                                                  | Client-denied authorization cases can use the regular client fixture while admin setup is blocked.                    |
+| Mutation scenario         | Isolated user/resource state and a cleanup or reset path.                                                                                                                                                                                                             | Read-only, validation, and unauthorized cases can be written and run independently of successful mutations.           |
+| External-service scenario | Its declared service or a deterministic local path: Keycloak from awesome-localstack for SSO; the backend local outbox or the Docker/LocalStack broker and mail sink for email; and ollama-mock on port 11434 or the configured Ollama container for generation/chat. | Contract, validation, and auth-rejection cases can still run without the service when they do not call through to it. |
+
+### Scenario dependency map
+
+An arrow means the downstream scenario needs state produced by the upstream operation or an equivalent fixture setup. Within one test workflow, satisfy these edges in order. Across spec files, create the prerequisite locally so Playwright can schedule files in parallel.
+
+```mermaid
+flowchart LR
+  signup["AUTH-01 signup"] --> signin["AUTH-02 signin"]
+  signin --> logout["AUTH-04 logout"]
+  signin --> refresh["AUTH-05 refresh"]
+  signup --> userOps["USER-02 lookup / USER-03 update / USER-04 delete / AUTH-06 forget"]
+  emailService["Local outbox or Docker/LocalStack email"] --> forgot["AUTH-07 password/forgot"]
+  forgot --> reset["AUTH-08 password/reset"]
+  forgot --> emailEvents["USER-09 email-events (optional assertion)"]
+  sendEmail["OPS-02 email/send"] --> emailEvents
+  setup2fa["AUTH-11 2FA/setup"] --> confirm2fa["AUTH-12 2FA/confirm"]
+  confirm2fa --> signin2fa["AUTH-10 signin/2FA"]
+  confirm2fa --> recovery["AUTH-14 recovery-codes"]
+  confirm2fa --> disable2fa["AUTH-15 2FA/disable"]
+  product["SHOP-02 create product or isolated product fixture"] --> getProduct["SHOP-03 get product"]
+  product --> updateProduct["SHOP-04 update product"]
+  product --> deleteProduct["SHOP-05 delete product"]
+  product --> addCart["SHOP-08 add cart item"]
+  addCart --> updateCartItem["SHOP-09 update cart item"]
+  addCart --> removeCartItem["SHOP-10 remove cart item"]
+  addCart --> createOrder["SHOP-12 create order"]
+  createOrder --> getOrder["SHOP-13 get order"]
+  createOrder --> cancelOrder["SHOP-14 cancel order"]
+  createOrder --> adminStatus["ADMIN-02 update order status"]
+  product --> inventoryDetail["ADMIN-04 inventory/detail"]
+  product --> adjustInventory["ADMIN-05 inventory/adjustment"]
+  adjustInventory --> movements["ADMIN-06 movements"]
+  ollama["ollama-mock or configured Ollama"] --> generate["INT-01 generate"]
+  ollama --> chat["INT-02 chat"]
+  ollama --> toolChat["INT-03 chat/tools"]
+  productData["Catalog data for product tools"] --> toolChat
+  keycloak["Keycloak from awesome-localstack"] --> sso["AUTH-09 SSO exchange"]
+```
+
+The graph shows scenario data and service dependencies. It does not prescribe spec-file execution order; each downstream spec should create or provision its own prerequisite state so the suite can run in parallel.
+
+| Dependency chain                                                                                          | What the downstream scenario needs                                                                                                                                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AUTH-01 signup -> AUTH-02 signin                                                                          | The account created by signup, when testing the same identity. The authenticated-user fixture already performs both setup calls for bearer-protected scenarios.                                                                                                                                                      |
+| AUTH-02 signin -> AUTH-04 logout / AUTH-05 refresh                                                        | A valid access token for logout or a valid refresh token for refresh. Use a fresh identity/token per test so parallel token lifecycle tests do not invalidate each other's tokens.                                                                                                                                   |
+| AUTH-01 signup -> USER-02 lookup / USER-03 update / USER-04 delete / AUTH-06 right-to-be-forgotten        | A known target username. For USER-04, also provide admin authorization; for AUTH-06, use the authenticated owner's identity and account for deletion in teardown.                                                                                                                                                    |
+| AUTH-07 password/forgot -> AUTH-08 password/reset                                                         | A reset token from the response or reset payload from the local profile outbox; Docker/LocalStack uses the broker and mail sink path. Keep the workflow on an isolated account and do not use an uncontrolled inbox.                                                                                                 |
+| AUTH-11 2FA/setup -> AUTH-12 2FA/confirm -> AUTH-10 signin/2FA                                            | An isolated account with MFA enabled and confirmed before exercising the second-factor sign-in. AUTH-13 can inspect the status before and after these transitions.                                                                                                                                                   |
+| AUTH-12 2FA/confirm -> AUTH-14 recovery-codes / AUTH-15 2FA/disable                                       | A confirmed MFA account; recovery-code and disablement scenarios must not share mutable account state when run concurrently.                                                                                                                                                                                         |
+| SHOP-02 product/create -> SHOP-03 get / SHOP-04 update / SHOP-05 delete / SHOP-08 cart/items              | A product ID. Each operation-specific spec should create its own product with controlled admin credentials or use a known stable fixture; do not depend on another spec leaving a product behind.                                                                                                                    |
+| SHOP-08 cart/items -> SHOP-09 update / SHOP-10 delete / SHOP-12 order/create                              | A populated cart containing an available product. Each scenario should use its own user/cart so clear, update, delete, and checkout tests can run in parallel.                                                                                                                                                       |
+| SHOP-12 order/create -> SHOP-13 order/get / SHOP-14 order/cancel / ADMIN-02 status/update                 | An order ID. Create a separate order per scenario; cancellation and admin status changes mutate order state and must not target the same order concurrently. ADMIN-01 can exercise empty/list behavior independently; use a created order when asserting non-empty results.                                          |
+| SHOP-02 product/create or controlled inventory fixture -> ADMIN-04 inventory/detail / ADMIN-05 adjustment | A product with an inventory record and admin credentials. Confirm product creation initializes inventory in the chosen environment; otherwise seed or provision the inventory record through a controlled fixture.                                                                                                   |
+| ADMIN-05 adjustment -> ADMIN-06 movements                                                                 | A movement created by the adjustment if asserting movement history. The movement-list endpoint can still cover auth, validation, and empty/history behavior without an adjustment in the same scenario.                                                                                                              |
+| INT-01 generate / INT-02 chat / INT-03 chat/tools -> ollama-mock or configured Ollama                     | The backend must be able to reach the chosen service. For local runs, start ollama-mock on port 11434 and use the backend local profile. Tool-flow assertions also need catalog data when a tool reads products; the mock scenario controls the model response, while the backend still executes the product lookup. |
+| OPS-02 email/send or AUTH-07 password/forgot -> USER-09 email-events                                      | Optional event-history assertions when the environment records those sends for the same user. Keep the send and read on an isolated account; test the endpoint's independent empty/current-history behavior separately.                                                                                              |
+
+### Work that can proceed in parallel
+
+These are ownership lanes, not stages. Split a lane further by controller or operation ID as needed. Keep the one-spec-per-method/path rule and use isolated data so work in different lanes does not contend for mutable resources.
+
+| Lane                     | Suggested independent slice                                                                         | Main coordination point                                                                                                                                                                  |
+| ------------------------ | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Contract and read-only   | OpenAPI/docs checks; OPS-03 to OPS-05; SHOP-01, SHOP-03, INT-04; USER-01, AUTH-03, AUTH-13, USER-09 | Bearer reads use their own client fixture. Use known or isolated IDs for lookup cases.                                                                                                   |
+| Accounts and settings    | AUTH-01, AUTH-02; USER-02, USER-03, USER-05 to USER-08; AUTH-06; OPS-01                             | Each spec owns a unique user. Profile lookup/update/delete scenarios must not share the same account.                                                                                    |
+| Product administration   | SHOP-02, SHOP-04, SHOP-05                                                                           | Needs controlled admin credentials for success paths; create a disposable product per spec and clean it up. Client-denied cases can proceed without admin setup.                         |
+| Cart and orders          | SHOP-06 to SHOP-14                                                                                  | Each flow uses its own user, cart, product, and order. Coordinate only shared fixture/client changes.                                                                                    |
+| Token, recovery, and MFA | AUTH-04, AUTH-05, AUTH-07, AUTH-08, AUTH-10 to AUTH-15                                              | Use dedicated accounts/tokens per workflow; password reset can use the local outbox or Docker/LocalStack email path, and MFA sign-in depends on completed setup/confirmation.            |
+| Admin and integrations   | USER-04, ADMIN-01 to ADMIN-06, AUTH-09, OPS-02, INT-01 to INT-03                                    | Admin identity and inventory/order fixtures, Keycloak, email services, or a reachable Ollama/mock endpoint may gate success paths. Keep independent denial and contract coverage moving. |
+
+Parallelize implementation and execution only where fixtures isolate data. Tests that clear a cart, delete a user/product, rotate tokens, cancel an order, change order status, adjust inventory, or consume recovery codes need separate owned resources. Shared-client or fixture changes should be coordinated with specs that import them; endpoint behavior work in separate spec files can otherwise proceed independently.
 
 ## Known defects
 
 - **Malformed JSON request bodies return `401 Unauthorized` instead of `400 Bad Request`.** Confirmed live on `PUT /api/v1/users/chat-system-prompt`, `PUT /api/v1/users/tool-system-prompt` (valid bearer token, unparsable/mistyped body), and on the fully public `POST /api/v1/users/signup` (no auth at all, unparsable body). A well-formed-but-invalid body still correctly returns `400`. This points to a global request-body-parsing exception being mapped to the authentication error path rather than the validation error path, so it likely affects every JSON-accepting operation, not just the ones listed here. Each affected spec keeps one test documenting the current (incorrect) `401` response; update those once the defect is fixed.
 
-## Phased coverage register — easiest to hardest
+## Coverage workstreams
 
-### Phase 1 — Quick wins: documentation, read-only, and simple lookups
+### Contract, read-only, and simple lookup operations
 
-**Difficulty:** ★☆☆☆☆  
-**Goal:** Add small request/response checks with little or no state mutation. Start here.  
-**Exit criteria:** Each operation has its own spec; happy-path status and response shape are asserted; lookup inputs include a useful not-found case where applicable.
+**Focus:** Documentation, read-only requests, and lookups with little or no state mutation. Assert the documented success status and response shape, plus a useful not-found case where applicable.
 
 | ID      | Operation                                   | Security | Status     | Dedicated spec file                                      |
 | ------- | ------------------------------------------- | -------- | ---------- | -------------------------------------------------------- |
@@ -78,11 +160,9 @@ Planning notes below are based on the sibling [`test-secure-backend` README](../
 | AUTH-13 | `GET /api/v1/users/2fa/status`              | Bearer   | ⬜ Planned | `users/get-users-2fa-status.api.spec.ts`                 |
 | USER-09 | `GET /api/v1/users/me/email-events`         | Bearer   | ⬜ Planned | `users/get-users-me-email-events.api.spec.ts`            |
 
-### Phase 2 — Simple authenticated requests and user-owned settings
+### Accounts, authentication, and user-owned settings
 
-**Difficulty:** ★★☆☆☆  
-**Goal:** Reuse the authenticated-user fixture for straightforward account, settings, and empty/current-resource checks.  
-**Exit criteria:** Each operation uses an isolated user; validate ownership and response shape; settings updates verify the resulting value.
+**Focus:** Account creation and sign-in, authenticated account behavior, user preferences, and current-user resources. Use isolated identities, verify ownership and response shape, and assert resulting values after settings updates.
 
 | ID      | Operation                              | Security | Status     | Dedicated spec file                              |
 | ------- | -------------------------------------- | -------- | ---------- | ------------------------------------------------ |
@@ -98,11 +178,9 @@ Planning notes below are based on the sibling [`test-secure-backend` README](../
 | SHOP-06 | `GET /api/v1/cart`                     | Bearer   | ✅ Covered | `cart/get-cart.api.spec.ts`                      |
 | SHOP-11 | `GET /api/v1/orders`                   | Bearer   | ⬜ Planned | `orders/get-orders.api.spec.ts`                  |
 
-### Phase 3 — Stateful customer flows
+### Customer and commerce lifecycle
 
-**Difficulty:** ★★★☆☆  
-**Goal:** Exercise token lifecycle, password recovery, cart changes, checkout, and order state transitions.  
-**Exit criteria:** Tests verify before/after state, reject invalid transitions, avoid cross-user data access, and clean up safely. Use the local email sink for password-reset flows when available.
+**Focus:** Token lifecycle, password recovery, cart changes, checkout, and order state transitions. Verify before/after state, reject invalid transitions, isolate users, and clean up safely. Use the local-profile reset token/outbox where available, or the configured Docker/LocalStack mail sink.
 
 | ID      | Operation                                               | Security | Status          | Dedicated spec file                                    |
 | ------- | ------------------------------------------------------- | -------- | --------------- | ------------------------------------------------------ |
@@ -119,41 +197,37 @@ Planning notes below are based on the sibling [`test-secure-backend` README](../
 | SHOP-13 | `GET /api/v1/orders/{id}`                               | Bearer   | ⬜ Planned      | `orders/get-orders-by-id.api.spec.ts`                  |
 | SHOP-14 | `POST /api/v1/orders/{id}/cancel`                       | Bearer   | ⬜ Planned      | `orders/post-orders-by-id-cancel.api.spec.ts`          |
 
-### Phase 4 — Higher-privilege access and multi-step authentication
+### Authorization, administration, and multi-step authentication
 
-**Difficulty:** ★★★★☆  
-**Goal:** Cover role boundaries, admin-only resource management, and the multi-step two-factor authentication flow.  
-**Exit criteria:** Client-denied cases and admin-success cases are separate and explicit. Until a controlled test admin is available, implement and assert the client-denied case; mark the row 🟡 Partial while admin-success remains blocked. Run admin-success cases only with a controlled test admin. Two-factor scenarios set up, confirm, use, and disable MFA with isolated accounts.
+**Focus:** Role boundaries, admin-only resource management, and two-factor authentication. Keep client-denied and admin-success scenarios distinct. When no controlled admin is available, client-denied coverage can still progress while admin-success remains blocked. Run admin-success cases only with a controlled test admin. Isolate accounts used for MFA setup, confirmation, use, recovery, and disablement.
 
-| ID       | Operation                                              | Security | Status                                                                 | Dedicated spec file                                   |
-| -------- | ------------------------------------------------------ | -------- | ---------------------------------------------------------------------- | ----------------------------------------------------- |
-| USER-01  | `GET /api/v1/users`                                    | Bearer   | ✅ Covered (authenticated client receives 200)                         | `users/get-users.api.spec.ts`                         |
-| USER-04  | `DELETE /api/v1/users/{username}`                      | Bearer   | ⏸️ Blocked — admin identity needed                                     | `users/delete-users-by-username.api.spec.ts`          |
-| SHOP-02  | `POST /api/v1/products`                                | Bearer   | ⬜ Planned (no spec file; POST /products not currently covered)        |
-| SHOP-04  | `PUT /api/v1/products/{id}`                            | Bearer   | ⬜ Planned (no spec file; PUT /products/{id} not currently covered)    |
-| SHOP-05  | `DELETE /api/v1/products/{id}`                         | Bearer   | ⬜ Planned (no spec file; DELETE /products/{id} not currently covered) |
-| ADMIN-01 | `GET /api/v1/orders/admin`                             | Bearer   | ⏸️ Blocked — admin identity needed                                     | `orders/get-orders-admin.api.spec.ts`                 |
-| ADMIN-02 | `PUT /api/v1/orders/{id}/status`                       | Bearer   | ⏸️ Blocked — admin identity needed                                     | `orders/put-orders-by-id-status.api.spec.ts`          |
-| ADMIN-03 | `GET /api/v1/admin/inventory`                          | Bearer   | ⏸️ Blocked — admin identity needed                                     | `admin/get-admin-inventory.api.spec.ts`               |
-| ADMIN-04 | `GET /api/v1/admin/inventory/{productId}`              | Bearer   | ⏸️ Blocked — admin identity needed                                     | `admin/get-admin-inventory-by-product-id.api.spec.ts` |
-| ADMIN-05 | `POST /api/v1/admin/inventory/{productId}/adjustments` | Bearer   | ⏸️ Blocked — admin identity needed                                     | `admin/post-admin-inventory-adjustments.api.spec.ts`  |
-| ADMIN-06 | `GET /api/v1/admin/inventory/{productId}/movements`    | Bearer   | ⏸️ Blocked — admin identity needed                                     | `admin/get-admin-inventory-movements.api.spec.ts`     |
-| AUTH-10  | `POST /api/v1/users/signin/2fa`                        | Public   | ⬜ Planned                                                             | `users/post-users-signin-2fa.api.spec.ts`             |
-| AUTH-11  | `POST /api/v1/users/2fa/setup`                         | Bearer   | ⬜ Planned                                                             | `users/post-users-2fa-setup.api.spec.ts`              |
-| AUTH-12  | `POST /api/v1/users/2fa/confirm`                       | Bearer   | ⬜ Planned                                                             | `users/post-users-2fa-confirm.api.spec.ts`            |
-| AUTH-14  | `POST /api/v1/users/2fa/recovery-codes`                | Bearer   | ⬜ Planned                                                             | `users/post-users-2fa-recovery-codes.api.spec.ts`     |
-| AUTH-15  | `POST /api/v1/users/2fa/disable`                       | Bearer   | ⬜ Planned                                                             | `users/post-users-2fa-disable.api.spec.ts`            |
+| ID       | Operation                                              | Security | Status                                                                   | Dedicated spec file                                   |
+| -------- | ------------------------------------------------------ | -------- | ------------------------------------------------------------------------ | ----------------------------------------------------- |
+| USER-01  | `GET /api/v1/users`                                    | Bearer   | ✅ Covered (authenticated client receives 200)                           | `users/get-users.api.spec.ts`                         |
+| USER-04  | `DELETE /api/v1/users/{username}`                      | Bearer   | ⏸️ Blocked — hosted admin credentials needed; local/demo admin available | `users/delete-users-by-username.api.spec.ts`          |
+| SHOP-02  | `POST /api/v1/products`                                | Bearer   | ⬜ Planned (no spec file; POST /products not currently covered)          |
+| SHOP-04  | `PUT /api/v1/products/{id}`                            | Bearer   | ⬜ Planned (no spec file; PUT /products/{id} not currently covered)      |
+| SHOP-05  | `DELETE /api/v1/products/{id}`                         | Bearer   | ⬜ Planned (no spec file; DELETE /products/{id} not currently covered)   |
+| ADMIN-01 | `GET /api/v1/orders/admin`                             | Bearer   | ⏸️ Blocked — hosted admin credentials needed; local/demo admin available | `orders/get-orders-admin.api.spec.ts`                 |
+| ADMIN-02 | `PUT /api/v1/orders/{id}/status`                       | Bearer   | ⏸️ Blocked — hosted admin credentials needed; local/demo admin available | `orders/put-orders-by-id-status.api.spec.ts`          |
+| ADMIN-03 | `GET /api/v1/admin/inventory`                          | Bearer   | ⏸️ Blocked — hosted admin credentials needed; local/demo admin available | `admin/get-admin-inventory.api.spec.ts`               |
+| ADMIN-04 | `GET /api/v1/admin/inventory/{productId}`              | Bearer   | ⏸️ Blocked — hosted admin credentials needed; local/demo admin available | `admin/get-admin-inventory-by-product-id.api.spec.ts` |
+| ADMIN-05 | `POST /api/v1/admin/inventory/{productId}/adjustments` | Bearer   | ⏸️ Blocked — hosted admin credentials needed; local/demo admin available | `admin/post-admin-inventory-adjustments.api.spec.ts`  |
+| ADMIN-06 | `GET /api/v1/admin/inventory/{productId}/movements`    | Bearer   | ⏸️ Blocked — hosted admin credentials needed; local/demo admin available | `admin/get-admin-inventory-movements.api.spec.ts`     |
+| AUTH-10  | `POST /api/v1/users/signin/2fa`                        | Public   | ⬜ Planned                                                               | `users/post-users-signin-2fa.api.spec.ts`             |
+| AUTH-11  | `POST /api/v1/users/2fa/setup`                         | Bearer   | ⬜ Planned                                                               | `users/post-users-2fa-setup.api.spec.ts`              |
+| AUTH-12  | `POST /api/v1/users/2fa/confirm`                       | Bearer   | ⬜ Planned                                                               | `users/post-users-2fa-confirm.api.spec.ts`            |
+| AUTH-14  | `POST /api/v1/users/2fa/recovery-codes`                | Bearer   | ⬜ Planned                                                               | `users/post-users-2fa-recovery-codes.api.spec.ts`     |
+| AUTH-15  | `POST /api/v1/users/2fa/disable`                       | Bearer   | ⬜ Planned                                                               | `users/post-users-2fa-disable.api.spec.ts`            |
 
-### Phase 5 — External services and integration-dependent behavior
+### External services and integration-dependent behavior
 
-**Difficulty:** ★★★★★  
-**Goal:** Cover behaviors that depend on identity, messaging, or AI services. Prefer controlled local services or deterministic substitutes so routine runs are stable.
-**Exit criteria:** Each test clearly identifies its required service and has a repeatable setup. If a dependency is unavailable, retain a specific blocker and keep independent negative or contract checks useful.
+**Focus:** Behaviors that depend on identity, messaging, or AI services. Prefer controlled local services or deterministic substitutes for stable runs. Document each required service and repeatable setup. If a dependency is unavailable, keep the blocker specific and continue with independent negative or contract checks.
 
-| ID      | Operation                         | Security | Status                                                | Dedicated spec file                         |
-| ------- | --------------------------------- | -------- | ----------------------------------------------------- | ------------------------------------------- |
-| AUTH-09 | `POST /api/v1/users/sso/exchange` | Public   | ⏸️ Blocked — controlled OIDC identity needed          | `users/post-users-sso-exchange.api.spec.ts` |
-| OPS-02  | `POST /api/v1/email`              | Bearer   | ⬜ Planned                                            | `email/post-email.api.spec.ts`              |
+| ID      | Operation                         | Security | Status                                                             | Dedicated spec file                         |
+| ------- | --------------------------------- | -------- | ------------------------------------------------------------------ | ------------------------------------------- |
+| AUTH-09 | `POST /api/v1/users/sso/exchange` | Public   | ⏸️ Blocked — controlled OIDC identity needed                       | `users/post-users-sso-exchange.api.spec.ts` |
+| OPS-02  | `POST /api/v1/email`              | Bearer   | ⬜ Planned                                                         | `email/post-email.api.spec.ts`              |
 | INT-01  | `POST /api/v1/ollama/generate`    | Bearer   | 🟡 Partial — upstream 404/500 cases need a controlled fault target | `ollama/post-ollama-generate.api.spec.ts`   |
 | INT-02  | `POST /api/v1/ollama/chat`        | Bearer   | 🟡 Partial — upstream 404/500 cases need a controlled fault target | `ollama/post-ollama-chat.api.spec.ts`       |
 | INT-03  | `POST /api/v1/ollama/chat/tools`  | Bearer   | 🟡 Partial — upstream 404/500 cases need a controlled fault target | `ollama/post-ollama-chat-tools.api.spec.ts` |
@@ -171,12 +245,9 @@ Keep scenarios in that operation's dedicated file. Choose applicable checks base
 
 Do not repeat a check that cannot apply to an operation; note the reason in its spec or plan row. Keep assertions at the API contract level instead of coupling them to internal implementation details.
 
-## Suggested first iteration
+## Working on an operation
 
-1. Take one Phase 1 endpoint and implement its dedicated spec.
-2. Run that file against the intended API environment and record the result.
-3. Update its status and add a progress-log entry with the operation ID and run result.
-4. Continue through the remaining Phase 1 rows before moving to Phase 2.
+For each selected operation, add or update its dedicated spec, run that file against the intended API environment, and record the implementation status and latest run result separately. Related operations can be handled together when they share fixtures or setup, while retaining one spec file per method and path.
 
 Example single-file command:
 
@@ -186,14 +257,14 @@ npx playwright test tests/4_byst.re_api_tests/<spec-file> --project=bystre-api-t
 
 ## Progress log
 
-Record the date, phase/operation IDs, implemented change, and latest run result. A spec can be ✅ Covered while its latest run is failing; keep implementation status and run outcome distinct in the log.
+Record the date, workstream or operation IDs, implemented change, and latest run result. A spec can be ✅ Covered while its latest run is failing; keep implementation status and run outcome distinct in the log.
 
-| Date       | Phase / operation IDs | Change                                                                                                                                                                                                                                                                      | Latest run / blocker                                                                                                                |
-| ---------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-10-19 | Baseline              | Mapped the 53 operations in the checked-in OpenAPI snapshot and the existing spec/fixture coverage. Reordered the roadmap by estimated implementation difficulty.                                                                                                           | Plan update only; no test run recorded.                                                                                             |
-| 2026-10-19 | AUTH-04, AUTH-05      | Added separate logout and refresh specs for token revocation, refresh rotation/reuse, validation, and unauthorized access.                                                                                                                                                  | 6/6 Playwright tests passed against the configured API (`--project=bystre-api-tests --workers=1 --retries=0`).                      |
-| 2026-10-19 | OPS-03–OPS-05         | Added controller-scoped traffic client, DTOs, fixture, shared entry assertions, and one dedicated spec per traffic operation. Coverage includes scoped info topics, generated-log pagination/filtering, correlation lookup, invalid input, and an empty not-found response. | Full Bystre API project: 25/27 passed. The live API returned HTTP 500 for correlation-ID detail lookup and the text-filter request. |
-| 2026-10-19 | OPS-05                | Removed the correlation-ID detail spec after the live API returned HTTP 500. The endpoint remains in the contract inventory as planned; the unused client method was removed.                                                                                               | Full Bystre API project: the correlation-ID detail case still returned HTTP 500. Revisit when the endpoint is stable.               |
+| Date       | Workstream / operation IDs | Change                                                                                                                                                                                                                                                                      | Latest run / blocker                                                                                                                |
+| ---------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-10-19 | Baseline                   | Mapped the 53 operations in the checked-in OpenAPI snapshot and the existing spec/fixture coverage. Reordered the roadmap by estimated implementation difficulty.                                                                                                           | Plan update only; no test run recorded.                                                                                             |
+| 2026-10-19 | AUTH-04, AUTH-05           | Added separate logout and refresh specs for token revocation, refresh rotation/reuse, validation, and unauthorized access.                                                                                                                                                  | 6/6 Playwright tests passed against the configured API (`--project=bystre-api-tests --workers=1 --retries=0`).                      |
+| 2026-10-19 | OPS-03–OPS-05              | Added controller-scoped traffic client, DTOs, fixture, shared entry assertions, and one dedicated spec per traffic operation. Coverage includes scoped info topics, generated-log pagination/filtering, correlation lookup, invalid input, and an empty not-found response. | Full Bystre API project: 25/27 passed. The live API returned HTTP 500 for correlation-ID detail lookup and the text-filter request. |
+| 2026-10-19 | OPS-05                     | Removed the correlation-ID detail spec after the live API returned HTTP 500. The endpoint remains in the contract inventory as planned; the unused client method was removed.                                                                                               | Full Bystre API project: the correlation-ID detail case still returned HTTP 500. Revisit when the endpoint is stable.               |
 
 | 2026-10-19 | USER-01, USER-02, SHOP-06, SHOP-07 | Added dedicated specs for user listing, username lookup, cart retrieval, and cart clearing, including authentication and not-found checks. | 13/13 Playwright checks passed against the configured API (`--project=bystre-api-tests --workers=1 --retries=0`). Client access to user listing returned 200. |
 | 2026-10-19 | OPS-01 | Added QR client, fixture, and endpoint spec for PNG output, auth rejection, and missing/blank text validation. | 5/5 Playwright tests passed against Bystre using an isolated config. Live probes confirmed the same behavior; the temporary probe user was deleted (204). |
@@ -201,4 +272,4 @@ Record the date, phase/operation IDs, implemented change, and latest run result.
 
 ## Completion criteria
 
-The plan is complete when each of the 53 method/path operations has its own spec file, each operation has a current status, all applicable security/role boundaries are covered, blockers have been revisited, and recent phase results are recorded above. Any operation that remains blocked must include a concrete reason and the environment change needed to resume it.
+Coverage is complete when each of the 53 method/path operations has its own spec file, each operation has a current status, applicable security and role boundaries are covered, blockers have been revisited, and recent run outcomes are recorded above. Any operation that remains blocked must include a concrete reason and the environment change needed to resume it. Workstreams are organizational views; progress can happen in any order as risk, readiness, and dependencies change.
