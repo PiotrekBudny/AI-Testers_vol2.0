@@ -94,6 +94,9 @@ jobs:
           DEMO_USER_DISPLAY_NAME: ${{ vars.DEMO_USER_DISPLAY_NAME }}
           DEFAULT_TEST_USER_DISPLAY_NAME: ${{ vars.DEFAULT_TEST_USER_DISPLAY_NAME }}
           DEFAULT_TEST_USER_PASSWORD: ${{ secrets.DEFAULT_TEST_USER_PASSWORD }}
+          BYSTRE_API_BASE_URL: ${{ vars.BYSTRE_API_BASE_URL }}
+          BYSTRE_API_USERNAME: ${{ secrets.BYSTRE_API_USERNAME }}
+          BYSTRE_API_PASSWORD: ${{ secrets.BYSTRE_API_PASSWORD }}
 
       - name: Upload Playwright report
         if: success() || failure()
