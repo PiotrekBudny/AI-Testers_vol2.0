@@ -161,7 +161,7 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 | SHOP-01 | `GET /api/v1/products`                      | Bearer   | ✅ Covered | `products/get-products.api.spec.ts`                      |
 | SHOP-03 | `GET /api/v1/products/{id}`                 | Bearer   | ✅ Covered | `products/get-products-by-id.api.spec.ts`                |
 | AUTH-03 | `GET /api/v1/users/me`                      | Bearer   | ✅ Covered | `users/bystre-me.api.spec.ts`                            |
-| AUTH-13 | `GET /api/v1/users/2fa/status`              | Bearer   | ⬜ Planned | `users/get-users-2fa-status.api.spec.ts`                 |
+| AUTH-13 | `GET /api/v1/users/2fa/status`              | Bearer   | ✅ Covered | `users/get-users-2fa-status.api.spec.ts`                 |
 | USER-09 | `GET /api/v1/users/me/email-events`         | Bearer   | ⬜ Planned | `users/get-users-me-email-events.api.spec.ts`            |
 
 ### Accounts, authentication, and user-owned settings
@@ -186,43 +186,43 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 
 **Focus:** Token lifecycle, password recovery, cart changes, checkout, and order state transitions. Verify before/after state, reject invalid transitions, isolate users, and clean up safely. Use the local-profile reset token/outbox where available, or the configured Docker/LocalStack mail sink.
 
-| ID      | Operation                                               | Security | Status     | Dedicated spec file                                    |
-| ------- | ------------------------------------------------------- | -------- | ---------- | ------------------------------------------------------ |
-| AUTH-04 | `POST /api/v1/users/logout`                             | Bearer   | ✅ Covered | `users/post-users-logout.api.spec.ts`                  |
-| AUTH-05 | `POST /api/v1/users/refresh`                            | Public   | ✅ Covered | `users/post-users-refresh.api.spec.ts`                 |
-| AUTH-06 | `DELETE /api/v1/users/{username}/right-to-be-forgotten` | Bearer   | ✅ Covered | `users/delete-users-right-to-be-forgotten.api.spec.ts` |
-| AUTH-07 | `POST /api/v1/users/password/forgot`                    | Public   | ⬜ Planned | `users/post-users-password-forgot.api.spec.ts`         |
-| AUTH-08 | `POST /api/v1/users/password/reset`                     | Public   | ⬜ Planned | `users/post-users-password-reset.api.spec.ts`          |
-| SHOP-07 | `DELETE /api/v1/cart`                                   | Bearer   | ✅ Covered | `cart/delete-cart.api.spec.ts`                         |
-| SHOP-08 | `POST /api/v1/cart/items`                               | Bearer   | ✅ Covered | `cart/post-cart-items.api.spec.ts`                     |
-| SHOP-09 | `PUT /api/v1/cart/items/{productId}`                    | Bearer   | ✅ Covered | `cart/put-cart-items-by-product-id.api.spec.ts`        |
-| SHOP-10 | `DELETE /api/v1/cart/items/{productId}`                 | Bearer   | ✅ Covered | `cart/delete-cart-items-by-product-id.api.spec.ts`     |
-| SHOP-12 | `POST /api/v1/orders`                                   | Bearer   | 🟡 Partial | `orders/post-orders.api.spec.ts`                       |
-| SHOP-13 | `GET /api/v1/orders/{id}`                               | Bearer   | 🟡 Partial | `orders/get-orders-by-id.api.spec.ts`                  |
-| SHOP-14 | `POST /api/v1/orders/{id}/cancel`                       | Bearer   | 🟡 Partial | `orders/post-orders-by-id-cancel.api.spec.ts`          |
+| ID      | Operation                                               | Security | Status                                                        | Dedicated spec file                                    |
+| ------- | ------------------------------------------------------- | -------- | ------------------------------------------------------------- | ------------------------------------------------------ |
+| AUTH-04 | `POST /api/v1/users/logout`                             | Bearer   | ✅ Covered                                                    | `users/post-users-logout.api.spec.ts`                  |
+| AUTH-05 | `POST /api/v1/users/refresh`                            | Public   | ✅ Covered                                                    | `users/post-users-refresh.api.spec.ts`                 |
+| AUTH-06 | `DELETE /api/v1/users/{username}/right-to-be-forgotten` | Bearer   | ✅ Covered                                                    | `users/delete-users-right-to-be-forgotten.api.spec.ts` |
+| AUTH-07 | `POST /api/v1/users/password/forgot`                    | Public   | 🟡 Partial — delivery cannot be observed on the hosted target | `users/post-users-password-forgot.api.spec.ts`         |
+| AUTH-08 | `POST /api/v1/users/password/reset`                     | Public   | 🟡 Partial — success needs a controlled reset token source    | `users/post-users-password-reset.api.spec.ts`          |
+| SHOP-07 | `DELETE /api/v1/cart`                                   | Bearer   | ✅ Covered                                                    | `cart/delete-cart.api.spec.ts`                         |
+| SHOP-08 | `POST /api/v1/cart/items`                               | Bearer   | ✅ Covered                                                    | `cart/post-cart-items.api.spec.ts`                     |
+| SHOP-09 | `PUT /api/v1/cart/items/{productId}`                    | Bearer   | ✅ Covered                                                    | `cart/put-cart-items-by-product-id.api.spec.ts`        |
+| SHOP-10 | `DELETE /api/v1/cart/items/{productId}`                 | Bearer   | ✅ Covered                                                    | `cart/delete-cart-items-by-product-id.api.spec.ts`     |
+| SHOP-12 | `POST /api/v1/orders`                                   | Bearer   | 🟡 Partial                                                    | `orders/post-orders.api.spec.ts`                       |
+| SHOP-13 | `GET /api/v1/orders/{id}`                               | Bearer   | 🟡 Partial                                                    | `orders/get-orders-by-id.api.spec.ts`                  |
+| SHOP-14 | `POST /api/v1/orders/{id}/cancel`                       | Bearer   | 🟡 Partial                                                    | `orders/post-orders-by-id-cancel.api.spec.ts`          |
 
 ### Authorization, administration, and multi-step authentication
 
 **Focus:** Role boundaries, admin-only resource management, and two-factor authentication. Keep client-denied and admin-success scenarios distinct. When no controlled admin is available, client-denied coverage can still progress while admin-success remains blocked. Run admin-success cases only with a controlled test admin. Isolate accounts used for MFA setup, confirmation, use, recovery, and disablement.
 
-| ID       | Operation                                              | Security | Status                                         | Dedicated spec file                                   |
-| -------- | ------------------------------------------------------ | -------- | ---------------------------------------------- | ----------------------------------------------------- |
-| USER-01  | `GET /api/v1/users`                                    | Bearer   | ✅ Covered (authenticated client receives 200) | `users/get-users.api.spec.ts`                         |
-| USER-04  | `DELETE /api/v1/users/{username}`                      | Bearer   | ✅ Covered                                     | `users/delete-users-by-username.api.spec.ts`          |
-| SHOP-02  | `POST /api/v1/products`                                | Bearer   | ✅ Covered                                     | `products/post-products.api.spec.ts`                  |
-| SHOP-04  | `PUT /api/v1/products/{id}`                            | Bearer   | ✅ Covered                                     | `products/put-products-by-id.api.spec.ts`             |
-| SHOP-05  | `DELETE /api/v1/products/{id}`                         | Bearer   | ✅ Covered                                     | `products/delete-products-by-id.api.spec.ts`          |
-| ADMIN-01 | `GET /api/v1/orders/admin`                             | Bearer   | ✅ Covered                                     | `orders/get-orders-admin.api.spec.ts`                 |
-| ADMIN-02 | `PUT /api/v1/orders/{id}/status`                       | Bearer   | ✅ Covered                                     | `orders/put-orders-by-id-status.api.spec.ts`          |
-| ADMIN-03 | `GET /api/v1/admin/inventory`                          | Bearer   | ✅ Covered                                     | `admin/get-admin-inventory.api.spec.ts`               |
-| ADMIN-04 | `GET /api/v1/admin/inventory/{productId}`              | Bearer   | ✅ Covered                                     | `admin/get-admin-inventory-by-product-id.api.spec.ts` |
-| ADMIN-05 | `POST /api/v1/admin/inventory/{productId}/adjustments` | Bearer   | ✅ Covered                                     | `admin/post-admin-inventory-adjustments.api.spec.ts`  |
-| ADMIN-06 | `GET /api/v1/admin/inventory/{productId}/movements`    | Bearer   | ✅ Covered                                     | `admin/get-admin-inventory-movements.api.spec.ts`     |
-| AUTH-10  | `POST /api/v1/users/signin/2fa`                        | Public   | ⬜ Planned                                     | `users/post-users-signin-2fa.api.spec.ts`             |
-| AUTH-11  | `POST /api/v1/users/2fa/setup`                         | Bearer   | ⬜ Planned                                     | `users/post-users-2fa-setup.api.spec.ts`              |
-| AUTH-12  | `POST /api/v1/users/2fa/confirm`                       | Bearer   | ⬜ Planned                                     | `users/post-users-2fa-confirm.api.spec.ts`            |
-| AUTH-14  | `POST /api/v1/users/2fa/recovery-codes`                | Bearer   | ⬜ Planned                                     | `users/post-users-2fa-recovery-codes.api.spec.ts`     |
-| AUTH-15  | `POST /api/v1/users/2fa/disable`                       | Bearer   | ⬜ Planned                                     | `users/post-users-2fa-disable.api.spec.ts`            |
+| ID       | Operation                                              | Security | Status                                                   | Dedicated spec file                                   |
+| -------- | ------------------------------------------------------ | -------- | -------------------------------------------------------- | ----------------------------------------------------- |
+| USER-01  | `GET /api/v1/users`                                    | Bearer   | ✅ Covered (authenticated client receives 200)           | `users/get-users.api.spec.ts`                         |
+| USER-04  | `DELETE /api/v1/users/{username}`                      | Bearer   | ✅ Covered                                               | `users/delete-users-by-username.api.spec.ts`          |
+| SHOP-02  | `POST /api/v1/products`                                | Bearer   | ✅ Covered                                               | `products/post-products.api.spec.ts`                  |
+| SHOP-04  | `PUT /api/v1/products/{id}`                            | Bearer   | ✅ Covered                                               | `products/put-products-by-id.api.spec.ts`             |
+| SHOP-05  | `DELETE /api/v1/products/{id}`                         | Bearer   | ✅ Covered                                               | `products/delete-products-by-id.api.spec.ts`          |
+| ADMIN-01 | `GET /api/v1/orders/admin`                             | Bearer   | ✅ Covered                                               | `orders/get-orders-admin.api.spec.ts`                 |
+| ADMIN-02 | `PUT /api/v1/orders/{id}/status`                       | Bearer   | ✅ Covered                                               | `orders/put-orders-by-id-status.api.spec.ts`          |
+| ADMIN-03 | `GET /api/v1/admin/inventory`                          | Bearer   | ✅ Covered                                               | `admin/get-admin-inventory.api.spec.ts`               |
+| ADMIN-04 | `GET /api/v1/admin/inventory/{productId}`              | Bearer   | ✅ Covered                                               | `admin/get-admin-inventory-by-product-id.api.spec.ts` |
+| ADMIN-05 | `POST /api/v1/admin/inventory/{productId}/adjustments` | Bearer   | ✅ Covered                                               | `admin/post-admin-inventory-adjustments.api.spec.ts`  |
+| ADMIN-06 | `GET /api/v1/admin/inventory/{productId}/movements`    | Bearer   | ✅ Covered                                               | `admin/get-admin-inventory-movements.api.spec.ts`     |
+| AUTH-10  | `POST /api/v1/users/signin/2fa`                        | Public   | 🟡 Partial — valid-challenge rejection cases remain      | `users/post-users-signin-2fa.api.spec.ts`             |
+| AUTH-11  | `POST /api/v1/users/2fa/setup`                         | Bearer   | 🟡 Partial — invalid-token and repeat-setup cases remain | `users/post-users-2fa-setup.api.spec.ts`              |
+| AUTH-12  | `POST /api/v1/users/2fa/confirm`                       | Bearer   | ✅ Covered                                               | `users/post-users-2fa-confirm.api.spec.ts`            |
+| AUTH-14  | `POST /api/v1/users/2fa/recovery-codes`                | Bearer   | ✅ Covered                                               | `users/post-users-2fa-recovery-codes.api.spec.ts`     |
+| AUTH-15  | `POST /api/v1/users/2fa/disable`                       | Bearer   | ✅ Covered                                               | `users/post-users-2fa-disable.api.spec.ts`            |
 
 ### External services and integration-dependent behavior
 
@@ -277,6 +277,9 @@ Record the date, workstream or operation IDs, implemented change, and latest run
 
 | 2026-10-27 | AUTH-01, AUTH-06, USER-01–USER-04, USER-06, USER-08, SHOP-02 | Expanded signup, user lookup/edit/delete, own-account deletion, and product creation coverage with isolated data, authorization checks, validation, and persisted-state checks. Updated malformed-JSON assertions to the current 400 response and limited role assumptions for unrelated listed accounts to the documented array shape. | Both complete Bystre Playwright projects passed 132/132 tests with 3 workers and no retries. Formatting, lint, and TypeScript checks passed. |
 | 2026-10-27 | SHOP-08–SHOP-14 | Added seven dedicated cart and customer-order specs, cart/order clients and fixtures, and an `@orders` tag. Cart operations cover state, totals, isolation, stock, validation, and auth. Order specs cover empty listing, pagination/query validation, empty-cart checkout, address validation, missing/malformed IDs, and auth. | New Bystre specs passed 34/34 (`--project=bystre-api-tests --workers=2 --retries=0`). SHOP-11–SHOP-14 remain partial: `.env.ai` has no controlled admin identity to create a disposable product on the non-admin target. Resume successful checkout, nonempty listing/ownership, retrieval, cancellation, and invalid transitions when a controlled product can be created on that same host or a suitable local integration environment is available. |
+| 2026-10-27 | AUTH-07–AUTH-08, AUTH-10–AUTH-15 | Added dedicated password-recovery and MFA specs with isolated accounts, plus MFA setup and TOTP helpers. AUTH-08 has invalid-token and validation coverage; success still needs a controlled reset token source. | A Playwright passing marker exists for the account-security worktree, but no test count was recorded in this handoff. The hosted forgot response returned `token: null`; the local outbox profile at `localhost:4001` and a controlled mail sink were unavailable. |
+| 2026-10-27 | SHOP-11 | Removed a status filter from the new user's empty-order-list test because an empty result cannot establish that filtering works. Nonempty filtering remains partial. | Focused GET-orders spec passed 6/6 live tests. A disposable-user probe returned 200 for empty `PENDING` and `PAID` lists and deleted the account with 204. |
+| 2026-10-27 | AUTH-12, AUTH-14, AUTH-15 | Added missing-bearer and invalid-bearer rejection cases for MFA confirmation, recovery-code rotation, and disablement. | All six new cases passed. A three-spec run passed 13/15 with 3 workers at the default 10-second timeout; two existing AUTH-15 cases timed out and account teardown returned 500. Both cases passed on a focused one-worker rerun with a 30-second timeout (2/2, 12.7 seconds), including cleanup. Prettier, ESLint, TypeScript, and diff checks passed on the agent branches. |
 
 ## Completion criteria
 
