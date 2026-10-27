@@ -2,6 +2,10 @@ import type { APIRequestContext, APIResponse } from "@playwright/test";
 
 import type {
   BystreLoginRequest,
+  BystreMfaChallengeRequest,
+  BystreMfaCodeRequest,
+  BystreMfaProtectedActionRequest,
+  BystrePasswordResetRequest,
   BystreRefreshTokenRequest,
   BystreSignupRequest,
   BystreUserEditRequest,
@@ -15,6 +19,7 @@ const mePath = "/api/v1/users/me";
 const logoutPath = "/api/v1/users/logout";
 const refreshPath = "/api/v1/users/refresh";
 const usersPath = "/api/v1/users";
+const mfaPath = "/api/v1/users/2fa";
 
 export class BystreUsersApiClient {
   constructor(private readonly request: APIRequestContext) {}
@@ -80,6 +85,66 @@ export class BystreUsersApiClient {
   refresh(refreshToken: string): Promise<APIResponse> {
     const data: BystreRefreshTokenRequest = { refreshToken };
     return this.request.post(refreshPath, { data });
+  }
+
+  forgotPassword(identifier?: string): Promise<APIResponse> {
+    return this.request.post(`${usersPath}/password/forgot`, {
+      data: { identifier },
+    });
+  }
+
+  resetPassword(
+    data: Partial<BystrePasswordResetRequest>,
+  ): Promise<APIResponse> {
+    return this.request.post(`${usersPath}/password/reset`, { data });
+  }
+
+  completeMfaSignIn(
+    data: Partial<BystreMfaChallengeRequest>,
+  ): Promise<APIResponse> {
+    return this.request.post(`${usersPath}/signin/2fa`, { data });
+  }
+
+  getMfaStatus(authorization?: string): Promise<APIResponse> {
+    return this.request.get(`${mfaPath}/status`, {
+      headers: authorization ? { Authorization: authorization } : undefined,
+    });
+  }
+
+  setupMfa(authorization?: string): Promise<APIResponse> {
+    return this.request.post(`${mfaPath}/setup`, {
+      headers: authorization ? { Authorization: authorization } : undefined,
+    });
+  }
+
+  confirmMfa(
+    data: Partial<BystreMfaCodeRequest>,
+    authorization?: string,
+  ): Promise<APIResponse> {
+    return this.request.post(`${mfaPath}/confirm`, {
+      data,
+      headers: authorization ? { Authorization: authorization } : undefined,
+    });
+  }
+
+  replaceMfaRecoveryCodes(
+    data: Partial<BystreMfaProtectedActionRequest>,
+    authorization?: string,
+  ): Promise<APIResponse> {
+    return this.request.post(`${mfaPath}/recovery-codes`, {
+      data,
+      headers: authorization ? { Authorization: authorization } : undefined,
+    });
+  }
+
+  disableMfa(
+    data: Partial<BystreMfaProtectedActionRequest>,
+    authorization?: string,
+  ): Promise<APIResponse> {
+    return this.request.post(`${mfaPath}/disable`, {
+      data,
+      headers: authorization ? { Authorization: authorization } : undefined,
+    });
   }
 
   deleteOwnAccount(
