@@ -11,6 +11,7 @@ test.describe("AUTH-13 GET /api/v1/users/2fa/status", () => {
     { tag: ["@bystre", "@auth"] },
     async ({ bystreUsersApi, authenticatedUser }) => {
       // Arrange
+      test.setTimeout(30_000);
       const authorization = `Bearer ${authenticatedUser.token}`;
       const initialResponse = await bystreUsersApi.getMfaStatus(authorization);
       const initial = (await initialResponse.json()) as BystreMfaStatusResponse;

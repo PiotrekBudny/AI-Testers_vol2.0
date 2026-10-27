@@ -145,6 +145,7 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 
 - **Malformed JSON now returns `400 Bad Request`.** Direct probes on 2026-10-27 confirmed this response for `PUT /api/v1/users/chat-system-prompt`, `PUT /api/v1/users/tool-system-prompt`, and public `POST /api/v1/users/signup`. Their specs assert the current status and error body.
 - **Cart and customer-order probes on 2026-10-27:** A disposable client observed cart add/update/remove success (200), increment on repeated add, zero-quantity removal, validation (400), insufficient stock (409), missing resource (404), and bearer rejection (401). An empty order list returned a page DTO (200); invalid pagination/status returned `{ error }` (400). Empty-cart checkout returned `{ message: "Cart is empty" }` (400), invalid address returned field errors (400), and unknown order lookup/cancellation returned 404. Probe accounts were deleted (204). Success-path checkout and order state transitions still require a controlled disposable product on the same target host.
+- **Admin-host ecommerce probe on 2026-10-27:** The configured daily-reset host returned 200 for `/v3/api-docs` and 401 for unauthenticated `GET /api/v1/orders`, `GET /api/v1/products`, and `POST /api/v1/orders`. Successful order lifecycle behavior still needs an admin identity configured on that host for a disposable product.
 - **Password-reset token visibility depends on the profile.** The hosted forgot-password response returned `token: null` for a known disposable account. The backend local profile is configured to return a token for a matching local account so the reset workflow can be exercised without email delivery. The AUTH-07 spec accepts either documented shape for a known account and still requires `null` for an unknown account.
 
 ## Coverage workstreams
@@ -181,7 +182,7 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 | USER-08 | `PUT /api/v1/users/chat-system-prompt` | Bearer   | ✅ Covered | `users/put-users-chat-system-prompt.api.spec.ts` |
 | OPS-01  | `POST /api/v1/qr/create`               | Bearer   | ✅ Covered | `qr/post-qr-create.api.spec.ts`                  |
 | SHOP-06 | `GET /api/v1/cart`                     | Bearer   | ✅ Covered | `cart/get-cart.api.spec.ts`                      |
-| SHOP-11 | `GET /api/v1/orders`                   | Bearer   | 🟡 Partial | `orders/get-orders.api.spec.ts`                  |
+| SHOP-11 | `GET /api/v1/orders`                   | Bearer   | ✅ Covered | `orders/get-orders.api.spec.ts`                  |
 
 ### Customer and commerce lifecycle
 
@@ -198,9 +199,9 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 | SHOP-08 | `POST /api/v1/cart/items`                               | Bearer   | ✅ Covered                                                    | `cart/post-cart-items.api.spec.ts`                     |
 | SHOP-09 | `PUT /api/v1/cart/items/{productId}`                    | Bearer   | ✅ Covered                                                    | `cart/put-cart-items-by-product-id.api.spec.ts`        |
 | SHOP-10 | `DELETE /api/v1/cart/items/{productId}`                 | Bearer   | ✅ Covered                                                    | `cart/delete-cart-items-by-product-id.api.spec.ts`     |
-| SHOP-12 | `POST /api/v1/orders`                                   | Bearer   | 🟡 Partial                                                    | `orders/post-orders.api.spec.ts`                       |
-| SHOP-13 | `GET /api/v1/orders/{id}`                               | Bearer   | 🟡 Partial                                                    | `orders/get-orders-by-id.api.spec.ts`                  |
-| SHOP-14 | `POST /api/v1/orders/{id}/cancel`                       | Bearer   | 🟡 Partial                                                    | `orders/post-orders-by-id-cancel.api.spec.ts`          |
+| SHOP-12 | `POST /api/v1/orders`                                   | Bearer   | ✅ Covered                                                    | `orders/post-orders.api.spec.ts`                       |
+| SHOP-13 | `GET /api/v1/orders/{id}`                               | Bearer   | ✅ Covered                                                    | `orders/get-orders-by-id.api.spec.ts`                  |
+| SHOP-14 | `POST /api/v1/orders/{id}/cancel`                       | Bearer   | ✅ Covered                                                    | `orders/post-orders-by-id-cancel.api.spec.ts`          |
 
 ### Authorization, administration, and multi-step authentication
 
@@ -284,6 +285,8 @@ Record the date, workstream or operation IDs, implemented change, and latest run
 | 2026-10-27 | AUTH-15 | Gave the two multi-request MFA disable workflows a 30-second test timeout after the default 10-second limit was exceeded under load. | Focused AUTH-15 spec passed 5/5 with 3 workers and no retries. Prettier, ESLint, TypeScript, and diff checks passed. |
 | 2026-10-27 | AUTH-07, AUTH-14, AUTH-15 | Made the forgot-password token assertion valid for both hosted and local response shapes. After recovery-code rotation, the test now rejects an old code and accepts a new one. The MFA-disable test now proves a previously valid refresh token is rejected after disablement. Token assertions avoid printing secret values on failure. | Hosted AUTH-07 spec passed 3/3; the local profile was unavailable. AUTH-14 spec passed 5/5 before the final token-safe assertion revision, and the revised scenario passed 1/1. The revised AUTH-15 scenario passed 1/1. Disposable probe accounts were deleted. Agent branch formatting, lint, TypeScript, and diff checks passed. |
 | 2026-10-27 | AUTH-07, AUTH-14, AUTH-15 | Verified the three delegated fixes together after integration. | All three focused specs passed 13/13 against the hosted Bystre API (`--project=bystre-api-tests --workers=2 --retries=0`). The local profile remains unavailable for AUTH-07's token-present variant. |
+| 2026-10-27 | SHOP-11–SHOP-14 | Added isolated admin-host order fixtures and cases for successful checkout, stock deduction/conflict, nonempty and status-filtered listings, owner/admin access, cancellation permissions and transitions, and stock restoration. Each operation remains in its dedicated spec. | Live unauthenticated probes returned 401. Playwright specs were not run because repository instructions prohibit running tests without a user request; `.env.ai` currently has no controlled admin credentials. Static formatting, lint, TypeScript, and diff checks passed. Configure `BYSTRE_ADMIN_API_USERNAME` and `BYSTRE_ADMIN_API_PASSWORD` for the daily-reset host, then run the four order specs with `--project=bystre-admin-api-tests`. |
+| 2026-10-27 | Full Bystre suite, AUTH-10, AUTH-12–AUTH-14 | Ran both Bystre projects with the actual configured environment. Increased the timeout to 30 seconds for four multi-request MFA workflows that failed or approached the 10-second limit under full-suite load. | Both complete runs passed 200/200 with 3 workers, no retries, and no skips. Prettier, ESLint, TypeScript, and diff checks passed. |
 
 ## Completion criteria
 

@@ -50,6 +50,7 @@ test.describe("AUTH-12 POST /api/v1/users/2fa/confirm", () => {
     { tag: ["@bystre", "@auth"] },
     async ({ bystreUsersApi, authenticatedUser }) => {
       // Arrange
+      test.setTimeout(30_000);
       const authorization = `Bearer ${authenticatedUser.token}`;
       const setupResponse = await requireBystreStatus(
         bystreUsersApi.setupMfa(authorization),

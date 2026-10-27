@@ -138,6 +138,7 @@ test.describe("AUTH-14 POST /api/v1/users/2fa/recovery-codes", () => {
     { tag: ["@bystre", "@auth"] },
     async ({ bystreUsersApi, authenticatedUser }) => {
       // Arrange
+      test.setTimeout(30_000);
       const authorization = `Bearer ${authenticatedUser.token}`;
       const { recoveryCodes } = await enrollMfa(
         bystreUsersApi,

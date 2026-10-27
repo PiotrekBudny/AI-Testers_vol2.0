@@ -11,6 +11,7 @@ test.describe("AUTH-10 POST /api/v1/users/signin/2fa", () => {
     { tag: ["@bystre", "@auth"] },
     async ({ bystreUsersApi, authenticatedUser }) => {
       // Arrange
+      test.setTimeout(30_000);
       const { recoveryCodes } = await enrollMfa(
         bystreUsersApi,
         authenticatedUser.token,
