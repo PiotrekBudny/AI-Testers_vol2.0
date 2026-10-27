@@ -9,6 +9,41 @@ import { enrollMfa } from "../support/users/bystre-users-mfa.helpers";
 
 test.describe("AUTH-15 POST /api/v1/users/2fa/disable", () => {
   test(
+    "requires a bearer token",
+    { tag: ["@bystre", "@auth"] },
+    async ({ bystreUsersApi }) => {
+      // Arrange
+      const payload = { password: "invalid-password", code: "123456" };
+
+      // Act
+      const response = await bystreUsersApi.disableMfa(payload);
+      const body = (await response.json()) as BystreErrorResponse;
+
+      // Assert
+      expect(response.status()).toBe(401);
+      expect(body).toMatchObject({ message: "Unauthorized" });
+    },
+  );
+
+  test(
+    "rejects an invalid bearer token",
+    { tag: ["@bystre", "@auth"] },
+    async ({ bystreUsersApi }) => {
+      // Arrange
+      const payload = { password: "invalid-password", code: "123456" };
+      const authorization = "Bearer invalid-bystre-test-token";
+
+      // Act
+      const response = await bystreUsersApi.disableMfa(payload, authorization);
+      const body = (await response.json()) as BystreErrorResponse;
+
+      // Assert
+      expect(response.status()).toBe(401);
+      expect(body).toMatchObject({ message: "Invalid or expired token" });
+    },
+  );
+
+  test(
     "disables MFA with a recovery code",
     { tag: ["@bystre", "@auth"] },
     async ({ bystreUsersApi, authenticatedUser }) => {

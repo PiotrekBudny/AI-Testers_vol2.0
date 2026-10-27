@@ -13,6 +13,44 @@ import {
 
 test.describe("AUTH-14 POST /api/v1/users/2fa/recovery-codes", () => {
   test(
+    "requires a bearer token",
+    { tag: ["@bystre", "@auth"] },
+    async ({ bystreUsersApi }) => {
+      // Arrange
+      const payload = { password: "invalid-password", code: "123456" };
+
+      // Act
+      const response = await bystreUsersApi.replaceMfaRecoveryCodes(payload);
+      const body = (await response.json()) as BystreErrorResponse;
+
+      // Assert
+      expect(response.status()).toBe(401);
+      expect(body).toMatchObject({ message: "Unauthorized" });
+    },
+  );
+
+  test(
+    "rejects an invalid bearer token",
+    { tag: ["@bystre", "@auth"] },
+    async ({ bystreUsersApi }) => {
+      // Arrange
+      const payload = { password: "invalid-password", code: "123456" };
+      const authorization = "Bearer invalid-bystre-test-token";
+
+      // Act
+      const response = await bystreUsersApi.replaceMfaRecoveryCodes(
+        payload,
+        authorization,
+      );
+      const body = (await response.json()) as BystreErrorResponse;
+
+      // Assert
+      expect(response.status()).toBe(401);
+      expect(body).toMatchObject({ message: "Invalid or expired token" });
+    },
+  );
+
+  test(
     "rotates recovery codes after a fresh authenticator code",
     { tag: ["@bystre", "@auth"] },
     async ({ bystreUsersApi, authenticatedUser }) => {
