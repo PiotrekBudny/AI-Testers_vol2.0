@@ -1,13 +1,16 @@
+import { config } from "../../../../src/config/environment";
+import { BystreAdminApiClient } from "../admin/bystre-admin-api.client";
 import { requireBystreStatus } from "../users/bystre-user-lifecycle";
 import { expect, test as usersTest } from "../users/bystre-users-api.fixtures";
 import type { BystreLoginResponse } from "../users/bystre-users-api.models";
 import { BystreProductsApiClient } from "./bystre-products-api.client";
-import { productInput } from "./bystre-products-api.helpers";
 import type { ProductDto, ProductInput } from "./bystre-products-api.models";
+import { BystreProductsTestDataGenerator } from "./bystre-products-test-data.generator";
 
 export { expect } from "../users/bystre-users-api.fixtures";
 interface ProductsFixtures {
   bystreProductsApi: BystreProductsApiClient;
+  bystreAdminApi: BystreAdminApiClient;
   adminAuthorization: string;
   createProduct: (overrides?: Partial<ProductInput>) => Promise<ProductDto>;
   productCleanup: (id: number) => void;
@@ -17,14 +20,17 @@ export const test = usersTest.extend<ProductsFixtures>({
   bystreProductsApi: async ({ request }, use): Promise<void> => {
     await use(new BystreProductsApiClient(request));
   },
+  bystreAdminApi: async ({ request }, use): Promise<void> => {
+    await use(new BystreAdminApiClient(request));
+  },
   adminAuthorization: async ({ bystreUsersApi }, use): Promise<void> => {
-    const username = process.env.BYSTRE_API_ADMIN_USERNAME;
-    const password = process.env.BYSTRE_API_ADMIN_PASSWORD;
+    const username = config.BYSTRE_ADMIN_API_USERNAME;
+    const password = config.BYSTRE_ADMIN_API_PASSWORD;
     // Admin-only cases need an explicitly configured test identity.
     // eslint-disable-next-line playwright/no-skipped-test
     test.skip(
       !username && !password,
-      "Admin coverage blocked: set BYSTRE_API_ADMIN_USERNAME and BYSTRE_API_ADMIN_PASSWORD.",
+      "Admin coverage blocked: set BYSTRE_ADMIN_API_USERNAME and BYSTRE_ADMIN_API_PASSWORD.",
     );
     if (!username || !password)
       throw new Error("Configure both Bystre admin credential variables.");
@@ -76,7 +82,10 @@ export const test = usersTest.extend<ProductsFixtures>({
   ): Promise<void> => {
     await use(async (overrides = {}) => {
       const response = await requireBystreStatus(
-        bystreProductsApi.create(productInput(overrides), adminAuthorization),
+        bystreProductsApi.create(
+          BystreProductsTestDataGenerator.productInput(overrides),
+          adminAuthorization,
+        ),
         "product creation",
         201,
       );

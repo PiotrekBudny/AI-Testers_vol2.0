@@ -130,9 +130,12 @@ Credentials are kept in memory and are not explicitly logged or saved. Playwrigh
 existing retained failure traces can include request bodies and bearer headers;
 treat those artifacts as sensitive.
 
-The fixture uses `BYSTRE_API_BASE_URL` and does not require `BYSTRE_API_USERNAME` or
-`BYSTRE_API_PASSWORD`. The repository's centralized configuration still requires
-the other application environment values listed in `.env.example` when loaded.
+The fixture uses the base URL selected by the Playwright project: `BYSTRE_API_BASE_URL`
+for regular Bystre tests and `BYSTRE_ADMIN_API_BASE_URL` for admin tests. It does not
+require `BYSTRE_API_USERNAME` or `BYSTRE_API_PASSWORD`. Admin specs also require
+`BYSTRE_ADMIN_API_USERNAME` and `BYSTRE_ADMIN_API_PASSWORD`. The repository's
+centralized configuration still requires the other application environment values
+listed in `.env.example` when loaded.
 Existing static-credential login tests remain separate.
 
 ### Current-user endpoint coverage

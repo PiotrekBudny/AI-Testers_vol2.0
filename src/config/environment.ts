@@ -69,6 +69,16 @@ export const config = Object.freeze({
   BYSTRE_API_BASE_URL:
     optionalEnv("BYSTRE_API_BASE_URL") ?? "https://awesome.byst.re",
 
+  /** Base URL for Bystre admin API tests. */
+  BYSTRE_ADMIN_API_BASE_URL:
+    optionalEnv("BYSTRE_ADMIN_API_BASE_URL") ?? "https://aitesters.byst.re",
+
+  /** Username for the controlled Bystre admin test identity. */
+  BYSTRE_ADMIN_API_USERNAME: optionalEnv("BYSTRE_ADMIN_API_USERNAME"),
+
+  /** Password for the controlled Bystre admin test identity. */
+  BYSTRE_ADMIN_API_PASSWORD: optionalEnv("BYSTRE_ADMIN_API_PASSWORD"),
+
   /** Indicates whether tests are running in a CI environment (GitHub Actions). */
   isCI: Boolean(process.env.CI),
 });

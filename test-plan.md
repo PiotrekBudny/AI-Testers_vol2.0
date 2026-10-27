@@ -18,22 +18,23 @@ Map) are lower priority.
 
 Tags map to Playwright's `--grep`/`--grep-invert` filters (e.g. `npx playwright test --grep @smoke`).
 
-| Tag            | Meaning                                      |
-| -------------- | -------------------------------------------- |
-| `@auth`        | Registration & login                         |
-| `@bystre`      | Bystre API                                   |
-| `@ollama`      | Ollama API and streaming responses           |
-| `@users`       | User account API operations                  |
-| `@cart`        | Shopping cart API operations                 |
-| `@rbac`        | Role-based access                            |
-| `@farm`        | Farm & resource management                   |
-| `@marketplace` | Marketplace trading                          |
-| `@finance`     | Financial operations                         |
-| `@e2e`         | End-to-end scenario                          |
-| `@flagged`     | Behind a feature flag                        |
-| `@docs`        | Documentation & API reference                |
-| `@system`      | System/health/debug/logs & version endpoints |
-| `@smoke`       | Critical path, run on every build            |
+| Tag             | Meaning                                       |
+| --------------- | --------------------------------------------- |
+| `@auth`         | Registration & login                          |
+| `@bystre`       | Bystre API                                    |
+| `@bystre-admin` | Bystre admin API on the daily-reset test host |
+| `@ollama`       | Ollama API and streaming responses            |
+| `@users`        | User account API operations                   |
+| `@cart`         | Shopping cart API operations                  |
+| `@rbac`         | Role-based access                             |
+| `@farm`         | Farm & resource management                    |
+| `@marketplace`  | Marketplace trading                           |
+| `@finance`      | Financial operations                          |
+| `@e2e`          | End-to-end scenario                           |
+| `@flagged`      | Behind a feature flag                         |
+| `@docs`         | Documentation & API reference                 |
+| `@system`       | System/health/debug/logs & version endpoints  |
+| `@smoke`        | Critical path, run on every build             |
 
 ## Test Areas
 

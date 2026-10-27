@@ -16,7 +16,11 @@ export { expect } from "@playwright/test";
 
 interface BystreUsersApiFixtures {
   bystreUsersApi: BystreUsersApiClient;
-  userCleanup: (user: Readonly<BystreSignupRequest>, token?: string) => void;
+  userCleanup: (
+    user: Readonly<BystreSignupRequest>,
+    token?: string,
+    deleted?: boolean,
+  ) => void;
   authenticatedUser: BystreAuthenticatedUser;
   secondAuthenticatedUser: BystreAuthenticatedUser;
 }
@@ -45,17 +49,23 @@ export const test = base.extend<BystreUsersApiFixtures>({
     async ({ bystreUsersApi }, use): Promise<void> => {
       const users = new Map<
         string,
-        { user: Readonly<BystreSignupRequest>; token?: string }
+        {
+          user: Readonly<BystreSignupRequest>;
+          token?: string;
+          deleted?: boolean;
+        }
       >();
-      await use((user, token) => {
+      await use((user, token, deleted) => {
         // Track only confirmed registrations; copy credentials before tests mutate them.
         users.set(user.username, {
           user: Object.freeze({ ...user }),
           token: token ?? users.get(user.username)?.token,
+          deleted: deleted ?? users.get(user.username)?.deleted,
         });
       });
       const failures: string[] = [];
-      for (const { user, token } of users.values()) {
+      for (const { user, token, deleted } of users.values()) {
+        if (deleted) continue;
         try {
           await deleteBystreUser(bystreUsersApi, user, token);
         } catch (error) {

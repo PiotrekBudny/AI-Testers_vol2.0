@@ -1,24 +1,9 @@
-import { randomUUID } from "node:crypto";
-
 import { expect } from "@playwright/test";
 
 import type { ProductDto, ProductInput } from "./bystre-products-api.models";
 
 // Identity-generated product IDs are positive. Never target a shared product for mutation-denied tests.
 export const missingProductId = -1;
-export function productInput(
-  overrides: Partial<ProductInput> = {},
-): ProductInput {
-  return {
-    name: `API product ${randomUUID()}`,
-    description: "Isolated API test product",
-    price: 12.34,
-    stockQuantity: 3,
-    category: "API tests",
-    imageUrl: "https://example.com/api-test.png",
-    ...overrides,
-  };
-}
 export function expectProduct(product: ProductDto): void {
   expect(product).toMatchObject({
     id: expect.any(Number),

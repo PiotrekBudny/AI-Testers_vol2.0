@@ -80,6 +80,15 @@ export class BystreUsersApiClient {
     );
   }
 
+  deleteByUsername(
+    username: string,
+    authorization?: string,
+  ): Promise<APIResponse> {
+    return this.request.delete(`${usersPath}/${encodeURIComponent(username)}`, {
+      headers: authorization ? { Authorization: authorization } : undefined,
+    });
+  }
+
   login(
     credentials: BystreLoginRequest,
     authorization?: string,

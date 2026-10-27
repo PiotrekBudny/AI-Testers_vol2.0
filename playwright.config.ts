@@ -50,7 +50,15 @@ export default defineConfig({
     {
       name: "bystre-api-tests",
       testMatch: /.*4_byst\.re_api_tests\/.*\.api\.spec\.ts/,
+      grepInvert: /@bystre-admin/,
       use: { baseURL: config.BYSTRE_API_BASE_URL },
+    },
+
+    {
+      name: "bystre-admin-api-tests",
+      testMatch: /.*4_byst\.re_api_tests\/.*\.api\.spec\.ts/,
+      grep: /@bystre-admin/,
+      use: { baseURL: config.BYSTRE_ADMIN_API_BASE_URL },
     },
 
     // Authenticated tests that mutate data - must finish before the demo user logs out
