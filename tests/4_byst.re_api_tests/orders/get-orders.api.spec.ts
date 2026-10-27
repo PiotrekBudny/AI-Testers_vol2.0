@@ -3,7 +3,7 @@ import type { OrderPageDto } from "../support/orders/bystre-orders-api.models";
 import { unauthorizedCases } from "../support/shared/bystre-api.assertions";
 
 test.describe("GET /api/v1/orders", { tag: ["@bystre", "@orders"] }, () => {
-  test("returns the new user's empty paginated order list", async ({
+  test("returns the new user's empty paginated order list without a status filter", async ({
     bystreOrdersApi,
     authenticatedUser,
   }) => {
@@ -12,7 +12,7 @@ test.describe("GET /api/v1/orders", { tag: ["@bystre", "@orders"] }, () => {
 
     // Act
     const response = await bystreOrdersApi.getAll(
-      { page: 0, size: 2, status: "PENDING" },
+      { page: 0, size: 2 },
       authorization,
     );
 
