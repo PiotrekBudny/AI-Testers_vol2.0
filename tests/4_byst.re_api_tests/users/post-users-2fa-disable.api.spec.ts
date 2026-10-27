@@ -3,6 +3,7 @@ import type {
   BystreErrorResponse,
   BystreLoginResponse,
   BystreMfaStatusResponse,
+  BystreTokenRefreshResponse,
   BystreValidationErrors,
 } from "../support/users/bystre-users-api.models";
 import { enrollMfa } from "../support/users/bystre-users-mfa.helpers";
@@ -44,22 +45,42 @@ test.describe("AUTH-15 POST /api/v1/users/2fa/disable", () => {
   );
 
   test(
-    "disables MFA with a recovery code",
+    "disables MFA with a recovery code and revokes refresh tokens",
     { tag: ["@bystre", "@auth"] },
     async ({ bystreUsersApi, authenticatedUser }) => {
       // Arrange
-      test.setTimeout(30_000);
-      const authorization = `Bearer ${authenticatedUser.token}`;
+      test.setTimeout(45_000);
       const { recoveryCodes } = await enrollMfa(
         bystreUsersApi,
         authenticatedUser.token,
       );
+      const challengeResponse = await bystreUsersApi.login({
+        username: authenticatedUser.user.username,
+        password: authenticatedUser.user.password,
+      });
+      const challenge = (await challengeResponse.json()) as BystreLoginResponse;
+      const mfaSignInResponse = await bystreUsersApi.completeMfaSignIn({
+        challengeToken: challenge.challengeToken ?? "",
+        code: recoveryCodes[0],
+      });
+      const mfaSignIn = (await mfaSignInResponse.json()) as BystreLoginResponse;
+      const beforeDisableResponse = await bystreUsersApi.refresh(
+        mfaSignIn.refreshToken ?? "",
+      );
+      const beforeDisable =
+        (await beforeDisableResponse.json()) as BystreTokenRefreshResponse;
+      const authorization = `Bearer ${beforeDisable.token}`;
 
       // Act
       const response = await bystreUsersApi.disableMfa(
-        { password: authenticatedUser.user.password, code: recoveryCodes[0] },
+        { password: authenticatedUser.user.password, code: recoveryCodes[1] },
         authorization,
       );
+      const revokedRefreshResponse = await bystreUsersApi.refresh(
+        beforeDisable.refreshToken,
+      );
+      const revokedRefresh =
+        (await revokedRefreshResponse.json()) as BystreErrorResponse;
       const statusResponse = await bystreUsersApi.getMfaStatus(authorization);
       const status = (await statusResponse.json()) as BystreMfaStatusResponse;
       const loginResponse = await bystreUsersApi.login({
@@ -69,8 +90,32 @@ test.describe("AUTH-15 POST /api/v1/users/2fa/disable", () => {
       const login = (await loginResponse.json()) as BystreLoginResponse;
 
       // Assert
+      expect(challengeResponse.status()).toBe(200);
+      expect(challenge.mfaRequired).toBe(true);
+      expect(
+        typeof challenge.challengeToken === "string" &&
+          challenge.challengeToken.length > 0,
+      ).toBe(true);
+      expect(mfaSignInResponse.status()).toBe(200);
+      expect(
+        typeof mfaSignIn.refreshToken === "string" &&
+          mfaSignIn.refreshToken.length > 0,
+      ).toBe(true);
+      expect(beforeDisableResponse.status()).toBe(200);
+      expect(
+        typeof beforeDisable.token === "string" &&
+          beforeDisable.token.length > 0,
+      ).toBe(true);
+      expect(
+        typeof beforeDisable.refreshToken === "string" &&
+          beforeDisable.refreshToken.length > 0,
+      ).toBe(true);
       expect(response.status()).toBe(200);
       expect(await response.text()).toBe("");
+      expect(revokedRefreshResponse.status()).toBe(401);
+      expect(revokedRefresh).toMatchObject({
+        message: expect.stringMatching(/invalid.*refresh token/i),
+      });
       expect(statusResponse.status()).toBe(200);
       expect(status).toEqual({ enabled: false, unusedRecoveryCodes: 0 });
       expect(loginResponse.status()).toBe(200);
