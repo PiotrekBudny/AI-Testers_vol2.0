@@ -1,6 +1,7 @@
 import { expect, test } from "../support/users/bystre-users-api.fixtures";
 import type {
   BystreErrorResponse,
+  BystreLoginResponse,
   BystreMfaRecoveryCodesResponse,
   BystreMfaStatusResponse,
   BystreValidationErrors,
@@ -55,7 +56,7 @@ test.describe("AUTH-14 POST /api/v1/users/2fa/recovery-codes", () => {
     { tag: ["@bystre", "@auth"] },
     async ({ bystreUsersApi, authenticatedUser }) => {
       // Arrange
-      test.setTimeout(60_000);
+      test.setTimeout(90_000);
       const authorization = `Bearer ${authenticatedUser.token}`;
       const { secret, recoveryCodes } = await enrollMfa(
         bystreUsersApi,
@@ -71,6 +72,28 @@ test.describe("AUTH-14 POST /api/v1/users/2fa/recovery-codes", () => {
       const body = (await response.json()) as BystreMfaRecoveryCodesResponse;
       const statusResponse = await bystreUsersApi.getMfaStatus(authorization);
       const status = (await statusResponse.json()) as BystreMfaStatusResponse;
+      const oldPasswordResponse = await bystreUsersApi.login({
+        username: authenticatedUser.user.username,
+        password: authenticatedUser.user.password,
+      });
+      const oldChallenge =
+        (await oldPasswordResponse.json()) as BystreLoginResponse;
+      const oldCodeResponse = await bystreUsersApi.completeMfaSignIn({
+        challengeToken: oldChallenge.challengeToken ?? "",
+        code: recoveryCodes[0],
+      });
+      const oldCodeBody = (await oldCodeResponse.json()) as BystreErrorResponse;
+      const newPasswordResponse = await bystreUsersApi.login({
+        username: authenticatedUser.user.username,
+        password: authenticatedUser.user.password,
+      });
+      const newChallenge =
+        (await newPasswordResponse.json()) as BystreLoginResponse;
+      const newCodeResponse = await bystreUsersApi.completeMfaSignIn({
+        challengeToken: newChallenge.challengeToken ?? "",
+        code: body.recoveryCodes[0],
+      });
+      const newCodeBody = (await newCodeResponse.json()) as BystreLoginResponse;
 
       // Assert
       expect(response.status()).toBe(200);
@@ -83,6 +106,21 @@ test.describe("AUTH-14 POST /api/v1/users/2fa/recovery-codes", () => {
       expect(new Set(body.recoveryCodes).size).toBe(8);
       expect(statusResponse.status()).toBe(200);
       expect(status).toEqual({ enabled: true, unusedRecoveryCodes: 8 });
+      expect(oldPasswordResponse.status()).toBe(200);
+      expect(oldChallenge.mfaRequired).toBe(true);
+      expect(oldChallenge.challengeToken).toEqual(expect.stringMatching(/\S+/));
+      expect(oldCodeResponse.status()).toBe(401);
+      expect(oldCodeBody).toMatchObject({ message: expect.any(String) });
+      expect(newPasswordResponse.status()).toBe(200);
+      expect(newChallenge.mfaRequired).toBe(true);
+      expect(newChallenge.challengeToken).toEqual(expect.stringMatching(/\S+/));
+      expect(newCodeResponse.status()).toBe(200);
+      expect(newCodeBody).toMatchObject({
+        username: authenticatedUser.user.username,
+        mfaRequired: false,
+        token: expect.stringMatching(/\S+/),
+        refreshToken: expect.stringMatching(/\S+/),
+      });
     },
   );
 
