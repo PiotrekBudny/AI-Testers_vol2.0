@@ -108,19 +108,28 @@ test.describe("AUTH-14 POST /api/v1/users/2fa/recovery-codes", () => {
       expect(status).toEqual({ enabled: true, unusedRecoveryCodes: 8 });
       expect(oldPasswordResponse.status()).toBe(200);
       expect(oldChallenge.mfaRequired).toBe(true);
-      expect(oldChallenge.challengeToken).toEqual(expect.stringMatching(/\S+/));
+      expect(
+        typeof oldChallenge.challengeToken === "string" &&
+          oldChallenge.challengeToken.length > 0,
+      ).toBe(true);
       expect(oldCodeResponse.status()).toBe(401);
       expect(oldCodeBody).toMatchObject({ message: expect.any(String) });
       expect(newPasswordResponse.status()).toBe(200);
       expect(newChallenge.mfaRequired).toBe(true);
-      expect(newChallenge.challengeToken).toEqual(expect.stringMatching(/\S+/));
+      expect(
+        typeof newChallenge.challengeToken === "string" &&
+          newChallenge.challengeToken.length > 0,
+      ).toBe(true);
       expect(newCodeResponse.status()).toBe(200);
-      expect(newCodeBody).toMatchObject({
-        username: authenticatedUser.user.username,
-        mfaRequired: false,
-        token: expect.stringMatching(/\S+/),
-        refreshToken: expect.stringMatching(/\S+/),
-      });
+      expect(newCodeBody.username).toBe(authenticatedUser.user.username);
+      expect(newCodeBody.mfaRequired).toBe(false);
+      expect(
+        typeof newCodeBody.token === "string" && newCodeBody.token.length > 0,
+      ).toBe(true);
+      expect(
+        typeof newCodeBody.refreshToken === "string" &&
+          newCodeBody.refreshToken.length > 0,
+      ).toBe(true);
     },
   );
 
