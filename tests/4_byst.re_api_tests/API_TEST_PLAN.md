@@ -40,7 +40,7 @@ Use one file per method/path, following the suggested file names in the register
 | `support/users/bystre-users-api.fixtures.ts`       | `authenticatedUser` registers a unique user, signs in, and deletes the account during teardown. The fixture provides a `CLIENT` token.                                                 |
 | `support/products/bystre-products-api.fixtures.ts` | Provides a controlled `ROLE_ADMIN` token, isolated product setup, and cleanup for admin specs.                                                                                         |
 | Playwright projects                                | `bystre-api-tests` stays on `BYSTRE_API_BASE_URL`; `bystre-admin-api-tests` runs `@bystre-admin` specs on `BYSTRE_ADMIN_API_BASE_URL`. The projects can run in parallel.               |
-| `users/bystre-signup.api.spec.ts`                  | Successful signup, missing required fields, and a supplied invalid bearer token. `POST /api/v1/users/signup` is 🟡 Partial.                                                            |
+| `users/bystre-signup.api.spec.ts`                  | Successful signup and sign-in, required-field and email validation, duplicate username/email, malformed JSON, and invalid bearer token. `POST /api/v1/users/signup` is ✅ Covered.     |
 | `users/bystre-login.api.spec.ts`                   | Configured-user login, invalid input, invalid bearer token, and unknown credentials. `POST /api/v1/users/signin` is 🟡 Partial.                                                        |
 | `users/bystre-me.api.spec.ts`                      | `GET /api/v1/users/me` with a valid, missing, malformed, or tampered JWT. This operation is ✅ Covered.                                                                                |
 | `docs/bystre-docs.api.spec.ts`                     | OpenAPI and Swagger availability, selected documented paths, and bearer security declarations. These are contract checks and do not count as behavioral coverage for every route.      |
@@ -141,9 +141,9 @@ These are ownership lanes, not stages. Split a lane further by controller or ope
 
 Parallelize implementation and execution only where fixtures isolate data. Tests that clear a cart, delete a user/product, rotate tokens, cancel an order, change order status, adjust inventory, or consume recovery codes need separate owned resources. Shared-client or fixture changes should be coordinated with specs that import them; endpoint behavior work in separate spec files can otherwise proceed independently.
 
-## Known defects
+## Contract observations
 
-- **Malformed JSON request bodies return `401 Unauthorized` instead of `400 Bad Request`.** Confirmed live on `PUT /api/v1/users/chat-system-prompt`, `PUT /api/v1/users/tool-system-prompt` (valid bearer token, unparsable/mistyped body), and on the fully public `POST /api/v1/users/signup` (no auth at all, unparsable body). A well-formed-but-invalid body still correctly returns `400`. This points to a global request-body-parsing exception being mapped to the authentication error path rather than the validation error path, so it likely affects every JSON-accepting operation, not just the ones listed here. Each affected spec keeps one test documenting the current (incorrect) `401` response; update those once the defect is fixed.
+- **Malformed JSON now returns `400 Bad Request`.** Direct probes on 2026-10-27 confirmed this response for `PUT /api/v1/users/chat-system-prompt`, `PUT /api/v1/users/tool-system-prompt`, and public `POST /api/v1/users/signup`. Their specs assert the current status and error body.
 
 ## Coverage workstreams
 
@@ -169,10 +169,10 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 
 | ID      | Operation                              | Security | Status     | Dedicated spec file                              |
 | ------- | -------------------------------------- | -------- | ---------- | ------------------------------------------------ |
-| AUTH-01 | `POST /api/v1/users/signup`            | Public   | 🟡 Partial | `users/bystre-signup.api.spec.ts`                |
+| AUTH-01 | `POST /api/v1/users/signup`            | Public   | ✅ Covered | `users/bystre-signup.api.spec.ts`                |
 | AUTH-02 | `POST /api/v1/users/signin`            | Public   | 🟡 Partial | `users/bystre-login.api.spec.ts`                 |
 | USER-02 | `GET /api/v1/users/{username}`         | Bearer   | ✅ Covered | `users/get-users-by-username.api.spec.ts`        |
-| USER-03 | `PUT /api/v1/users/{username}`         | Bearer   | ⬜ Planned | `users/put-users-by-username.api.spec.ts`        |
+| USER-03 | `PUT /api/v1/users/{username}`         | Bearer   | ✅ Covered | `users/put-users-by-username.api.spec.ts`        |
 | USER-05 | `GET /api/v1/users/tool-system-prompt` | Bearer   | ✅ Covered | `users/get-users-tool-system-prompt.api.spec.ts` |
 | USER-06 | `PUT /api/v1/users/tool-system-prompt` | Bearer   | ✅ Covered | `users/put-users-tool-system-prompt.api.spec.ts` |
 | USER-07 | `GET /api/v1/users/chat-system-prompt` | Bearer   | ✅ Covered | `users/get-users-chat-system-prompt.api.spec.ts` |
@@ -185,20 +185,20 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 
 **Focus:** Token lifecycle, password recovery, cart changes, checkout, and order state transitions. Verify before/after state, reject invalid transitions, isolate users, and clean up safely. Use the local-profile reset token/outbox where available, or the configured Docker/LocalStack mail sink.
 
-| ID      | Operation                                               | Security | Status          | Dedicated spec file                                    |
-| ------- | ------------------------------------------------------- | -------- | --------------- | ------------------------------------------------------ |
-| AUTH-04 | `POST /api/v1/users/logout`                             | Bearer   | ✅ Covered      | `users/post-users-logout.api.spec.ts`                  |
-| AUTH-05 | `POST /api/v1/users/refresh`                            | Public   | ✅ Covered      | `users/post-users-refresh.api.spec.ts`                 |
-| AUTH-06 | `DELETE /api/v1/users/{username}/right-to-be-forgotten` | Bearer   | 🧰 Fixture only | `users/delete-users-right-to-be-forgotten.api.spec.ts` |
-| AUTH-07 | `POST /api/v1/users/password/forgot`                    | Public   | ⬜ Planned      | `users/post-users-password-forgot.api.spec.ts`         |
-| AUTH-08 | `POST /api/v1/users/password/reset`                     | Public   | ⬜ Planned      | `users/post-users-password-reset.api.spec.ts`          |
-| SHOP-07 | `DELETE /api/v1/cart`                                   | Bearer   | ✅ Covered      | `cart/delete-cart.api.spec.ts`                         |
-| SHOP-08 | `POST /api/v1/cart/items`                               | Bearer   | ⬜ Planned      | `cart/post-cart-items.api.spec.ts`                     |
-| SHOP-09 | `PUT /api/v1/cart/items/{productId}`                    | Bearer   | ⬜ Planned      | `cart/put-cart-items-by-product-id.api.spec.ts`        |
-| SHOP-10 | `DELETE /api/v1/cart/items/{productId}`                 | Bearer   | ⬜ Planned      | `cart/delete-cart-items-by-product-id.api.spec.ts`     |
-| SHOP-12 | `POST /api/v1/orders`                                   | Bearer   | ⬜ Planned      | `orders/post-orders.api.spec.ts`                       |
-| SHOP-13 | `GET /api/v1/orders/{id}`                               | Bearer   | ⬜ Planned      | `orders/get-orders-by-id.api.spec.ts`                  |
-| SHOP-14 | `POST /api/v1/orders/{id}/cancel`                       | Bearer   | ⬜ Planned      | `orders/post-orders-by-id-cancel.api.spec.ts`          |
+| ID      | Operation                                               | Security | Status     | Dedicated spec file                                    |
+| ------- | ------------------------------------------------------- | -------- | ---------- | ------------------------------------------------------ |
+| AUTH-04 | `POST /api/v1/users/logout`                             | Bearer   | ✅ Covered | `users/post-users-logout.api.spec.ts`                  |
+| AUTH-05 | `POST /api/v1/users/refresh`                            | Public   | ✅ Covered | `users/post-users-refresh.api.spec.ts`                 |
+| AUTH-06 | `DELETE /api/v1/users/{username}/right-to-be-forgotten` | Bearer   | ✅ Covered | `users/delete-users-right-to-be-forgotten.api.spec.ts` |
+| AUTH-07 | `POST /api/v1/users/password/forgot`                    | Public   | ⬜ Planned | `users/post-users-password-forgot.api.spec.ts`         |
+| AUTH-08 | `POST /api/v1/users/password/reset`                     | Public   | ⬜ Planned | `users/post-users-password-reset.api.spec.ts`          |
+| SHOP-07 | `DELETE /api/v1/cart`                                   | Bearer   | ✅ Covered | `cart/delete-cart.api.spec.ts`                         |
+| SHOP-08 | `POST /api/v1/cart/items`                               | Bearer   | ⬜ Planned | `cart/post-cart-items.api.spec.ts`                     |
+| SHOP-09 | `PUT /api/v1/cart/items/{productId}`                    | Bearer   | ⬜ Planned | `cart/put-cart-items-by-product-id.api.spec.ts`        |
+| SHOP-10 | `DELETE /api/v1/cart/items/{productId}`                 | Bearer   | ⬜ Planned | `cart/delete-cart-items-by-product-id.api.spec.ts`     |
+| SHOP-12 | `POST /api/v1/orders`                                   | Bearer   | ⬜ Planned | `orders/post-orders.api.spec.ts`                       |
+| SHOP-13 | `GET /api/v1/orders/{id}`                               | Bearer   | ⬜ Planned | `orders/get-orders-by-id.api.spec.ts`                  |
+| SHOP-14 | `POST /api/v1/orders/{id}/cancel`                       | Bearer   | ⬜ Planned | `orders/post-orders-by-id-cancel.api.spec.ts`          |
 
 ### Authorization, administration, and multi-step authentication
 
@@ -273,6 +273,8 @@ Record the date, workstream or operation IDs, implemented change, and latest run
 | 2026-10-19 | OPS-01 | Added QR client, fixture, and endpoint spec for PNG output, auth rejection, and missing/blank text validation. | 5/5 Playwright tests passed against Bystre using an isolated config. Live probes confirmed the same behavior; the temporary probe user was deleted (204). |
 | 2026-10-19 | INT-01–INT-04 | Added four Ollama operation specs, typed client/fixture, and a multiline SSE JSON parser. Coverage includes definitions, token assembly, thinking, tool iterations, validation, and bearer rejection. | Only the new Ollama specs ran: 19/19 passed against the hosted API (`--project=bystre-api-tests --workers=1 --retries=0`). Upstream 404/500 behavior remains untested with the current mock. |
 | 2026-10-27 | USER-04, SHOP-02, SHOP-04, SHOP-05, ADMIN-01–ADMIN-06 | Added dedicated admin operation specs and a separate Playwright project for the daily-reset admin host. Coverage includes admin success and client-denied checks; mutable resources are isolated and cleaned up. | New admin project passed 20/20 Playwright tests against `BYSTRE_ADMIN_API_BASE_URL` with 3 workers. |
+
+| 2026-10-27 | AUTH-01, AUTH-06, USER-01–USER-04, USER-06, USER-08, SHOP-02 | Expanded signup, user lookup/edit/delete, own-account deletion, and product creation coverage with isolated data, authorization checks, validation, and persisted-state checks. Updated malformed-JSON assertions to the current 400 response and limited role assumptions for unrelated listed accounts to the documented array shape. | Both complete Bystre Playwright projects passed 132/132 tests with 3 workers and no retries. Formatting, lint, and TypeScript checks passed. |
 
 ## Completion criteria
 

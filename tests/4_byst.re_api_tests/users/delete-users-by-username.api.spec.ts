@@ -1,60 +1,103 @@
 import { randomUUID } from "node:crypto";
 
 import { expect, test } from "../support/products/bystre-products-api.fixtures";
-import { expectApiError } from "../support/shared/bystre-api.assertions";
-import {
-  requireBystreStatus,
-  signInBystreUser,
-} from "../support/users/bystre-user-lifecycle";
-import { BystreTestDataGenerator } from "../support/users/bystre-users-test-data.generator";
+import { unauthorizedCases } from "../support/shared/bystre-api.assertions";
 
 test.describe(
   "DELETE /api/v1/users/{username}",
   { tag: ["@bystre", "@users", "@rbac", "@bystre-admin"] },
   () => {
-    test("deletes a disposable client account as an administrator", async ({
+    test("deletes a client account and makes it unavailable", async ({
       bystreUsersApi,
       adminAuthorization,
+      authenticatedUser,
       userCleanup,
     }) => {
       // Arrange
-      const user = Object.freeze(BystreTestDataGenerator.signupRequest());
-      await requireBystreStatus(
-        bystreUsersApi.signup(user),
-        "admin deletion target signup",
-        201,
-      );
-      userCleanup(user);
-      const token = await signInBystreUser(bystreUsersApi, user);
-      userCleanup(user, token);
+      const { user, token } = authenticatedUser;
 
       // Act
       const response = await bystreUsersApi.deleteByUsername(
         user.username,
         adminAuthorization,
       );
+      userCleanup(user, token, response.status() === 204);
+      const lookup = await bystreUsersApi.getByUsername(
+        user.username,
+        adminAuthorization,
+      );
+      const lookupBody = await lookup.json();
 
       // Assert
       expect(response.status()).toBe(204);
-      userCleanup(user, token, true);
+      expect(lookup.status()).toBe(404);
+      expect(lookupBody).toHaveProperty(
+        "message",
+        expect.stringMatching(/\S+/),
+      );
     });
 
-    test("rejects a regular client", async ({
+    test("reports a missing user to an administrator", async ({
       bystreUsersApi,
-      authenticatedUser,
+      adminAuthorization,
     }) => {
       // Arrange
       const username = `missing-${randomUUID()}`;
-      const authorization = `Bearer ${authenticatedUser.token}`;
 
       // Act
       const response = await bystreUsersApi.deleteByUsername(
         username,
-        authorization,
+        adminAuthorization,
+      );
+      const body = await response.json();
+
+      // Assert
+      expect(response.status()).toBe(404);
+      expect(body).toHaveProperty("message", expect.stringMatching(/\S+/));
+    });
+
+    test("prevents a client from deleting a real account", async ({
+      bystreUsersApi,
+      authenticatedUser,
+      secondAuthenticatedUser,
+    }) => {
+      // Arrange
+      const target = authenticatedUser.user;
+      const otherAuthorization = `Bearer ${secondAuthenticatedUser.token}`;
+
+      // Act
+      const response = await bystreUsersApi.deleteByUsername(
+        target.username,
+        otherAuthorization,
+      );
+      const body = await response.json();
+      const lookup = await bystreUsersApi.getByUsername(
+        target.username,
+        `Bearer ${authenticatedUser.token}`,
       );
 
       // Assert
-      await expectApiError(response, 403);
+      expect(response.status()).toBe(403);
+      expect(body).toHaveProperty("message", expect.stringMatching(/\S+/));
+      expect(lookup.status()).toBe(200);
     });
+
+    for (const { name, authorization } of unauthorizedCases) {
+      test("rejects " + name, async ({ bystreUsersApi }) => {
+        // Arrange
+        const username = `missing-${randomUUID()}`;
+
+        // Act
+        const response = await bystreUsersApi.deleteByUsername(
+          username,
+          authorization,
+        );
+        const body = await response.json();
+
+        // Assert
+        expect(response.status()).toBe(401);
+        expect(body).toHaveProperty("message", expect.stringMatching(/\S+/));
+      });
+    }
   },
 );

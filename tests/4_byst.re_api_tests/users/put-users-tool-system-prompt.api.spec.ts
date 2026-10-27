@@ -1,65 +1,82 @@
-import {
-  expectApiError,
-  unauthorizedCases,
-} from "../support/shared/bystre-api.assertions";
-import { readSystemPrompt } from "../support/users/bystre-user-prompts.helpers";
+import { unauthorizedCases } from "../support/shared/bystre-api.assertions";
 import { expect, test } from "../support/users/bystre-users-api.fixtures";
+import type { SystemPromptDto } from "../support/users/bystre-users-api.models";
 
 test.describe(
   "PUT /api/v1/users/tool-system-prompt",
-  { tag: ["@bystre", "@prompts"] },
+  { tag: ["@bystre", "@users", "@prompts"] },
   () => {
     test("updates and persists the current user's prompt", async ({
       bystreUsersApi,
       authenticatedUser,
     }) => {
-      const authorization = "Bearer " + authenticatedUser.token;
+      // Arrange
+      const authorization = `Bearer ${authenticatedUser.token}`;
       const value = "Only call tools you have been given; never guess.";
+
+      // Act
       const response = await bystreUsersApi.updateSystemPrompt(
         "tool",
         { toolSystemPrompt: value },
         authorization,
       );
+      const body = (await response.json()) as SystemPromptDto;
+      const lookup = await bystreUsersApi.getSystemPrompt(
+        "tool",
+        authorization,
+      );
+      const persisted = (await lookup.json()) as SystemPromptDto;
+
+      // Assert
       expect(response.status()).toBe(200);
-      expect(await response.json()).toEqual({ toolSystemPrompt: value });
-      expect(
-        await readSystemPrompt(
-          await bystreUsersApi.getSystemPrompt("tool", authorization),
-          "toolSystemPrompt",
-        ),
-      ).toBe(value);
+      expect(body).toEqual({ toolSystemPrompt: value });
+      expect(lookup.status()).toBe(200);
+      expect(persisted).toEqual({ toolSystemPrompt: value });
     });
 
-    // Known defect: a malformed JSON body returns 401 Unauthorized instead of
-    // 400 Bad Request, even with a valid bearer token. Reproduced on this
-    // endpoint and on the public POST /api/v1/users/signup, so it looks like
-    // a global request-body-parsing exception mapped to the auth error path.
-    // This test documents the current (incorrect) behavior; update it to
-    // expect 400 once the defect is fixed.
-    test("returns 401 instead of 400 for a malformed JSON body (known defect)", async ({
+    test("reports a malformed JSON body as a bad request", async ({
       request,
       authenticatedUser,
     }) => {
-      const response = await request.put("/api/v1/users/tool-system-prompt", {
+      // Arrange
+      const path = "/api/v1/users/tool-system-prompt";
+      const authorization = `Bearer ${authenticatedUser.token}`;
+
+      // Act
+      const response = await request.put(path, {
         headers: {
-          Authorization: "Bearer " + authenticatedUser.token,
+          Authorization: authorization,
           "Content-Type": "application/json",
         },
         data: "{",
       });
-      expect(response.status()).toBe(401);
+      const body = await response.json();
+
+      // Assert
+      expect(response.status()).toBe(400);
+      expect(body).toMatchObject({
+        status: 400,
+        error: expect.stringMatching(/\S+/),
+        path,
+      });
     });
 
     for (const { name, authorization } of unauthorizedCases) {
       test("rejects " + name, async ({ bystreUsersApi }) => {
-        await expectApiError(
-          await bystreUsersApi.updateSystemPrompt(
-            "tool",
-            { toolSystemPrompt: "Unauthorized change" },
-            authorization,
-          ),
-          401,
+        // Arrange
+        const value = "Unauthorized change";
+
+        // Act
+        const response = await bystreUsersApi.updateSystemPrompt(
+          "tool",
+          { toolSystemPrompt: value },
+          authorization,
         );
+        const body = await response.json();
+
+        // Assert
+        expect(response.status()).toBe(401);
+        expect(body).toHaveProperty("message", expect.stringMatching(/\S+/));
       });
     }
   },

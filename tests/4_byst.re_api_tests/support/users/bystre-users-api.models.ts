@@ -20,6 +20,12 @@ export interface BystreSignupRequest {
   lastName: string;
 }
 
+export interface BystreUserEditRequest {
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+}
+
 export interface BystreAuthenticatedUser {
   user: Readonly<BystreSignupRequest>;
   token: string;

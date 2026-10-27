@@ -4,6 +4,7 @@ import type {
   BystreLoginRequest,
   BystreRefreshTokenRequest,
   BystreSignupRequest,
+  BystreUserEditRequest,
   SystemPromptDto,
   SystemPromptKind,
 } from "./bystre-users-api.models";
@@ -35,6 +36,17 @@ export class BystreUsersApiClient {
     authorization?: string,
   ): Promise<APIResponse> {
     return this.request.get(`${usersPath}/${encodeURIComponent(username)}`, {
+      headers: authorization ? { Authorization: authorization } : undefined,
+    });
+  }
+
+  updateByUsername(
+    username: string,
+    data: Partial<BystreUserEditRequest>,
+    authorization?: string,
+  ): Promise<APIResponse> {
+    return this.request.put(`${usersPath}/${encodeURIComponent(username)}`, {
+      data,
       headers: authorization ? { Authorization: authorization } : undefined,
     });
   }
@@ -72,11 +84,13 @@ export class BystreUsersApiClient {
 
   deleteOwnAccount(
     username: string,
-    authorization: string,
+    authorization?: string,
   ): Promise<APIResponse> {
     return this.request.delete(
       `/api/v1/users/${encodeURIComponent(username)}/right-to-be-forgotten`,
-      { headers: { Authorization: authorization } },
+      {
+        headers: authorization ? { Authorization: authorization } : undefined,
+      },
     );
   }
 

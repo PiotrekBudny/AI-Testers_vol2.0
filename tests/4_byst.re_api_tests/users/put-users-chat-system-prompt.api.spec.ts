@@ -1,65 +1,82 @@
-import {
-  expectApiError,
-  unauthorizedCases,
-} from "../support/shared/bystre-api.assertions";
-import { readSystemPrompt } from "../support/users/bystre-user-prompts.helpers";
+import { unauthorizedCases } from "../support/shared/bystre-api.assertions";
 import { expect, test } from "../support/users/bystre-users-api.fixtures";
+import type { SystemPromptDto } from "../support/users/bystre-users-api.models";
 
 test.describe(
   "PUT /api/v1/users/chat-system-prompt",
-  { tag: ["@bystre", "@prompts"] },
+  { tag: ["@bystre", "@users", "@prompts"] },
   () => {
     test("updates and persists the current user's prompt", async ({
       bystreUsersApi,
       authenticatedUser,
     }) => {
-      const authorization = "Bearer " + authenticatedUser.token;
+      // Arrange
+      const authorization = `Bearer ${authenticatedUser.token}`;
       const value = "Answer concisely and cite your sources.";
+
+      // Act
       const response = await bystreUsersApi.updateSystemPrompt(
         "chat",
         { chatSystemPrompt: value },
         authorization,
       );
+      const body = (await response.json()) as SystemPromptDto;
+      const lookup = await bystreUsersApi.getSystemPrompt(
+        "chat",
+        authorization,
+      );
+      const persisted = (await lookup.json()) as SystemPromptDto;
+
+      // Assert
       expect(response.status()).toBe(200);
-      expect(await response.json()).toEqual({ chatSystemPrompt: value });
-      expect(
-        await readSystemPrompt(
-          await bystreUsersApi.getSystemPrompt("chat", authorization),
-          "chatSystemPrompt",
-        ),
-      ).toBe(value);
+      expect(body).toEqual({ chatSystemPrompt: value });
+      expect(lookup.status()).toBe(200);
+      expect(persisted).toEqual({ chatSystemPrompt: value });
     });
 
-    // Known defect: a malformed JSON body returns 401 Unauthorized instead of
-    // 400 Bad Request, even with a valid bearer token. Reproduced on this
-    // endpoint and on the public POST /api/v1/users/signup, so it looks like
-    // a global request-body-parsing exception mapped to the auth error path.
-    // This test documents the current (incorrect) behavior; update it to
-    // expect 400 once the defect is fixed.
-    test("returns 401 instead of 400 for a malformed JSON body (known defect)", async ({
+    test("reports a malformed JSON body as a bad request", async ({
       request,
       authenticatedUser,
     }) => {
-      const response = await request.put("/api/v1/users/chat-system-prompt", {
+      // Arrange
+      const path = "/api/v1/users/chat-system-prompt";
+      const authorization = `Bearer ${authenticatedUser.token}`;
+
+      // Act
+      const response = await request.put(path, {
         headers: {
-          Authorization: "Bearer " + authenticatedUser.token,
+          Authorization: authorization,
           "Content-Type": "application/json",
         },
         data: "{",
       });
-      expect(response.status()).toBe(401);
+      const body = await response.json();
+
+      // Assert
+      expect(response.status()).toBe(400);
+      expect(body).toMatchObject({
+        status: 400,
+        error: expect.stringMatching(/\S+/),
+        path,
+      });
     });
 
     for (const { name, authorization } of unauthorizedCases) {
       test("rejects " + name, async ({ bystreUsersApi }) => {
-        await expectApiError(
-          await bystreUsersApi.updateSystemPrompt(
-            "chat",
-            { chatSystemPrompt: "Unauthorized change" },
-            authorization,
-          ),
-          401,
+        // Arrange
+        const value = "Unauthorized change";
+
+        // Act
+        const response = await bystreUsersApi.updateSystemPrompt(
+          "chat",
+          { chatSystemPrompt: value },
+          authorization,
         );
+        const body = await response.json();
+
+        // Assert
+        expect(response.status()).toBe(401);
+        expect(body).toHaveProperty("message", expect.stringMatching(/\S+/));
       });
     }
   },

@@ -38,6 +38,34 @@ test.describe(
       expect(body).not.toHaveProperty("refreshToken");
     });
 
+    test("returns another client's public account details", async ({
+      bystreUsersApi,
+      authenticatedUser,
+      secondAuthenticatedUser,
+    }) => {
+      // Arrange
+      const target = secondAuthenticatedUser.user;
+      const authorization = `Bearer ${authenticatedUser.token}`;
+
+      // Act
+      const response = await bystreUsersApi.getByUsername(
+        target.username,
+        authorization,
+      );
+      const body = (await response.json()) as BystreUserResponse;
+
+      // Assert
+      expect(response.status()).toBe(200);
+      expect(body).toMatchObject({
+        username: target.username,
+        email: target.email,
+        firstName: target.firstName,
+        lastName: target.lastName,
+        roles: expect.arrayContaining(["ROLE_CLIENT"]),
+      });
+      expect(body).not.toHaveProperty("password");
+    });
+
     test("reports a username that does not exist", async ({
       bystreUsersApi,
       authenticatedUser,

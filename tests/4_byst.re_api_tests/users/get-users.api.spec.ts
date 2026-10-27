@@ -9,6 +9,7 @@ test.describe("GET /api/v1/users", { tag: ["@bystre", "@users"] }, () => {
   test("returns user accounts to an authenticated client", async ({
     bystreUsersApi,
     authenticatedUser,
+    secondAuthenticatedUser,
   }) => {
     // Arrange
     const authorization = `Bearer ${authenticatedUser.token}`;
@@ -27,13 +28,25 @@ test.describe("GET /api/v1/users", { tag: ["@bystre", "@users"] }, () => {
         id: expect.any(Number),
         username: expect.stringMatching(/\S+/),
         email: expect.any(String),
-        roles: expect.arrayContaining([expect.stringMatching(/^ROLE_/)]),
+        roles: expect.any(Array),
       });
+      for (const role of user.roles) expect(role).toMatch(/^ROLE_/);
       expect(user).not.toHaveProperty("password");
     }
     expect(new Set(users.map((user) => user.id)).size).toBe(users.length);
-    expect(users.map((user) => user.username)).toContain(
-      authenticatedUser.user.username,
+    expect(users).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          username: authenticatedUser.user.username,
+          email: authenticatedUser.user.email,
+          roles: expect.arrayContaining(["ROLE_CLIENT"]),
+        }),
+        expect.objectContaining({
+          username: secondAuthenticatedUser.user.username,
+          email: secondAuthenticatedUser.user.email,
+          roles: expect.arrayContaining(["ROLE_CLIENT"]),
+        }),
+      ]),
     );
   });
 
