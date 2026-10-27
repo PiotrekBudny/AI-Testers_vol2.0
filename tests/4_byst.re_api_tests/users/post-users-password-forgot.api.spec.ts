@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+
 import { expect, test } from "../support/users/bystre-users-api.fixtures";
 import type {
   BystreForgotPasswordResponse,
