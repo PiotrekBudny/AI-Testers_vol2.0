@@ -28,6 +28,7 @@ Tags map to Playwright's `--grep`/`--grep-invert` filters (e.g. `npx playwright 
 | `@products`     | Bystre product API operations                 |
 | `@prompts`      | Bystre user system prompt operations          |
 | `@cart`         | Shopping cart API operations                  |
+| `@orders`       | Bystre customer order API operations          |
 | `@rbac`         | Role-based access                             |
 | `@farm`         | Farm & resource management                    |
 | `@marketplace`  | Marketplace trading                           |

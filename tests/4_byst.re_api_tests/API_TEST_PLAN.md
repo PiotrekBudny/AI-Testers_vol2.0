@@ -144,6 +144,7 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 ## Contract observations
 
 - **Malformed JSON now returns `400 Bad Request`.** Direct probes on 2026-10-27 confirmed this response for `PUT /api/v1/users/chat-system-prompt`, `PUT /api/v1/users/tool-system-prompt`, and public `POST /api/v1/users/signup`. Their specs assert the current status and error body.
+- **Cart and customer-order probes on 2026-10-27:** A disposable client observed cart add/update/remove success (200), increment on repeated add, zero-quantity removal, validation (400), insufficient stock (409), missing resource (404), and bearer rejection (401). An empty order list returned a page DTO (200); invalid pagination/status returned `{ error }` (400). Empty-cart checkout returned `{ message: "Cart is empty" }` (400), invalid address returned field errors (400), and unknown order lookup/cancellation returned 404. Probe accounts were deleted (204). Success-path checkout and order state transitions still require a controlled disposable product on the same target host.
 
 ## Coverage workstreams
 
@@ -179,7 +180,7 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 | USER-08 | `PUT /api/v1/users/chat-system-prompt` | Bearer   | ✅ Covered | `users/put-users-chat-system-prompt.api.spec.ts` |
 | OPS-01  | `POST /api/v1/qr/create`               | Bearer   | ✅ Covered | `qr/post-qr-create.api.spec.ts`                  |
 | SHOP-06 | `GET /api/v1/cart`                     | Bearer   | ✅ Covered | `cart/get-cart.api.spec.ts`                      |
-| SHOP-11 | `GET /api/v1/orders`                   | Bearer   | ⬜ Planned | `orders/get-orders.api.spec.ts`                  |
+| SHOP-11 | `GET /api/v1/orders`                   | Bearer   | 🟡 Partial | `orders/get-orders.api.spec.ts`                  |
 
 ### Customer and commerce lifecycle
 
@@ -193,12 +194,12 @@ Parallelize implementation and execution only where fixtures isolate data. Tests
 | AUTH-07 | `POST /api/v1/users/password/forgot`                    | Public   | ⬜ Planned | `users/post-users-password-forgot.api.spec.ts`         |
 | AUTH-08 | `POST /api/v1/users/password/reset`                     | Public   | ⬜ Planned | `users/post-users-password-reset.api.spec.ts`          |
 | SHOP-07 | `DELETE /api/v1/cart`                                   | Bearer   | ✅ Covered | `cart/delete-cart.api.spec.ts`                         |
-| SHOP-08 | `POST /api/v1/cart/items`                               | Bearer   | ⬜ Planned | `cart/post-cart-items.api.spec.ts`                     |
-| SHOP-09 | `PUT /api/v1/cart/items/{productId}`                    | Bearer   | ⬜ Planned | `cart/put-cart-items-by-product-id.api.spec.ts`        |
-| SHOP-10 | `DELETE /api/v1/cart/items/{productId}`                 | Bearer   | ⬜ Planned | `cart/delete-cart-items-by-product-id.api.spec.ts`     |
-| SHOP-12 | `POST /api/v1/orders`                                   | Bearer   | ⬜ Planned | `orders/post-orders.api.spec.ts`                       |
-| SHOP-13 | `GET /api/v1/orders/{id}`                               | Bearer   | ⬜ Planned | `orders/get-orders-by-id.api.spec.ts`                  |
-| SHOP-14 | `POST /api/v1/orders/{id}/cancel`                       | Bearer   | ⬜ Planned | `orders/post-orders-by-id-cancel.api.spec.ts`          |
+| SHOP-08 | `POST /api/v1/cart/items`                               | Bearer   | ✅ Covered | `cart/post-cart-items.api.spec.ts`                     |
+| SHOP-09 | `PUT /api/v1/cart/items/{productId}`                    | Bearer   | ✅ Covered | `cart/put-cart-items-by-product-id.api.spec.ts`        |
+| SHOP-10 | `DELETE /api/v1/cart/items/{productId}`                 | Bearer   | ✅ Covered | `cart/delete-cart-items-by-product-id.api.spec.ts`     |
+| SHOP-12 | `POST /api/v1/orders`                                   | Bearer   | 🟡 Partial | `orders/post-orders.api.spec.ts`                       |
+| SHOP-13 | `GET /api/v1/orders/{id}`                               | Bearer   | 🟡 Partial | `orders/get-orders-by-id.api.spec.ts`                  |
+| SHOP-14 | `POST /api/v1/orders/{id}/cancel`                       | Bearer   | 🟡 Partial | `orders/post-orders-by-id-cancel.api.spec.ts`          |
 
 ### Authorization, administration, and multi-step authentication
 
@@ -275,6 +276,7 @@ Record the date, workstream or operation IDs, implemented change, and latest run
 | 2026-10-27 | USER-04, SHOP-02, SHOP-04, SHOP-05, ADMIN-01–ADMIN-06 | Added dedicated admin operation specs and a separate Playwright project for the daily-reset admin host. Coverage includes admin success and client-denied checks; mutable resources are isolated and cleaned up. | New admin project passed 20/20 Playwright tests against `BYSTRE_ADMIN_API_BASE_URL` with 3 workers. |
 
 | 2026-10-27 | AUTH-01, AUTH-06, USER-01–USER-04, USER-06, USER-08, SHOP-02 | Expanded signup, user lookup/edit/delete, own-account deletion, and product creation coverage with isolated data, authorization checks, validation, and persisted-state checks. Updated malformed-JSON assertions to the current 400 response and limited role assumptions for unrelated listed accounts to the documented array shape. | Both complete Bystre Playwright projects passed 132/132 tests with 3 workers and no retries. Formatting, lint, and TypeScript checks passed. |
+| 2026-10-27 | SHOP-08–SHOP-14 | Added seven dedicated cart and customer-order specs, cart/order clients and fixtures, and an `@orders` tag. Cart operations cover state, totals, isolation, stock, validation, and auth. Order specs cover empty listing, pagination/query validation, empty-cart checkout, address validation, missing/malformed IDs, and auth. | New Bystre specs passed 34/34 (`--project=bystre-api-tests --workers=2 --retries=0`). SHOP-11–SHOP-14 remain partial: `.env.ai` has no controlled admin identity to create a disposable product on the non-admin target. Resume successful checkout, nonempty listing/ownership, retrieval, cancellation, and invalid transitions when a controlled product can be created on that same host or a suitable local integration environment is available. |
 
 ## Completion criteria
 
