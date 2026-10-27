@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { expect, test } from "../support/users/bystre-users-api.fixtures";
 import type {
   BystreForgotPasswordResponse,
@@ -32,7 +33,7 @@ test.describe("AUTH-07 POST /api/v1/users/password/forgot", () => {
     { tag: ["@bystre", "@auth"] },
     async ({ bystreUsersApi }) => {
       // Arrange
-      const identifier = "missing-bystre-security-account@example.com";
+      const identifier = `missing-bystre-security-${randomUUID()}@example.com`;
 
       // Act
       const response = await bystreUsersApi.forgotPassword(identifier);
