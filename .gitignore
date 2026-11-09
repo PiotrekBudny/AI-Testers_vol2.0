@@ -7,7 +7,6 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 /.playwright-mcp/
-
 .ai-outputs/
 .env
 .env.*

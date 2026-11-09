@@ -27,6 +27,16 @@ export default [
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
       "@typescript-eslint/explicit-function-return-type": "error",
+      "playwright/expect-expect": [
+        "warn",
+        {
+          assertFunctionNames: [
+            "expectApiError",
+            "expectBadRequest",
+            "readSystemPrompt",
+          ],
+        },
+      ],
     },
   },
   eslintPluginPlaywright.configs["flat/recommended"],
